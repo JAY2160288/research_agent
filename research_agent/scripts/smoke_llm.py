@@ -41,7 +41,9 @@ def main() -> int:
         print("  (목록 조회 실패:", e, ")")
     for key in ("model", "judge_model"):
         name = getattr(s.llm, key)
-        flag = "OK" if (not ids or name in ids) else "!! 목록에 없음 → config/models.yaml 수정 필요"
+        # 별칭(claude-haiku-4-5)은 목록에 날짜 붙은 id(claude-haiku-4-5-20251001)로만 나오므로 접두어 일치도 허용
+        found = not ids or any(i == name or i.startswith(name + "-") for i in ids)
+        flag = "OK" if found else "!! 목록에 없음 → config/models.yaml 수정 필요"
         print(f"  config.{key} = {name}  {flag}")
 
     # 2. 구조화 출력 1회
