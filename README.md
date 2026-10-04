@@ -37,6 +37,6 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 | 주차 | 내용 | 상태 |
 |---|---|---|
 | W1 | 스키마, LLM 래퍼, 학술 도구, 베이스라인 ReAct, 평가 세트 | 완료 |
-| W2 | 역할 분리 그래프(Planner·Searcher·Evaluator·Synthesizer·Critic·Writer) | 예정 |
+| W2 | 역할 분리 그래프(Planner·Searcher·Evaluator·Synthesizer·Critic·Writer) | 완료 (Critic 결정적 검사까지. Replan 루프는 W3) |
 | W3 | Reflection·Replanning 루프, 반복 실행 안정성 | 예정 |
 | W4 | 베이스라인 vs 최종 구조 ablation, LLM-judge, 클린룸 재현 테스트 | 예정 |
