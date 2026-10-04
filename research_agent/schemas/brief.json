@@ -1,0 +1,447 @@
+{
+  "$defs": {
+    "Claim": {
+      "properties": {
+        "statement": {
+          "description": "종합된 주장 한 문장 (영어)",
+          "title": "Statement",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "description": "근거 Paper.id. 반드시 1개 이상",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "sub_rq_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Sub Rq Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "statement",
+        "evidence_ids"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "Conflict": {
+      "properties": {
+        "claim": {
+          "description": "상충하는 쟁점",
+          "title": "Claim",
+          "type": "string"
+        },
+        "side_a": {
+          "$ref": "#/$defs/Claim"
+        },
+        "side_b": {
+          "$ref": "#/$defs/Claim"
+        },
+        "hypothesis_for_conflict": {
+          "description": "왜 결과가 갈리는지 가설 (표본, 측정, 맥락 차이 등)",
+          "title": "Hypothesis For Conflict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claim",
+        "side_a",
+        "side_b",
+        "hypothesis_for_conflict"
+      ],
+      "title": "Conflict",
+      "type": "object"
+    },
+    "Evidence": {
+      "description": "평가된 문헌 한 편. Evaluator(LLM) 가 Paper 를 읽고 채운다.",
+      "properties": {
+        "paper_id": {
+          "description": "Paper.id 를 그대로",
+          "title": "Paper Id",
+          "type": "string"
+        },
+        "relevance": {
+          "description": "주제·sub-RQ 관련성 0~5",
+          "maximum": 5,
+          "minimum": 0,
+          "title": "Relevance",
+          "type": "integer"
+        },
+        "reliability": {
+          "description": "방법론·출처 신뢰도 0~5 (동료심사·표본·설계 고려)",
+          "maximum": 5,
+          "minimum": 0,
+          "title": "Reliability",
+          "type": "integer"
+        },
+        "method": {
+          "description": "연구 방법. 예: 'RCT', 'survey n=312', 'systematic review', 'case study'",
+          "title": "Method",
+          "type": "string"
+        },
+        "sample": {
+          "default": "",
+          "description": "표본·데이터. 모르면 빈 문자열",
+          "title": "Sample",
+          "type": "string"
+        },
+        "finding": {
+          "description": "핵심 결과 한두 문장 (영어). 초록에 없는 내용은 쓰지 않는다",
+          "title": "Finding",
+          "type": "string"
+        },
+        "sub_rq_ids": {
+          "description": "이 문헌이 답하는 sub-RQ id",
+          "items": {
+            "type": "string"
+          },
+          "title": "Sub Rq Ids",
+          "type": "array"
+        },
+        "limitations": {
+          "default": "",
+          "description": "초록에서 드러나는 한계",
+          "title": "Limitations",
+          "type": "string"
+        }
+      },
+      "required": [
+        "paper_id",
+        "relevance",
+        "reliability",
+        "method",
+        "finding",
+        "sub_rq_ids"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "EvidenceTable": {
+      "properties": {
+        "items": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Items",
+          "type": "array"
+        }
+      },
+      "required": [
+        "items"
+      ],
+      "title": "EvidenceTable",
+      "type": "object"
+    },
+    "Gap": {
+      "properties": {
+        "description": {
+          "description": "무엇이 연구되지 않았는가 (영어)",
+          "title": "Description",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "description": "이 공백을 드러내는 근거 문헌 2개 이상",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "proposed_rq": {
+          "description": "제안 연구 질문",
+          "title": "Proposed Rq",
+          "type": "string"
+        },
+        "method": {
+          "description": "제안 방법 (설계, 분석)",
+          "title": "Method",
+          "type": "string"
+        },
+        "data": {
+          "description": "필요 데이터·표본",
+          "title": "Data",
+          "type": "string"
+        }
+      },
+      "required": [
+        "description",
+        "evidence_ids",
+        "proposed_rq",
+        "method",
+        "data"
+      ],
+      "title": "Gap",
+      "type": "object"
+    },
+    "GapList": {
+      "properties": {
+        "gaps": {
+          "items": {
+            "$ref": "#/$defs/Gap"
+          },
+          "minItems": 1,
+          "title": "Gaps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "gaps"
+      ],
+      "title": "GapList",
+      "type": "object"
+    },
+    "ResearchPlan": {
+      "description": "조사 계획. sub-RQ 3~6개가 주제를 빠짐없이, 겹치지 않게 덮어야 한다.",
+      "properties": {
+        "sub_rqs": {
+          "items": {
+            "$ref": "#/$defs/SubRQ"
+          },
+          "maxItems": 6,
+          "minItems": 3,
+          "title": "Sub Rqs",
+          "type": "array"
+        },
+        "search_strategy": {
+          "description": "전체 검색 전략 요약 (기간, 분야, 제외 기준 등)",
+          "title": "Search Strategy",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sub_rqs",
+        "search_strategy"
+      ],
+      "title": "ResearchPlan",
+      "type": "object"
+    },
+    "SubRQ": {
+      "properties": {
+        "id": {
+          "description": "짧은 식별자. 예: 'rq1'",
+          "title": "Id",
+          "type": "string"
+        },
+        "question": {
+          "description": "하위 연구 질문 (영어). 다른 sub-RQ 와 겹치지 않게",
+          "title": "Question",
+          "type": "string"
+        },
+        "rationale": {
+          "description": "이 질문이 주제 이해에 왜 필요한지 한 문장",
+          "title": "Rationale",
+          "type": "string"
+        },
+        "queries": {
+          "description": "학술 검색 쿼리 2~4개 (영어, 키워드 조합)",
+          "items": {
+            "type": "string"
+          },
+          "title": "Queries",
+          "type": "array"
+        },
+        "source_pref": {
+          "default": "both",
+          "description": "CS/물리 성격이 강하면 arxiv 포함, 아니면 openalex",
+          "enum": [
+            "openalex",
+            "arxiv",
+            "both"
+          ],
+          "title": "Source Pref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "question",
+        "rationale",
+        "queries"
+      ],
+      "title": "SubRQ",
+      "type": "object"
+    },
+    "Synthesis": {
+      "properties": {
+        "consensus": {
+          "description": "다수 문헌이 일치하는 결과",
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Consensus",
+          "type": "array"
+        },
+        "conflicts": {
+          "description": "문헌 간 상충하는 결과",
+          "items": {
+            "$ref": "#/$defs/Conflict"
+          },
+          "title": "Conflicts",
+          "type": "array"
+        },
+        "conditional": {
+          "description": "특정 조건에서만 성립하는 결과",
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Conditional",
+          "type": "array"
+        },
+        "coverage_note": {
+          "description": "어느 sub-RQ 가 충분/부족한지 한 단락",
+          "title": "Coverage Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "consensus",
+        "conflicts",
+        "conditional",
+        "coverage_note"
+      ],
+      "title": "Synthesis",
+      "type": "object"
+    },
+    "TopicFrame": {
+      "description": "연구 주제를 분해한 구조. 이후 모든 단계의 기준점.",
+      "properties": {
+        "original_topic": {
+          "title": "Original Topic",
+          "type": "string"
+        },
+        "topic_en": {
+          "description": "주제의 영어 번역 (학술 검색용)",
+          "title": "Topic En",
+          "type": "string"
+        },
+        "domain": {
+          "description": "주 학문 분야. 예: 'education', 'computer science', 'accounting'",
+          "title": "Domain",
+          "type": "string"
+        },
+        "concepts": {
+          "description": "핵심 개념 3~8개 (영어)",
+          "items": {
+            "type": "string"
+          },
+          "title": "Concepts",
+          "type": "array"
+        },
+        "variables": {
+          "$ref": "#/$defs/Variables"
+        },
+        "synonyms_en": {
+          "description": "검색 확장용 영어 동의어·관련어 (최소 3개)",
+          "items": {
+            "type": "string"
+          },
+          "title": "Synonyms En",
+          "type": "array"
+        },
+        "research_question": {
+          "description": "주제를 한 문장의 연구 질문으로 재진술 (영어)",
+          "title": "Research Question",
+          "type": "string"
+        }
+      },
+      "required": [
+        "original_topic",
+        "topic_en",
+        "domain",
+        "concepts",
+        "variables",
+        "synonyms_en",
+        "research_question"
+      ],
+      "title": "TopicFrame",
+      "type": "object"
+    },
+    "Variables": {
+      "properties": {
+        "independent": {
+          "description": "독립변수/개입/처치 (X). 예: '생성형 AI 활용'",
+          "items": {
+            "type": "string"
+          },
+          "title": "Independent",
+          "type": "array"
+        },
+        "dependent": {
+          "description": "종속변수/결과 (Y). 예: '연구 생산성', '연구 품질'",
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependent",
+          "type": "array"
+        },
+        "population": {
+          "description": "연구 대상 모집단. 예: '대학원생'",
+          "title": "Population",
+          "type": "string"
+        },
+        "context": {
+          "default": "",
+          "description": "맥락·범위. 예: '고등교육, 2022년 이후'",
+          "title": "Context",
+          "type": "string"
+        }
+      },
+      "required": [
+        "independent",
+        "dependent",
+        "population"
+      ],
+      "title": "Variables",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "topic_frame": {
+      "$ref": "#/$defs/TopicFrame"
+    },
+    "plan": {
+      "$ref": "#/$defs/ResearchPlan"
+    },
+    "evidence": {
+      "$ref": "#/$defs/EvidenceTable"
+    },
+    "synthesis": {
+      "$ref": "#/$defs/Synthesis"
+    },
+    "gaps": {
+      "$ref": "#/$defs/GapList"
+    },
+    "limitations": {
+      "description": "Agent 가 확신하지 못하는 부분, 미달 항목, 검색 범위 한계",
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "executive_summary": {
+      "description": "연구자가 1분 안에 읽을 요약 (한국어, 5~8문장)",
+      "title": "Executive Summary",
+      "type": "string"
+    }
+  },
+  "required": [
+    "topic_frame",
+    "plan",
+    "evidence",
+    "synthesis",
+    "gaps",
+    "limitations",
+    "executive_summary"
+  ],
+  "title": "ResearchBrief",
+  "type": "object"
+}

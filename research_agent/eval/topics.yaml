@@ -1,0 +1,31 @@
+# 테스트 주제 5개 (plan.md §6.1). 분야 분산 + 한국어/영어 입력 혼합.
+# 각 주제는 ko / en 두 버전. T5 는 한국어만 (언어 민감도 확인용).
+topics:
+  - id: T1
+    domain: education
+    note: 지침 예시 (기준점)
+    ko: 생성형 AI 활용이 대학원생의 연구 생산성과 연구 품질에 미치는 영향
+    en: The impact of generative AI use on graduate students' research productivity and research quality
+
+  - id: T2
+    domain: computer science
+    note: arXiv 비중 높음, 수업 연계
+    ko: LLM 에이전트의 장기 메모리 설계가 멀티스텝 과업 성공률에 미치는 영향
+    en: How long-term memory design in LLM agents affects success rates on multi-step tasks
+
+  - id: T3
+    domain: accounting
+    note: 본인 도메인 — 품질을 직접 판단 가능
+    ko: AI 기반 이상거래 탐지가 외부감사 품질과 감사 비용에 미치는 영향
+    en: The effect of AI-based anomaly detection on external audit quality and audit fees
+
+  - id: T4
+    domain: public health
+    note: 임상 문헌 — RCT 등 방법론 필드 테스트
+    ko: 디지털 치료제의 우울증 증상 완화 효과와 지속성
+    en: Efficacy and durability of digital therapeutics for reducing depressive symptoms
+
+  - id: T5
+    domain: economics / public policy
+    note: 한국어 입력만. 영어 쿼리 확장 필요
+    ko: 전기차 보조금 정책이 중고차 시장 가격에 미치는 영향

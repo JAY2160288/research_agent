@@ -1,0 +1,99 @@
+"""실행 기록. runs/<timestamp>_<slug>/ 아래에 이벤트(JSONL), 비용, 최종 리포트를 남긴다.
+
+재현성(goals.md O7)의 근거 자료이자, 설계평가에서 Planning/Reflection/Replanning 이
+실제로 일어났음을 보여주는 증거다. 외부 서비스 없이 파일만 쓴다.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+from pydantic import BaseModel
+
+from .config import RUNS_DIR
+
+
+def _slug(text: str, n: int = 40) -> str:
+    s = re.sub(r"[^\w가-힣]+", "-", text).strip("-").lower()
+    return s[:n] or "run"
+
+
+class RunLogger:
+    def __init__(self, topic: str, mode: str, runs_dir: Path = RUNS_DIR):
+        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        self.dir = runs_dir / f"{ts}_{mode}_{_slug(topic)}"
+        self.dir.mkdir(parents=True, exist_ok=True)
+        self._events = self.dir / "events.jsonl"
+        self._t0 = time.monotonic()
+        self.cost_usd = 0.0
+        self.input_tokens = 0
+        self.output_tokens = 0
+        self.llm_calls = 0
+        self.event("run_start", topic=topic, mode=mode)
+
+    # ---- 이벤트 -------------------------------------------------------
+    def event(self, kind: str, **data: Any) -> None:
+        rec = {"t": round(time.monotonic() - self._t0, 3), "kind": kind, **_jsonable(data)}
+        with self._events.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+    def llm(self, *, role: str, model: str, input_tokens: int, output_tokens: int,
+            cost_usd: float, attempt: int, ok: bool, error: str | None = None) -> None:
+        self.llm_calls += 1
+        self.input_tokens += input_tokens
+        self.output_tokens += output_tokens
+        self.cost_usd += cost_usd
+        self.event("llm_call", role=role, model=model, input_tokens=input_tokens,
+                   output_tokens=output_tokens, cost_usd=round(cost_usd, 6),
+                   attempt=attempt, ok=ok, error=error)
+
+    def tool(self, name: str, args: dict[str, Any], n_results: int, cached: bool) -> None:
+        self.event("tool_call", name=name, args=args, n_results=n_results, cached=cached)
+
+    # ---- 산출물 -------------------------------------------------------
+    def save(self, name: str, obj: Any) -> Path:
+        """중간 산출물을 JSON 또는 텍스트로 저장."""
+        if isinstance(obj, BaseModel):
+            path = self.dir / f"{name}.json"
+            path.write_text(obj.model_dump_json(indent=2, ensure_ascii=False) if hasattr(obj, "model_dump_json")
+                            else json.dumps(obj, ensure_ascii=False, indent=2), encoding="utf-8")
+        elif isinstance(obj, str):
+            path = self.dir / name
+            path.write_text(obj, encoding="utf-8")
+        else:
+            path = self.dir / f"{name}.json"
+            path.write_text(json.dumps(_jsonable(obj), ensure_ascii=False, indent=2), encoding="utf-8")
+        return path
+
+    def finish(self, status: str = "ok", **extra: Any) -> dict[str, Any]:
+        summary = {
+            "status": status,
+            "elapsed_sec": round(time.monotonic() - self._t0, 1),
+            "llm_calls": self.llm_calls,
+            "input_tokens": self.input_tokens,
+            "output_tokens": self.output_tokens,
+            "cost_usd": round(self.cost_usd, 4),
+            **extra,
+        }
+        (self.dir / "cost.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+        self.event("run_end", **summary)
+        return summary
+
+    @property
+    def elapsed_min(self) -> float:
+        return (time.monotonic() - self._t0) / 60
+
+
+def _jsonable(x: Any) -> Any:
+    if isinstance(x, BaseModel):
+        return x.model_dump(mode="json")
+    if isinstance(x, dict):
+        return {k: _jsonable(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_jsonable(v) for v in x]
+    return x

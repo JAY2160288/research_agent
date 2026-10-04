@@ -1,0 +1,26 @@
+# 모델·비용 설정. 모델명만 바꾸면 다른 Claude 모델로 실행됩니다.
+# (현 SDK 는 temperature 파라미터를 받지 않음 — 실행 간 편차는 Critic 게이트로 통제, goals.md O7-L3)
+llm:
+  model: claude-sonnet-4-5          # 실행용. `agent models` 로 계정에서 쓸 수 있는 모델명 확인
+  judge_model: claude-opus-4-1      # LLM-judge 전용 (실행 모델과 다르게 — 자기 채점 편향 완화)
+  max_tokens: 8192
+  max_retries: 2                    # 스키마 검증 실패 시 재요청 횟수
+
+# 1회 실행 상한 (goals.md O6)
+limits:
+  max_cost_usd: 1.00
+  max_minutes: 10
+  max_react_steps: 15               # 베이스라인 ReAct 전용
+
+# 비용 계산용 단가 (USD / 1M tokens). 모델 변경 시 함께 수정
+pricing:
+  claude-sonnet-4-5:  {input: 3.00,  output: 15.00}
+  claude-opus-4-1:    {input: 15.00, output: 75.00}
+  claude-haiku-4-5:   {input: 1.00,  output: 5.00}
+  default:            {input: 3.00,  output: 15.00}
+
+tools:
+  openalex_per_query: 15
+  arxiv_per_query: 10
+  cache_dir: .cache
+  user_agent: "research-agent/0.1 (yonsei DAS6035 hackathon)"

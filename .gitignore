@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# 수업 자료 (교수님 배포 PDF) — 저작권상 공개 저장소에 올리지 않음. 로컬 보관만.
+*지침_교수님.pdf
+
+# Python / uv (research_agent/.gitignore 와 중복이지만 루트에서도 안전하게)
+.env
+.venv/
+__pycache__/
+*.pyc
+.cache/
+.pytest_cache/
+dist/
+
+# 실행 산출물 — 제출용 run 은 나중에 선별해서 force-add
+research_agent/runs/*
+!research_agent/runs/.gitkeep
