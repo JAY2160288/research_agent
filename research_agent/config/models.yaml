@@ -8,7 +8,7 @@
 llm:
   model: claude-haiku-4-5           # 개발용. 제출 전 claude-sonnet-5-5 로 교체. `agent models` 로 계정 모델명 확인
   judge_model: claude-opus-5-5      # LLM-judge 전용
-  max_tokens: 8192
+  max_tokens: 16384                 # 최종 브리프 JSON 이 8192 에서 잘렸음 (2026-10-04 T1 실행). 16384 는 non-streaming 허용 범위
   max_retries: 2                    # 스키마 검증 실패 시 재요청 횟수
 
 # 1회 실행 상한 (goals.md O6)

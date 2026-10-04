@@ -40,10 +40,15 @@ class LLM:
         self.client = client or anthropic.Anthropic(api_key=settings.anthropic_api_key, max_retries=3)
 
     # ------------------------------------------------------------------
-    def _cost(self, model: str, usage: Any) -> tuple[int, int, float]:
+    def _cost(self, model: str, usage: Any) -> tuple[int, int, int, int, float]:
+        """(미적중 입력, 출력, 캐시 읽기, 캐시 생성, 비용 USD). 캐시 읽기는 입력 단가의 10%, 생성은 125%."""
         p = self.s.price_for(model)
-        i, o = int(getattr(usage, "input_tokens", 0) or 0), int(getattr(usage, "output_tokens", 0) or 0)
-        return i, o, (i * p.input + o * p.output) / 1_000_000
+        i = int(getattr(usage, "input_tokens", 0) or 0)
+        o = int(getattr(usage, "output_tokens", 0) or 0)
+        cr = int(getattr(usage, "cache_read_input_tokens", 0) or 0)
+        cw = int(getattr(usage, "cache_creation_input_tokens", 0) or 0)
+        cost = (i * p.input + cw * p.input * 1.25 + cr * p.input * 0.10 + o * p.output) / 1_000_000
+        return i, o, cr, cw, cost
 
     def _guard(self) -> None:
         if self.log is None:
@@ -75,7 +80,7 @@ class LLM:
             resp = self.client.messages.parse(
                 model=model, max_tokens=max_tokens, system=system, messages=messages, output_format=schema,
             )
-            i, o, cost = self._cost(model, resp.usage)
+            i, o, cr, cw, cost = self._cost(model, resp.usage)
             parsed = next((b.parsed_output for b in resp.content if getattr(b, "parsed_output", None) is not None), None)
             raw_text = "".join(getattr(b, "text", "") for b in resp.content)
 
@@ -85,13 +90,15 @@ class LLM:
                 try:
                     obj = schema.model_validate(parsed if isinstance(parsed, dict) else parsed.model_dump())
                     if self.log:
-                        self.log.llm(role=role, model=model, input_tokens=i, output_tokens=o, cost_usd=cost, attempt=attempt, ok=True)
+                        self.log.llm(role=role, model=model, input_tokens=i, output_tokens=o, cost_usd=cost,
+                                     attempt=attempt, ok=True, cache_read=cr, cache_write=cw)
                     return obj
                 except ValidationError as e:
                     last_err = f"schema validation failed: {e.errors(include_url=False)[:5]}"
 
             if self.log:
-                self.log.llm(role=role, model=model, input_tokens=i, output_tokens=o, cost_usd=cost, attempt=attempt, ok=False, error=last_err)
+                self.log.llm(role=role, model=model, input_tokens=i, output_tokens=o, cost_usd=cost,
+                             attempt=attempt, ok=False, error=last_err, cache_read=cr, cache_write=cw)
             # 되먹임: 이전 응답과 오류를 대화에 추가해 수정 요청
             messages.append({"role": "assistant", "content": raw_text or "(empty)"})
             messages.append({"role": "user", "content": f"Your previous output was rejected: {last_err}\n"
@@ -110,18 +117,45 @@ class LLM:
         model: str | None = None,
         max_tokens: int | None = None,
     ) -> anthropic.types.Message:
-        """ReAct 한 턴. 호출자가 tool_use 블록을 꺼내 실행하고 tool_result 를 messages 에 붙인다."""
+        """ReAct 한 턴. 호출자가 tool_use 블록을 꺼내 실행하고 tool_result 를 messages 에 붙인다.
+
+        프롬프트 캐싱: system 과 마지막 user 메시지에 cache_control 을 붙인다. ReAct 는 매 턴 대화 전체를
+        다시 보내므로, 직전 턴까지의 prefix 가 캐시에 맞으면 입력 비용이 약 1/10 로 준다 (비용 상한 O6).
+        """
         self._guard()
         model = model or self.s.llm.model
-        kwargs: dict[str, Any] = dict(model=model, max_tokens=max_tokens or self.s.llm.max_tokens,
-                                      system=system, messages=messages, tools=tools)
+        _mark_cache(messages)
+        kwargs: dict[str, Any] = dict(
+            model=model, max_tokens=max_tokens or self.s.llm.max_tokens,
+            system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+            messages=messages, tools=tools,
+        )
         if tool_choice:
             kwargs["tool_choice"] = tool_choice
         resp = self.client.messages.create(**kwargs)
-        i, o, cost = self._cost(model, resp.usage)
+        i, o, cr, cw, cost = self._cost(model, resp.usage)
         if self.log:
-            self.log.llm(role=role, model=model, input_tokens=i, output_tokens=o, cost_usd=cost, attempt=1, ok=True)
+            self.log.llm(role=role, model=model, input_tokens=i, output_tokens=o, cost_usd=cost,
+                         attempt=1, ok=True, cache_read=cr, cache_write=cw)
         return resp
+
+
+def _mark_cache(messages: list[dict[str, Any]]) -> None:
+    """이전 턴의 cache_control 을 모두 지우고(요청당 breakpoint 4개 제한), 마지막 user 메시지 끝 블록에만 붙인다.
+    문자열 content 는 text 블록 리스트로 바꾼다. assistant 메시지(SDK 객체)는 건드리지 않는다."""
+    for m in messages:
+        if m.get("role") == "user" and isinstance(m.get("content"), list):
+            for b in m["content"]:
+                if isinstance(b, dict):
+                    b.pop("cache_control", None)
+    last = messages[-1] if messages else None
+    if not last or last.get("role") != "user":
+        return
+    if isinstance(last["content"], str):
+        last["content"] = [{"type": "text", "text": last["content"]}]
+    blocks = last["content"]
+    if blocks and isinstance(blocks[-1], dict):
+        blocks[-1]["cache_control"] = {"type": "ephemeral"}
 
 
 def schema_as_tool(schema: type[BaseModel], name: str, description: str) -> dict[str, Any]:

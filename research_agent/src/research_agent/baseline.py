@@ -13,13 +13,18 @@ from __future__ import annotations
 from typing import Any
 
 from .config import Settings, load_prompt
-from .llm import LLM, schema_as_tool
+from .llm import LLM, CostLimitExceeded, TimeLimitExceeded, schema_as_tool
 from .runlog import RunLogger
 from .schemas import ResearchBrief
 from .tools import TOOL_DEFS, Tools
 
 SUBMIT = schema_as_tool(ResearchBrief, "submit_brief",
                         "Submit the final research brief. Call exactly once when finished.")
+
+TRUNCATED_MSG = ("Your output hit the max_tokens limit and was cut off, so this call was NOT executed. "
+                 "Make the brief compact and call submit_brief again in ONE call with ALL fields: "
+                 "evidence table 15-25 papers only (the most relevant), finding <= 2 sentences, "
+                 "no repetition of abstracts, limitations 3-6 bullets.")
 
 
 def run_baseline(topic: str, settings: Settings, *, use_cache: bool = True) -> tuple[ResearchBrief | None, RunLogger]:
@@ -29,41 +34,53 @@ def run_baseline(topic: str, settings: Settings, *, use_cache: bool = True) -> t
     system = load_prompt("baseline")
     messages: list[dict[str, Any]] = [{"role": "user", "content": f"Research topic: {topic}"}]
     brief: ResearchBrief | None = None
+    status = "no_brief"
     max_steps = settings.limits.max_react_steps
 
-    for step in range(1, max_steps + 1):
-        force_submit = step == max_steps
-        resp = llm.call_with_tools(
-            role="react", system=system, messages=messages, tools=TOOL_DEFS + [SUBMIT],
-            tool_choice={"type": "tool", "name": "submit_brief"} if force_submit else None,
-        )
-        messages.append({"role": "assistant", "content": resp.content})
-        tool_uses = [b for b in resp.content if b.type == "tool_use"]
-        thoughts = " ".join(b.text for b in resp.content if b.type == "text")
-        log.event("react_step", step=step, thought=thoughts[:500], tools=[t.name for t in tool_uses])
+    try:
+        for step in range(1, max_steps + 1):
+            force_submit = step == max_steps
+            resp = llm.call_with_tools(
+                role="react", system=system, messages=messages, tools=TOOL_DEFS + [SUBMIT],
+                tool_choice={"type": "tool", "name": "submit_brief"} if force_submit else None,
+            )
+            messages.append({"role": "assistant", "content": resp.content})
+            tool_uses = [b for b in resp.content if b.type == "tool_use"]
+            thoughts = " ".join(b.text for b in resp.content if b.type == "text")
+            truncated = resp.stop_reason == "max_tokens"
+            log.event("react_step", step=step, thought=thoughts[:500], tools=[t.name for t in tool_uses],
+                      truncated=truncated)
 
-        if not tool_uses:
-            # 도구 없이 끝내려 함 → 제출 강제
-            messages.append({"role": "user", "content": "Call submit_brief now with the complete brief."})
-            continue
+            if not tool_uses:
+                # 도구 없이 끝내려 함 → 제출 강제
+                messages.append({"role": "user", "content": "Call submit_brief now with the complete brief."})
+                continue
 
-        results = []
-        for tu in tool_uses:
-            if tu.name == "submit_brief":
-                try:
-                    brief = ResearchBrief.model_validate(tu.input)
-                    results.append({"type": "tool_result", "tool_use_id": tu.id, "content": "accepted"})
-                except Exception as e:  # noqa: BLE001
-                    err = str(e)[:800]
-                    log.event("submit_rejected", error=err)
-                    results.append({"type": "tool_result", "tool_use_id": tu.id, "is_error": True,
-                                    "content": f"schema error: {err}. Fix and call submit_brief again."})
-            else:
-                out = tools.dispatch(tu.name, tu.input)
-                results.append({"type": "tool_result", "tool_use_id": tu.id, "content": out})
-        messages.append({"role": "user", "content": results})
-        if brief is not None:
-            break
+            results = []
+            for tu in tool_uses:
+                if truncated:
+                    # 잘린 tool_use 의 input 은 불완전 → 실행하지 않고 압축 지시만 돌려준다 (같은 오류 반복 방지)
+                    results.append({"type": "tool_result", "tool_use_id": tu.id, "is_error": True, "content": TRUNCATED_MSG})
+                elif tu.name == "submit_brief":
+                    try:
+                        brief = ResearchBrief.model_validate(tu.input)
+                        results.append({"type": "tool_result", "tool_use_id": tu.id, "content": "accepted"})
+                    except Exception as e:  # noqa: BLE001
+                        err = str(e)[:800]
+                        log.event("submit_rejected", error=err)
+                        results.append({"type": "tool_result", "tool_use_id": tu.id, "is_error": True,
+                                        "content": f"schema error: {err}. Fix and call submit_brief again."})
+                else:
+                    out = tools.dispatch(tu.name, tu.input)
+                    results.append({"type": "tool_result", "tool_use_id": tu.id, "content": out})
+            messages.append({"role": "user", "content": results})
+            if brief is not None:
+                status = "ok"
+                break
+    except (CostLimitExceeded, TimeLimitExceeded) as e:
+        # 상한 초과는 실패가 아니라 측정 결과다 (goals.md O1: 죽지 않고 기록). 베이스라인 약점으로 남긴다.
+        status = "limit_exceeded"
+        log.event("limit_exceeded", error=str(e))
 
     # ---- 사후 결정적 검사 (재시도 없음) ----------------------------------
     checks = _post_checks(brief, tools) if brief else {"submitted": False}
@@ -71,7 +88,7 @@ def run_baseline(topic: str, settings: Settings, *, use_cache: bool = True) -> t
         log.save("brief", brief)
         log.save("report.md", render_markdown(brief))
     log.save("papers", {k: v.model_dump() for k, v in tools.papers.items()})
-    log.finish("ok" if brief else "no_brief", checks=checks, papers_seen=len(tools.papers))
+    log.finish(status, checks=checks, papers_seen=len(tools.papers))
     return brief, log
 
 

@@ -13,3 +13,9 @@ Hard rules:
 - Every claim must reference at least one paper id. Every gap must reference at least two.
 - Do not claim anything an abstract does not support.
 - When you have enough evidence (or after the step limit), call the `submit_brief` tool exactly once with the complete brief. The executive_summary must be in Korean; everything else in English.
+
+Budget rules (the output has a hard token limit — a brief that is too long is rejected):
+- Run 6–10 searches in total (1–2 per sub-question). Do not re-search the same idea with slightly different words.
+- The evidence table lists the 15–25 MOST relevant papers you found, not every paper. Each `finding` is at most 2 sentences.
+- Do not restate paper lists or abstracts in your text replies; keep text between tool calls to one short sentence.
+- Submit all seven fields (topic_frame, plan, evidence, synthesis, gaps, limitations, executive_summary) in ONE submit_brief call.

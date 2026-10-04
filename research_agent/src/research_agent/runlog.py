@@ -43,12 +43,15 @@ class RunLogger:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
     def llm(self, *, role: str, model: str, input_tokens: int, output_tokens: int,
-            cost_usd: float, attempt: int, ok: bool, error: str | None = None) -> None:
+            cost_usd: float, attempt: int, ok: bool, error: str | None = None,
+            cache_read: int = 0, cache_write: int = 0) -> None:
+        """input_tokens 는 캐시 미적중분. cache_read/cache_write 는 프롬프트 캐시 적중·생성 토큰 (비용 10% / 125%)."""
         self.llm_calls += 1
-        self.input_tokens += input_tokens
+        self.input_tokens += input_tokens + cache_read + cache_write
         self.output_tokens += output_tokens
         self.cost_usd += cost_usd
         self.event("llm_call", role=role, model=model, input_tokens=input_tokens,
+                   cache_read=cache_read, cache_write=cache_write,
                    output_tokens=output_tokens, cost_usd=round(cost_usd, 6),
                    attempt=attempt, ok=ok, error=error)
 
