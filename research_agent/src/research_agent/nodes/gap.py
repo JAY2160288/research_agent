@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from ..schemas import GapList, RunState
 from . import NodeContext, checked_call
-from .synthesize import evidence_digest
+from .synthesize import critique_feedback, evidence_digest
 
 
 def run(state: RunState, ctx: NodeContext) -> None:
@@ -18,7 +18,8 @@ def run(state: RunState, ctx: NodeContext) -> None:
     user = (
         f"Research question: {state.topic_frame.research_question}\n\n"
         "Synthesis so far (JSON):\n" + syn.model_dump_json(indent=1) +
-        f"\n\nEvidence ({len(ids)} papers; cite ONLY these ids as the basis for each gap):\n{digest}"
+        f"\n\nEvidence ({len(ids)} papers; cite ONLY these ids as the basis for each gap):\n{digest}" +
+        critique_feedback(state, "gap analysis")
     )
     gaps, issues = checked_call(
         ctx, role="gap", schema=GapList, user=user,

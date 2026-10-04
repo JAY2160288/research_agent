@@ -12,7 +12,8 @@ from pathlib import Path
 
 from research_agent.config import RUNS_DIR
 
-COLS = ["run", "mode", "status", "cost", "min", "calls", "cites", "cite_ok", "claims", "claim_src", "subrq", "gaps"]
+COLS = ["run", "mode", "status", "cost", "min", "calls", "cites", "cite_ok", "claims", "claim_src", "subrq", "gaps",
+        "critic", "replans"]
 
 
 def load(mode: str | None) -> list[dict]:
@@ -39,6 +40,10 @@ def load(mode: str | None) -> list[dict]:
             "claim_src": _frac(ck.get("claims_with_source"), ck.get("claims_total")),
             "subrq": _frac(ck.get("sub_rqs_covered"), ck.get("sub_rqs")),
             "gaps": ck.get("gaps", "-"),
+            # 그래프 전용: Critic 라운드 수와 최종 통과 여부, Replan 횟수 (베이스라인은 '-')
+            "critic": (f"{c['critic_rounds']}{'✓' if c.get('final_critic_passed') else '✗'}"
+                       if c.get("critic_rounds") else "-"),
+            "replans": c.get("replans", "-") if m == "graph" else "-",
         })
     return rows
 

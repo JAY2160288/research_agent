@@ -74,6 +74,61 @@ def test_retry_then_ok(tmp_path):
     assert log.llm_calls == 2
 
 
+def test_sdk_parse_validation_error_is_fed_back(tmp_path):
+    """SDK 가 parse 단계에서 pydantic ValidationError 를 던지는 경우(2026-10-04 ReplanPlan.queries 초과) — 죽지 않고 되먹여 재시도."""
+    from pydantic import ValidationError
+
+    class RaisingMessages(FakeMessages):
+        def parse(self, **kw):
+            if len(self.calls) == 0:
+                self.calls.append(kw)
+                try:
+                    TopicFrame.model_validate(dict(GOOD, concepts="x"))
+                except ValidationError as e:
+                    raise e
+            return super().parse(**kw)
+
+    log = RunLogger("t", "test", runs_dir=tmp_path)
+    client = SimpleNamespace(messages=RaisingMessages([GOOD]))
+    llm = LLM(_settings(), log, client=client)
+    tf = llm.call(role="understand", system="s", user="u", schema=TopicFrame)
+    assert tf.domain == "education" and len(client.messages.calls) == 2
+    msgs = client.messages.calls[1]["messages"]
+    assert len(msgs) == 1 and msgs[0]["role"] == "user" and "SDK parse" in msgs[0]["content"]   # user 턴 하나에 합쳐 되먹임
+    assert log.llm_calls == 2 and log.cost_usd == pytest.approx((1000 * 3 + 500 * 15) / 1e6)  # 실패 시도는 비용 0 기록
+
+
+def test_truncated_json_from_sdk_gets_shorter_hint(tmp_path):
+    """max_tokens 에서 잘린 JSON (json_invalid) → '더 짧게' 힌트를 되먹인다 (2026-10-04 T1 반복 2회차: gap 7만 자 폭주)."""
+    from pydantic import ValidationError
+
+    class TruncMessages(FakeMessages):
+        def parse(self, **kw):
+            if len(self.calls) == 0:
+                self.calls.append(kw)
+                try:
+                    TopicFrame.model_validate_json('{"original_topic": "t", "concepts": ["a')
+                except ValidationError as e:
+                    raise e
+            return super().parse(**kw)
+
+    client = SimpleNamespace(messages=TruncMessages([GOOD]))
+    llm = LLM(_settings(), RunLogger("t", "test", runs_dir=tmp_path), client=client)
+    llm.call(role="gap", system="s", user="u", schema=TopicFrame, max_tokens=6000)
+    fb = client.messages.calls[1]["messages"][0]["content"]
+    assert "cut off at the 6000-token limit" in fb and "much shorter" in fb
+
+
+def test_client_gets_request_timeout_and_retries(monkeypatch):
+    """SDK 기본 타임아웃(600초)이면 멈춘 요청 하나가 10분 상한을 먹는다 → config 값으로 짧게."""
+    import anthropic
+    captured = {}
+    monkeypatch.setattr(anthropic, "Anthropic", lambda **kw: captured.update(kw) or SimpleNamespace())
+    s = _settings(llm=LLMConfig(model="m", judge_model="j", request_timeout_sec=42, sdk_max_retries=1))
+    LLM(s)
+    assert captured["max_retries"] == 1 and captured["timeout"] == 42.0   # float 초 — SDK 는 httpx2 라 httpx.Timeout 을 거부
+
+
 def test_gives_up_after_retries(tmp_path):
     bad = dict(GOOD, concepts="x")
     llm = LLM(_settings(), RunLogger("t", "test", runs_dir=tmp_path), client=_client([bad, bad, bad]))

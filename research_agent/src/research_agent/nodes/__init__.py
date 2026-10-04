@@ -52,7 +52,8 @@ def checked_call(
             f"{user}\n\nYour previous answer failed these deterministic checks:\n- " + "\n- ".join(issues) +
             "\nFix every item and return the complete object again."
         )
-        obj = ctx.llm.call(role=role, system=system, user=prompt, schema=schema)
+        obj = ctx.llm.call(role=role, system=system, user=prompt, schema=schema,
+                           max_tokens=ctx.settings.llm.node_max_tokens)  # 노드 출력은 짧다 — 폭주 출력을 일찍 끊는다
         issues = check(obj)
         ctx.log.event("node_check", node=role, attempt=attempt + 1, issues=issues)
         if not issues:

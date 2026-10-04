@@ -71,6 +71,15 @@ class Tools:
         papers = [Paper(**d) for d in raw]
         return self._register(papers, sub_rq_id, "search_openalex", args, cached)
 
+    def search_crossref(self, query: str, from_year: int | None = None, sub_rq_id: str | None = None) -> list[Paper]:
+        """OpenAlex 폴백 (plan.md ADR-8). tool use 에는 노출하지 않는다 — search 노드가 OpenAlex 실패 시에만 부른다."""
+        args = {"query": query, "from_year": from_year, "rows": self.s.tools.crossref_per_query}
+        raw, cached = self.cache.get_or_call("crossref_search", args, lambda: [
+            p.model_dump() for p in crossref.search(query, rows=self.s.tools.crossref_per_query, mailto=self.s.contact_email,
+                                                    user_agent=self.s.tools.user_agent, from_year=from_year)])
+        papers = [Paper(**d) for d in raw]
+        return self._register(papers, sub_rq_id, "search_crossref", args, cached)
+
     def search_arxiv(self, query: str, sub_rq_id: str | None = None) -> list[Paper]:
         args = {"query": query, "max_results": self.s.tools.arxiv_per_query}
         raw, cached = self.cache.get_or_call("arxiv", args, lambda: [

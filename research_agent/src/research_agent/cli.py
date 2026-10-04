@@ -16,11 +16,19 @@ def run(
     model: str | None = typer.Option(None, "--model", help="config/models.yaml 의 model 을 이번 실행만 덮어씀"),
     no_cache: bool = typer.Option(False, "--no-cache", help="도구 캐시 끄기 (live 재현)"),
     until: str | None = typer.Option(None, "--until", help="graph 모드: 이 노드까지만 실행 (예: plan)"),
+    critic: str | None = typer.Option(None, "--critic", help="graph 모드 품질 게이트: none | deterministic | full (ablation B/C/D)"),
+    max_replans: int | None = typer.Option(None, "--max-replans", help="graph 모드 Replan 상한 (기본 config graph.max_replans)"),
 ):
     """연구 주제 하나로 파이프라인 실행. 결과는 runs/<timestamp>_<mode>_<topic>/ 에 저장."""
     s = load_settings()
     if model:
         s.llm.model = model
+    if critic is not None or max_replans is not None:
+        from .config import GraphConfig
+        s.graph = GraphConfig(  # pydantic 이 잘못된 critic 값을 거른다
+            critic=critic or s.graph.critic,  # type: ignore[arg-type]
+            max_replans=s.graph.max_replans if max_replans is None else max_replans,
+        )
     if not s.anthropic_api_key:
         typer.echo("ANTHROPIC_API_KEY 가 없습니다 (.env 확인)", err=True)
         raise typer.Exit(1)
@@ -35,6 +43,9 @@ def run(
         done = state.brief is not None
         if state.plan:
             typer.echo(f"sub-RQ {len(state.plan.sub_rqs)}개: " + "; ".join(sq.question[:60] for sq in state.plan.sub_rqs))
+        if state.critiques:
+            rounds = ", ".join(f"r{c.round}={'pass' if c.passed else 'fail'}" for c in state.critiques)
+            typer.echo(f"Critic {len(state.critiques)}회 ({rounds}) · Replan {state.replan_count}회")
         if state.notes:
             typer.echo("미해결 검사: " + " | ".join(state.notes))
     else:

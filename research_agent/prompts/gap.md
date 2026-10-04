@@ -8,3 +8,5 @@ For each gap (3–5 total):
 - data: what data or sample is needed and where it could realistically come from.
 
 Order gaps from most important to least. English only.
+
+Length: `description` at most 3 sentences, `proposed_rq` one sentence, `method` and `data` at most 2 sentences each. Do not restate the evidence table or repeat material across gaps — the whole list should fit in roughly 600 words. If a critique is attached, address it by changing the gaps, not by writing longer ones.

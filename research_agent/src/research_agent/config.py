@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from typing import Literal
 
 import yaml
 from dotenv import load_dotenv
@@ -18,8 +19,11 @@ RUNS_DIR = ROOT / "runs"
 class LLMConfig(BaseModel):
     model: str
     judge_model: str
-    max_tokens: int = 8192
+    max_tokens: int = 8192             # 베이스라인 ReAct·최종 브리프용 상한
+    node_max_tokens: int = 6000        # 그래프 노드 1회 호출 상한. 노드 출력은 2~3k 토큰이면 충분 — 더 크면 폭주 출력이 잘려 JSON 이 깨진다
     max_retries: int = 2
+    request_timeout_sec: float = 180   # HTTP 요청 1건 상한. SDK 기본 600초라 멈춘 요청 하나가 10분 상한을 통째로 먹는다 (2026-10-04 관찰)
+    sdk_max_retries: int = 2           # 연결 오류·타임아웃·429 에 대한 SDK 자동 재시도
 
 
 class Limits(BaseModel):
@@ -36,6 +40,7 @@ class Price(BaseModel):
 class ToolsConfig(BaseModel):
     openalex_per_query: int = 15
     arxiv_per_query: int = 10
+    crossref_per_query: int = 15       # OpenAlex 실패(429 등) 시 폴백 검색 (ADR-8)
     cache_dir: str = ".cache"
     user_agent: str = "research-agent/0.1"
     # 그래프 노드 상한 (plan.md §3.2)
@@ -50,11 +55,19 @@ class ToolsConfig(BaseModel):
     min_evidence_per_subrq: int = 3    # Critic: sub-RQ 당 evidence ≥ 이 값
 
 
+class GraphConfig(BaseModel):
+    """그래프 모드의 품질 게이트 설정. ablation 조건 B/C/D 는 이 두 값으로 만든다 (plan.md §6.3)."""
+    critic: Literal["none", "deterministic", "full"] = "full"  # none=B, deterministic=C, full=D(결정적 + LLM 비판)
+    max_replans: int = 2               # Critic 미달 시 Replan 상한 (plan.md §3.3). 0 이면 루프 없음
+    replan_budget_fraction: float = 0.6  # 경과 시간·비용이 상한의 이 비율을 넘으면 Replan 을 건너뛰고 write 로 (완주 우선, O1)
+
+
 class Settings(BaseModel):
     llm: LLMConfig
     limits: Limits = Field(default_factory=Limits)
     pricing: dict[str, Price]
     tools: ToolsConfig = Field(default_factory=ToolsConfig)
+    graph: GraphConfig = Field(default_factory=GraphConfig)
     anthropic_api_key: str | None = None
     contact_email: str | None = None
 

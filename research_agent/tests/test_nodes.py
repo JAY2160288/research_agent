@@ -53,6 +53,7 @@ def test_understand_fills_topic_frame(tmp_path):
     assert state.topic_frame is not None and state.topic_frame.domain == "education"
     assert state.notes == [] and (ctx.log.dir / "topic_frame.json").exists()
     assert len(fake.messages.calls) == 1
+    assert fake.messages.calls[0]["max_tokens"] == ctx.settings.llm.node_max_tokens   # 노드 호출은 node_max_tokens (폭주 출력 차단)
 
 
 def test_understand_retries_on_check_failure(tmp_path):

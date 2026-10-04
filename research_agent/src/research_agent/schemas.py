@@ -237,12 +237,83 @@ class ResearchBrief(BaseModel):
 # ---------------------------------------------------------------------------
 
 
+class CritiqueIssue(BaseModel):
+    """Critic LLM 비판의 지적 하나. 결정적 검사가 못 보는 깊이·논리 문제."""
+
+    severity: Literal["major", "minor"] = Field(
+        description="major = 이 브리프를 믿은 연구자가 오도되거나 sub-RQ 가 사실상 미답. 그 외는 minor")
+    where: Literal["synthesis", "gaps", "evidence"]
+    sub_rq_id: str | None = Field(default=None, description="관련 sub-RQ id. 특정 sub-RQ 문제가 아니면 null")
+    problem: str = Field(description="무엇이 문제인지 한 문장. 관련 paper id 나 claim 을 지목")
+    action: str = Field(description="파이프라인이 할 일. 'search rq3: <찾을 문헌 종류>' 또는 'synthesize: ...' / 'gap: ...'")
+
+
+class LLMCritique(BaseModel):
+    """Critic 의 LLM 비판 결과. 결정적 검사를 통과한 뒤에만 호출된다 (plan.md §3.3 마지막 행)."""
+
+    issues: list[CritiqueIssue] = Field(default_factory=list, description="문제 없으면 빈 목록")
+
+    @property
+    def major(self) -> list[CritiqueIssue]:
+        return [i for i in self.issues if i.severity == "major"]
+
+    def check(self, rq_ids: set[str]) -> list[str]:
+        return [f"issue refers unknown sub_rq_id {i.sub_rq_id}" for i in self.issues
+                if i.sub_rq_id is not None and i.sub_rq_id not in rq_ids]
+
+
 class Critique(BaseModel):
+    round: int = 1
     passed: bool
     deterministic_issues: list[str] = Field(default_factory=list)
     uncovered_sub_rqs: list[str] = Field(default_factory=list)
     weak_claims: list[str] = Field(default_factory=list)
     actions: list[str] = Field(default_factory=list, description="Replan 지시. 예: 'rq2: add query X'")
+    llm_ran: bool = Field(default=False, description="LLM 비판이 실행됐는가 (결정적 검사 통과 + critic=full 일 때만)")
+    llm_issues: list[CritiqueIssue] = Field(default_factory=list)
+
+    def feedback_lines(self) -> list[str]:
+        """synthesize·gap 재실행 시 프롬프트에 붙일 비판 요약."""
+        return list(self.deterministic_issues) + [f"[{i.severity}] {i.problem} → {i.action}" for i in self.llm_issues]
+
+
+class ReplanItem(BaseModel):
+    sub_rq_id: str = Field(description="재검색할 sub-RQ id (계획에 있는 것만)")
+    reason: str = Field(description="왜 이 sub-RQ 를 다시 찾는가 (Critic 지적 요약)")
+    queries: list[str] = Field(min_length=1, description="기존 쿼리와 표현이 다른 새 검색 쿼리 1~3개 (영어). 3개를 넘으면 앞의 3개만 쓴다")
+
+
+class ReplanPlan(BaseModel):
+    """Replan 노드 출력. items 가 비어 있으면 재검색 없이 종합·Gap 만 비판을 반영해 다시 쓴다."""
+
+    items: list[ReplanItem] = Field(default_factory=list)
+    rationale: str = Field(description="무엇을 왜 바꿨는지 1~3문장")
+
+    def check(self, plan: ResearchPlan, required: set[str] | None = None) -> list[str]:
+        """required = Critic 이 재검색을 지시한 sub-RQ. 그 각각에 쿼리가 있어야 한다 — rationale 에 글로만 쓰고
+        items 를 비워 보내는 응답(Haiku 에서 관찰)은 한 라운드를 통째로 낭비하므로 되먹인다."""
+        issues = []
+        by_id = {s.id: s for s in plan.sub_rqs}
+        missing = sorted((required or set()) - {it.sub_rq_id for it in self.items})
+        if missing:
+            issues.append(f"items is missing the sub-RQs the critic asked to re-search: {missing}. "
+                          "Give 1-3 NEW queries for each of them in `items` (rationale text is not a substitute)")
+        for it in self.items:
+            sq = by_id.get(it.sub_rq_id)
+            if sq is None:
+                issues.append(f"unknown sub_rq_id {it.sub_rq_id}")
+                continue
+            old = {q.strip().lower() for q in sq.queries}
+            dup = [q for q in it.queries if q.strip().lower() in old]
+            if dup:
+                issues.append(f"{it.sub_rq_id}: queries already used {dup}")
+        return issues
+
+    def as_extra_queries(self) -> dict[str, list[str]]:
+        out: dict[str, list[str]] = {}
+        for it in self.items:
+            out.setdefault(it.sub_rq_id, []).extend(it.queries)
+        return out
 
 
 class RunState(BaseModel):
@@ -253,6 +324,7 @@ class RunState(BaseModel):
     evidence: EvidenceTable | None = None
     synthesis: Synthesis | None = None
     critiques: list[Critique] = Field(default_factory=list)
+    replans: list[ReplanPlan] = Field(default_factory=list)
     gaps: GapList | None = None
     brief: ResearchBrief | None = None
     replan_count: int = 0

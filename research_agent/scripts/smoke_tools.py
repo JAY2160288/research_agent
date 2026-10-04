@@ -18,8 +18,18 @@ def main() -> int:
     ok = True
 
     t0 = time.time()
-    ps = t.search_openalex("generative AI graduate students research productivity", from_year=2022)
-    print(f"[openalex] {len(ps)} papers in {time.time()-t0:.1f}s")
+    try:
+        ps = t.search_openalex("generative AI graduate students research productivity", from_year=2022)
+        print(f"[openalex] {len(ps)} papers in {time.time()-t0:.1f}s")
+        for p in ps[:3]:
+            print(f"   {p.year} | {p.title[:70]} | doi={p.doi} | abstract={'yes' if p.abstract else 'NO'}")
+        ok &= len(ps) >= 5
+    except Exception as e:  # noqa: BLE001 — 429 = 일일 크레딧(1000, 검색당 10) 소진. 파이프라인은 Crossref 로 폴백한다
+        print(f"[openalex] FAILED: {str(e)[:120]}  → 파이프라인은 Crossref 폴백으로 계속 (ADR-8)")
+
+    t0 = time.time()
+    ps = t.search_crossref("generative AI graduate students research productivity", from_year=2022)
+    print(f"[crossref search] {len(ps)} papers in {time.time()-t0:.1f}s  (OpenAlex 폴백용, ADR-8)")
     for p in ps[:3]:
         print(f"   {p.year} | {p.title[:70]} | doi={p.doi} | abstract={'yes' if p.abstract else 'NO'}")
     ok &= len(ps) >= 5

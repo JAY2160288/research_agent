@@ -37,7 +37,12 @@ class LLM:
     def __init__(self, settings: Settings, log: RunLogger | None = None, client: anthropic.Anthropic | None = None):
         self.s = settings
         self.log = log
-        self.client = client or anthropic.Anthropic(api_key=settings.anthropic_api_key, max_retries=3)
+        # timeout 은 초(float). SDK 1.11 은 자체 httpx2 를 써서 `httpx.Timeout` 객체를 거부한다 (2026-10-04)
+        self.client = client or anthropic.Anthropic(
+            api_key=settings.anthropic_api_key, max_retries=settings.llm.sdk_max_retries,
+            timeout=float(settings.llm.request_timeout_sec),
+        )
+        self.grace_calls = 0  # 상한 초과 뒤에도 허용할 호출 수 (graph 가 마지막 write 를 위해 1~2 로 올린다)
 
     # ------------------------------------------------------------------
     def _cost(self, model: str, usage: Any) -> tuple[int, int, int, int, float]:
@@ -52,6 +57,9 @@ class LLM:
 
     def _guard(self) -> None:
         if self.log is None:
+            return
+        if self.grace_calls > 0:
+            self.grace_calls -= 1
             return
         if self.log.cost_usd > self.s.limits.max_cost_usd:
             raise CostLimitExceeded(f"cost {self.log.cost_usd:.3f} > {self.s.limits.max_cost_usd}")
@@ -77,9 +85,25 @@ class LLM:
 
         for attempt in range(1, self.s.llm.max_retries + 2):
             self._guard()
-            resp = self.client.messages.parse(
-                model=model, max_tokens=max_tokens, system=system, messages=messages, output_format=schema,
-            )
+            try:
+                resp = self.client.messages.parse(
+                    model=model, max_tokens=max_tokens, system=system, messages=messages, output_format=schema,
+                )
+            except ValidationError as e:
+                # SDK 가 parse 단계에서 pydantic 검증을 하므로(list max_length 등) 여기서 터진다. 응답 본문·usage 는
+                # SDK 가 삼켜서 복구 불가 → 비용 0 으로 기록(실제로는 과금됨)하고 오류를 되먹여 재요청.
+                # 2026-10-04 T1 반복 실행에서 ReplanPlan.queries 4~6개로 전체 실행이 죽은 사례.
+                errs = e.errors(include_url=False)
+                last_err = f"schema validation failed in SDK parse (usage not recorded): {errs[:5]}"
+                hint = "Return a corrected object that satisfies the schema exactly."
+                if any(x.get("type") == "json_invalid" for x in errs):  # 잘린 JSON = max_tokens 초과 폭주 출력
+                    hint = (f"Your output was cut off at the {max_tokens}-token limit, so the JSON was invalid. "
+                            "Return the SAME object much shorter: at most 2-3 sentences per text field, no repetition.")
+                if self.log:
+                    self.log.llm(role=role, model=model, input_tokens=0, output_tokens=0, cost_usd=0.0,
+                                 attempt=attempt, ok=False, error=last_err)
+                messages = [{"role": "user", "content": f"{user}\n\nYour previous answer was rejected: {last_err[:600]}\n{hint}"}]
+                continue
             i, o, cr, cw, cost = self._cost(model, resp.usage)
             parsed = next((b.parsed_output for b in resp.content if getattr(b, "parsed_output", None) is not None), None)
             raw_text = "".join(getattr(b, "text", "") for b in resp.content)

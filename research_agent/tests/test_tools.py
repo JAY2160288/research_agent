@@ -66,6 +66,30 @@ def test_crossref_verify():
     assert crossref.verify_doi("10.9999/nope", client=c) is None
 
 
+CROSSREF_JSON = {"message": {"items": [
+    {"DOI": "10.1000/XYZ", "title": ["Gen  AI\nin grad research"], "published": {"date-parts": [[2025, 3]]},
+     "author": [{"given": "A", "family": "Kim"}, {"name": "Some Consortium"}], "container-title": ["J. Ed."],
+     "abstract": "<jats:p>We   study <jats:italic>LLMs</jats:italic>.</jats:p>", "is-referenced-by-count": 4, "type": "journal-article"},
+    {"DOI": "10.1000/notitle", "title": [], "published": {"date-parts": [[2024]]}},
+]}}
+
+
+def test_crossref_search_parse_strips_jats_and_requires_title():
+    seen = {}
+
+    def handler(r):
+        seen["params"] = dict(r.url.params)
+        return httpx.Response(200, json=CROSSREF_JSON)
+    c = httpx.Client(transport=httpx.MockTransport(handler))
+    ps = crossref.search("gen ai grad", rows=5, mailto="me@x.org", from_year=2022, sub_rq_id="rq1", client=c)
+    assert seen["params"]["query.bibliographic"] == "gen ai grad" and "from-pub-date:2022-01-01" in seen["params"]["filter"]
+    assert len(ps) == 1
+    p = ps[0]
+    assert p.id == "10.1000/xyz" and p.title == "Gen AI in grad research" and p.year == 2025
+    assert p.abstract == "We study LLMs ." and p.authors == ["A Kim", "Some Consortium"] and p.venue == "J. Ed."
+    assert p.source == "crossref" and p.verified and p.sub_rq_ids == ["rq1"] and p.cited_by_count == 4
+
+
 def _settings(tmp_path):
     return Settings(llm=LLMConfig(model="m", judge_model="j"), pricing={"default": Price(input=1, output=1)},
                     tools=ToolsConfig(cache_dir=str(tmp_path / "cache")))

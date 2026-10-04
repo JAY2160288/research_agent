@@ -23,13 +23,24 @@ def evidence_digest(state: RunState, min_relevance: int) -> tuple[str, set[str]]
     return "\n".join(lines), {e.paper_id for e in rows}
 
 
+def critique_feedback(state: RunState, stage: str) -> str:
+    """Replan 라운드에서 synthesize·gap 프롬프트에 붙일 직전 Critic 의 지적. 첫 라운드엔 빈 문자열 (Reflection 의 입력)."""
+    if not state.critiques:
+        return ""
+    lines = state.critiques[-1].feedback_lines()
+    if not lines:
+        return ""
+    return (f"\n\nA critic reviewed the previous {stage} of this evidence and raised these points. Address each one "
+            "explicitly (the evidence table may now contain new papers):\n- " + "\n- ".join(lines))
+
+
 def run(state: RunState, ctx: NodeContext) -> None:
     assert state.topic_frame is not None and state.plan is not None and state.evidence is not None
     digest, ids = evidence_digest(state, ctx.settings.tools.min_relevance)
     user = (
         f"Research question: {state.topic_frame.research_question}\n"
         "Sub-questions:\n" + "\n".join(f"  {sq.id}: {sq.question}" for sq in state.plan.sub_rqs) +
-        f"\n\nEvidence ({len(ids)} papers; cite ONLY these ids):\n{digest}"
+        f"\n\nEvidence ({len(ids)} papers; cite ONLY these ids):\n{digest}" + critique_feedback(state, "synthesis")
     )
     syn, issues = checked_call(
         ctx, role="synthesize", schema=Synthesis, user=user,

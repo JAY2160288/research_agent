@@ -33,8 +33,8 @@ PLAN = ResearchPlan(sub_rqs=[
 
 
 def _paper(i: int, src="openalex", abstract="abs", cites=0, year=2024):
-    pid = f"10.1/p{i}" if src == "openalex" else f"arxiv:{i:04d}.00001"
-    return Paper(id=pid, title=f"P{i}", year=year, abstract=abstract, doi=pid if src == "openalex" else None,
+    pid = f"arxiv:{i:04d}.00001" if src == "arxiv" else f"10.1/p{i}"
+    return Paper(id=pid, title=f"P{i}", year=year, abstract=abstract, doi=None if src == "arxiv" else pid,
                  source=src, verified=True, cited_by_count=cites)
 
 
@@ -85,6 +85,28 @@ def test_search_routes_by_source_pref_and_tags(tmp_path, monkeypatch):
     assert not any("shortfall" in n for n in state.notes)            # 모든 sub-RQ ≥ 3 (OpenAlex 2×2 + 중복 p100)
 
 
+def test_search_falls_back_to_crossref_when_openalex_fails(tmp_path, monkeypatch):
+    """OpenAlex 429(일일 크레딧 소진, 2026-10-04 관찰) → 실패한 쿼리만 Crossref 로 (ADR-8). 결과 구조는 그대로."""
+    from research_agent.tools import crossref
+    cr_calls = []
+
+    def oa(q, **kw):
+        if q.startswith("a"):
+            raise RuntimeError("429 Too Many Requests")
+        return [_paper(1)]
+    monkeypatch.setattr(openalex, "search", oa)
+    monkeypatch.setattr(crossref, "search", lambda q, **kw: cr_calls.append(q) or [_paper(300 + len(cr_calls), "crossref")])
+    monkeypatch.setattr(arxiv, "search", lambda q, **kw: [])
+    monkeypatch.setattr(search.time, "sleep", lambda s: None)
+    ctx, _ = _ctx(tmp_path, [], search_min_per_subrq=1)
+    state = RunState(topic="t", topic_frame=TF, plan=PLAN)
+    search.run(state, ctx)
+    assert sorted(cr_calls) == ["a1", "a2", "a3"]                                   # 실패한 쿼리만 폴백
+    assert any(p.source == "crossref" and p.verified for p in state.papers.values())
+    assert any("OpenAlex failed for 3/6 queries" in n and "Crossref fallback answered 3" in n for n in state.notes)
+    assert all(sum(1 for p in state.papers.values() if sq.id in p.sub_rq_ids) >= 1 for sq in PLAN.sub_rqs)
+
+
 def test_search_circuit_breaker_disables_arxiv(tmp_path, monkeypatch):
     ax_calls = []
 
@@ -106,7 +128,7 @@ def test_search_circuit_breaker_disables_arxiv(tmp_path, monkeypatch):
 # ---- evaluate -----------------------------------------------------------------
 
 def _state_with_papers(n=6):
-    st = RunState(topic="t", topic_frame=TF, plan=PLAN)
+    st = RunState(topic="t", topic_frame=TF, plan=PLAN.model_copy(deep=True))  # replan 이 queries 를 덧붙이므로 테스트 간 공유 금지
     for i in range(n):
         p = _paper(i, cites=10 - i)
         p.sub_rq_ids = ["rq1"] if i < 3 else ["rq2"]
@@ -201,16 +223,17 @@ def test_graph_end_to_end_with_fakes(tmp_path, monkeypatch):
         ids = [l.split("id: ")[1] for l in text.splitlines() if l.startswith("--- id: ")]
         return EvidenceTable(items=[Evidence(**_ev(i, rq=("rq1", "rq2", "rq3"))) for i in ids])
 
-    outputs = [frame, plan, eval_batch, eval_batch, eval_batch, syn, gaps, BRIEF_TEXT]
+    outputs = [frame, plan, eval_batch, eval_batch, eval_batch, syn, gaps, {"issues": []}, BRIEF_TEXT]  # critic=full → LLM 비판 1회
     fake = SimpleNamespace(messages=FakeParse(outputs))
     s = _settings(tmp_path, evaluate_per_subrq=3, evaluate_batch=3, search_min_per_subrq=1)
     monkeypatch.setattr(graph, "RunLogger", lambda topic, mode: RunLogger(topic, mode, runs_dir=tmp_path))
     monkeypatch.setattr(graph, "LLM", lambda settings, log: LLM(settings, log, client=fake))
 
     state, log = graph.run_graph("t", s)
-    assert state.brief is not None and state.critiques and state.critiques[0].passed
+    assert state.brief is not None and state.critiques and state.critiques[0].passed and state.critiques[0].llm_ran
     cost = json.loads((log.dir / "cost.json").read_text(encoding="utf-8"))
     assert cost["status"] == "ok" and cost["checks"]["citation_verified_rate"] == 1.0 and cost["critic_rounds"] == 1
+    assert cost["replans"] == 0 and cost["final_critic_passed"] is True
     kinds = [json.loads(l)["kind"] for l in (log.dir / "events.jsonl").read_text(encoding="utf-8").splitlines()]
     assert kinds.count("node_start") == 8 and "critique" in kinds
     for f in ("brief.json", "report.md", "papers.json", "state.json", "critique_1.json"):

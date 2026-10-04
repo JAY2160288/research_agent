@@ -4,6 +4,7 @@
 - LLM 배치 평가: evaluate_batch 편씩 묶어 Evidence 를 채운다. 초록에 없는 내용은 쓰지 않도록 프롬프트에서 제한.
 - 결정적 검증(배치): paper_id 가 배치 안의 id 여야 하고 중복 없음, sub_rq_ids ⊆ 계획의 sub-RQ. 실패 시 1회 재호출.
 - 결정적 검증(전체): EvidenceTable.check — 미검증 문헌 참조 금지.
+- 증분 평가(Replan 라운드): 이미 평가한 문헌은 건너뛰고, `only_sub_rqs` 로 지정된 sub-RQ 의 새 후보만 평가해 기존 표에 합친다.
 """
 
 from __future__ import annotations
@@ -12,11 +13,16 @@ from ..schemas import Evidence, EvidenceTable, Paper, RunState
 from . import NodeContext, checked_call
 
 
-def select_candidates(state: RunState, per_subrq: int) -> list[Paper]:
+def select_candidates(state: RunState, per_subrq: int, exclude: set[str] | None = None,
+                      only_sub_rqs: set[str] | None = None) -> list[Paper]:
+    """sub-RQ 마다 (초록 있음 → 피인용 → 최신) 순으로 per_subrq 편. exclude 는 이미 평가한 id, only_sub_rqs 는 재검색 대상."""
     assert state.plan is not None
+    exclude = exclude or set()
     chosen: dict[str, Paper] = {}
     for sq in state.plan.sub_rqs:
-        pool = [p for p in state.papers.values() if sq.id in p.sub_rq_ids and p.verified]
+        if only_sub_rqs is not None and sq.id not in only_sub_rqs:
+            continue
+        pool = [p for p in state.papers.values() if sq.id in p.sub_rq_ids and p.verified and p.id not in exclude]
         pool.sort(key=lambda p: (p.abstract is None, -(p.cited_by_count or 0), -(p.year or 0)))
         for p in pool[:per_subrq]:
             chosen.setdefault(p.id, p)
@@ -54,12 +60,14 @@ def _check_batch(table: EvidenceTable, batch_ids: set[str], rq_ids: set[str]) ->
     return issues
 
 
-def run(state: RunState, ctx: NodeContext) -> None:
+def run(state: RunState, ctx: NodeContext, only_sub_rqs: set[str] | None = None) -> None:
     assert state.plan is not None and state.topic_frame is not None
     cfg = ctx.settings.tools
-    candidates = select_candidates(state, cfg.evaluate_per_subrq)
+    prior = list(state.evidence.items) if state.evidence else []
+    evaluated = {e.paper_id for e in prior}
+    candidates = select_candidates(state, cfg.evaluate_per_subrq, exclude=evaluated, only_sub_rqs=only_sub_rqs)
     rq_ids = {sq.id for sq in state.plan.sub_rqs}
-    items: list[Evidence] = []
+    items: list[Evidence] = prior
     B = max(1, cfg.evaluate_batch)
     for i in range(0, len(candidates), B):
         batch = candidates[i:i + B]
@@ -76,6 +84,6 @@ def run(state: RunState, ctx: NodeContext) -> None:
     if issues:
         state.evidence.items = [e for e in items if state.papers.get(e.paper_id) and state.papers[e.paper_id].verified]
         state.notes.append(f"evaluate: dropped unverified refs {issues[:3]}")
-    ctx.log.event("node_check", node="evaluate", attempt=1, issues=issues,
-                  candidates=len(candidates), evaluated=len(state.evidence.items))
+    ctx.log.event("node_check", node="evaluate", attempt=1, issues=issues, candidates=len(candidates),
+                  prior=len(prior), evaluated=len(state.evidence.items), only_sub_rqs=sorted(only_sub_rqs or []))
     ctx.log.save("evidence", state.evidence)

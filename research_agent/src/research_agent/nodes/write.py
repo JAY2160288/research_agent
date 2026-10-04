@@ -24,8 +24,8 @@ def run(state: RunState, ctx: NodeContext) -> None:
         "\n\nConditional:\n" + "\n".join(f"- {c.statement}" for c in syn.conditional) +
         f"\n\nCoverage note: {syn.coverage_note}\n\n"
         "Gaps:\n" + "\n".join(f"- {g.description} → {g.proposed_rq}" for g in gaps.gaps) +
-        "\n\nQuality-gate findings (deterministic):\n" +
-        ("\n".join(f"- {i}" for i in last.deterministic_issues) if last and last.deterministic_issues else "- all checks passed") +
+        f"\n\nQuality-gate findings (final critic round {last.round if last else 0}, after {state.replan_count} replan(s)):\n" +
+        ("\n".join(f"- {i}" for i in last.feedback_lines()) if last and last.feedback_lines() else "- all checks passed") +
         f"\n\nEvidence base: {len(state.evidence.items)} evaluated papers out of {len(state.papers)} candidates."  # type: ignore[union-attr]
     )
     text, issues = checked_call(ctx, role="write", schema=BriefText, user=user, check=lambda t: t.check())

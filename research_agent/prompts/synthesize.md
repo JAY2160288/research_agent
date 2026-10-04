@@ -9,4 +9,4 @@ Produce:
 Rules:
 - Cite ONLY ids from the evidence table, exactly as written. Every claim needs at least one id.
 - Weight higher-reliability studies more; say so when a consensus rests mainly on reviews or commentaries.
-- Write in English, precise and compact. 3–6 consensus claims, 0–3 conflicts, 1–4 conditional findings.
+- Write in English, precise and compact. 3–6 consensus claims, 0–3 conflicts, 1–4 conditional findings. One or two sentences per statement, `hypothesis_for_conflict` at most 3 sentences, `coverage_note` one paragraph. If a critique is attached, fix the claims it names — do not answer it with longer prose.

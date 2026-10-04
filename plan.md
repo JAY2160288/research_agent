@@ -1,7 +1,7 @@
 # AI Research Agent — 구현 계획 (plan.md)
 
 - 상위 문서: `goals.md` (O1~O7, 성공 기준). 이 문서는 "어떻게"를 다룸
-- 작성일: 2026-10-02 · 상태: **W2 완료 (2026-10-04): 그래프 8노드 end-to-end (T1·T2), Critic 결정적 검사 작동. 다음은 W3 — Critic LLM 비판 + Replan 루프, 반복 실행 편차 측정** (`research_agent/README.md` 참고)
+- 작성일: 2026-10-02 · 상태: **W3 완료 (2026-10-04): Critic LLM 비판 + Replan 루프(ADR-7), 같은 주제 3회 반복 실행에서 L3 불변 지표 전부 통과, OpenAlex 할당량 대응 Crossref 폴백(ADR-8). 다음은 W4 — ablation A~D, LLM-judge, 클린룸, config `model` → sonnet** (`research_agent/README.md` 참고)
 - 갱신 규칙: 설계가 바뀌면 §4 ADR에 결정 추가, §8 변경 로그에 날짜와 이유 기록. goals.md는 건드리지 않음
 
 ---
@@ -36,7 +36,7 @@
 ⑤ Synthesize ──→ 합의/상충/조건부 매트릭스 ◄────┘
   │
   ▼
-  Critic ──(미달)──→ Replan (부족한 sub-RQ만 재검색, 최대 2회) ──→ ③
+  Critic ──(미달)──→ Replan (부족한 sub-RQ만 새 쿼리로 재검색 → 새 후보만 재평가, 최대 2회) ──→ ③
   │ (통과)
   ▼
 ⑥ Gap & Direction ──→ Writer ──→ ResearchBrief (스키마 검증) ──→ 리포트 + run log
@@ -94,20 +94,23 @@ src/research_agent/
 │   ├── search.py
 │   ├── evaluate.py
 │   ├── synthesize.py
-│   ├── critic.py
+│   ├── critic.py     # 결정적 5종 + LLM 비판 (ADR-7)
+│   ├── replan.py     # Critic 미달 → 걸린 sub-RQ 의 새 쿼리 (W3)
 │   ├── gap.py
 │   └── write.py
-├── graph.py          # 노드 순서·루프·병렬 정의, 러너
+├── graph.py          # 노드 순서·루프 정의, 러너
 ├── baseline.py       # 단일 ReAct (ablation용)
-├── logging.py        # runs/ 이벤트 기록
+├── report.py         # 렌더링·사후 지표 (베이스라인·그래프 공용)
+├── runlog.py         # runs/ 이벤트 기록
 └── cli.py
 prompts/<node>.md     # 노드별 시스템 프롬프트. 코드에 문자열 없음
-config/models.yaml    # provider, model, temperature, max_cost_usd, max_minutes
+config/models.yaml    # model, 단가, max_cost_usd, max_minutes, 노드 상한, graph.critic / max_replans
 schemas/brief.json    # ResearchBrief JSON Schema export (문서용)
+scripts/              # smoke_tools, smoke_llm, summarize_runs
 eval/
 ├── topics.yaml       # 테스트 주제 5개
 ├── rubric.md         # LLM-judge 루브릭
-└── judge.py
+└── judge.py          # W4 예정
 ```
 
 ### 3.2 노드 입출력
@@ -132,9 +135,9 @@ eval/
 | sub-RQ별 evidence ≥ 3 | 결정적 | 해당 sub-RQ만 Replan |
 | Gap당 근거 ≥ 2 | 결정적 | gap 노드 재실행 |
 | 상충 결과에 원인 가설 존재 | 결정적 | synthesize 재실행 |
-| 종합의 깊이·논리 | LLM 비판 | actions 로 Replan 지시 |
+| 종합의 깊이·논리 | LLM 비판 (결정적 5종 통과 시에만, `graph.critic: full`) | major 이슈 → actions 로 Replan 지시 (`search rqN: ...` / `synthesize: ...`) |
 
-Replan 상한 2회. 상한 도달 시 미달 항목을 리포트 §7 "한계"에 자동 기재하고 종료 (실패로 죽지 않음 — O1).
+Replan 상한 2회(`graph.max_replans`). 상한 도달 시 미달 항목을 리포트 §7 "한계"에 자동 기재하고 종료 (실패로 죽지 않음 — O1). 구현은 ADR-7.
 
 ---
 
@@ -164,6 +167,22 @@ Replan 상한 2회. 상한 도달 시 미달 항목을 리포트 §7 "한계"에
 
 ### ADR-5. 품질은 Critic이 보장, 모델 출력의 운에 의존하지 않음
 - 이유: L3. 실행마다 문장·문헌이 달라져도 결정적 검사가 하한을 지킴. LLM 비판은 그 위에서만
+
+### ADR-7. Critic 루프: 결정적 검사 → (통과 시) LLM 비판 → Replan 은 증분 재검색·재평가 (2026-10-04)
+- 결정: Critic 은 결정적 5종을 먼저 돌리고, **통과했을 때만** LLM 비판(`prompts/critic.md`, `LLMCritique`)을 부른다. LLM 지적은 major/minor 로 나뉘며 major 가 하나라도 있으면 미통과. 미통과 시 Replan 노드(`prompts/replan.md`, Planner 역할의 2차 호출)가 걸린 sub-RQ 에만 새 쿼리 1~3개를 만들고, search 는 그 쿼리만, evaluate 는 **아직 평가하지 않은 새 후보만** 평가해 기존 Evidence 에 합친다. synthesize·gap 은 직전 Critique 를 프롬프트에 붙여 다시 쓴다. 상한 `graph.max_replans`(기본 2)
+- 대안: (a) 매 라운드 전체 재평가 — 토큰 2배, (b) LLM 비판을 항상 실행 — 결정적 실패가 뻔한 상태에 비용 낭비, (c) Replan 이 쿼리 대신 자유 지시문 출력 — search 가 기계적으로 실행할 수 없음
+- 이유: 비용 상한(O6) 안에서 루프를 2회까지 돌리려면 증분이어야 한다. Critic 과 Planner 를 분리해 "판정"과 "재계획"이 각각 로그에 남는다(O4). 새 쿼리는 계획의 sub-RQ 에 덧붙여 리포트 §2 에 그대로 드러난다 — 재계획 흔적이 산출물에 보인다
+- 미달 노트는 루프 종료 후 **최종 라운드 기준**으로만 남긴다. 중간 라운드에서 걸렸다가 Replan 으로 풀린 항목이 리포트 한계에 남으면 거짓 한계가 된다
+- ablation 손잡이: `graph.critic` = none(B) | deterministic(C) | full(D), `graph.max_replans`. CLI `--critic`, `--max-replans`
+- **루프 종료 규칙 2개 추가 (같은 날 반복 실행에서 필요해짐)**: (a) 이미 재검색한 sub-RQ 에 같은 `search` major 가 또 나오면 문헌이 없는 것이므로 한계로 기록하고 통과 — T1 에서 "rq2 에 실험 연구가 없다" 가 3라운드 연속 major 로 나와 재검색이 무의미했음. (b) 경과 시간·비용이 상한의 `graph.replan_budget_fraction`(0.6) 을 넘으면 Replan 을 생략하고 write 로 간다. 그래도 상한에 걸리면 `grace_write` 가 마지막 종합으로 브리프를 쓴다(`status=ok_after_limit`) — Replan 2회 뒤 write 직전 10.1분에 걸려 34회 호출을 통째로 잃은 사례
+- 재검토 조건: 상위 모델(Sonnet)에서는 호출당 시간이 늘어 Replan 1회로도 10분을 넘길 수 있다. W4 제출 실행 전 `max_minutes` 또는 `replan_budget_fraction` 재조정
+
+### ADR-8. OpenAlex 일일 크레딧 소진 시 Crossref works 검색으로 자동 폴백 (2026-10-04)
+- 발견: OpenAlex 가 크레딧 기반 제한을 적용 중 — 응답 헤더 `x-ratelimit-limit: 1000`, 검색 1회 = 10 크레딧, 소진 시 429 + `retry-after` 약 12시간. 즉 **IP 당 하루 검색 약 100회**. 그래프 1회 실행이 sub-RQ 6 × 쿼리 4 + Replan ≈ 30회를 쓰므로 하루 3회 실행이면 막힌다. 반복 실행 측정 도중 3회 연속으로 당했다 (W3 §8). ADR-3 의 "키 없이 넉넉한 rate limit" 전제가 깨짐 — 평가자가 주제 5개를 연속으로 돌리면 3번째부터 실패할 수 있는 L1 리스크
+- 결정: search 노드에서 OpenAlex 가 실패한 쿼리(429·5xx·타임아웃)만 **Crossref `works?query.bibliographic`** 로 다시 검색한다. Crossref 는 DOI 등록기관이라 결과가 곧 실존 검증(verified=True), 키 없음, polite pool(mailto) 로 50 req/s. 초록은 일부(스모크에서 15편 중 1~5편)만 있어 Evaluate 가 "no abstract → reliability ≤ 2" 로 감점한다. tool use(베이스라인)에는 노출하지 않는다 — 베이스라인 조건은 그대로 두어 ablation 비교를 흔들지 않는다
+- 대안: (a) Semantic Scholar — 키 없이는 공유 풀 100 req/5분이라 더 불안정, (b) OpenAlex API 키 — 키 필요 도구 금지(ADR-3), (c) 실행 간 캐시 재사용 — 계획 쿼리가 실행마다 달라 적중률 낮음
+- 기록: 폴백이 일어나면 `openalex_fallback` 이벤트 + notes → 리포트 §7 에 "OpenAlex failed for N/M queries; Crossref fallback answered K" 로 투명하게 남는다
+- 재검토 조건: Crossref 폴백 실행의 결정적 지표가 OpenAlex 실행과 다르게 나오면(초록 부족으로 evidence 가 얇아짐) 폴백 시 `evaluate_per_subrq` 를 올리거나 arXiv 쿼리 상한을 늘린다
 
 ### ADR-6. OpenAlex 가 모든 sub-RQ 의 주력, arXiv 는 보강 + circuit breaker (2026-10-04)
 - 결정: search 노드는 `source_pref` 와 무관하게 모든 쿼리를 OpenAlex 로 보낸다. arXiv 는 arxiv/both 인 sub-RQ 에만 sub-RQ 당 2개 쿼리, 3초 간격, 연속 2회 실패 시 그 실행에서 차단
@@ -201,10 +220,10 @@ Replan 상한 2회. 상한 도달 시 미달 항목을 리포트 §7 "한계"에
 
 | # | 태스크 | DoD |
 |---|---|---|
-| 3.1 | Critic LLM 비판 + Replan 루프 | 최소 1개 주제에서 Replan이 결과를 바꿈 (로그로 증명) |
-| 3.2 | **같은 주제 3회 반복 실행, 편차 측정** | 결정적 지표 전부 100% 유지. Gap 겹침 비율·비용 편차 기록 |
-| 3.3 | 프롬프트 다듬기 | 불안정 노드(스키마 재시도 잦은 곳) 우선 |
-| 3.4 | MCP 적용 여부 결정 | 도구 하나를 MCP 서버로 노출할지 — 수업 7주차 내용 보고 판단. 설계평가 가산 가능성 vs 재현 복잡도 |
+| 3.1 | Critic LLM 비판 + Replan 루프 (ADR-7) | 최소 1개 주제에서 Replan이 결과를 바꿈 (로그로 증명) — §8 2026-10-04 W3 항목 |
+| 3.2 | **같은 주제 3회 반복 실행, 편차 측정** (`scripts/compare_repeats.py`) | 결정적 지표 전부 100% 유지. Gap 겹침 비율·비용 편차 기록 — §8 |
+| 3.3 | 프롬프트 다듬기 | 불안정 노드(스키마 재시도 잦은 곳) 우선 — replan 프롬프트·결정적 검사 보강 (§8) |
+| 3.4 | MCP 적용 여부 결정 | 잠정 미적용 (§7). 7주차 수업 후 최종 |
 
 ### W4 (10/23–10/29) — 실험 + 클린룸
 
@@ -269,7 +288,7 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 
 | 질문 | 확인 대상 | 기한 |
 |---|---|---|
-| MCP 적용 여부 | 7주차 수업 후 본인 판단 | W3 |
+| MCP 적용 여부 | **잠정 결정(2026-10-04): 미적용.** 도구 3개가 이미 `TOOL_DEFS` 로 tool use 에 노출되어 있어 MCP 서버로 감싸도 기능은 같고, 평가자 환경에 MCP 서버 프로세스 하나가 추가되어 L1 재현 리스크만 늘어남. 7주차 수업에서 설계평가 가산이 명시되면 `tools/` 하나를 MCP 서버로 노출하는 선택 모드로 재검토 (Jay 확인 필요) | W3 → 보류 |
 | 웹 검색 추가 여부 | W4 여유 보고 | W4 |
 
 ---
@@ -285,6 +304,8 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 | 2026-10-02 | ADR-2 보완: Anthropic SDK 1.11 의 `messages.parse(output_format=PydanticModel)` 네이티브 구조화 출력 사용. tool use 강제는 베이스라인 최종 제출(`submit_brief`)에만. SDK 가 `temperature` 파라미터를 받지 않아 config 에서 제거 | SDK 확인 |
 | 2026-10-02 | 공급자 전환(OpenAI↔Claude) 요구 제거. LiteLLM → Anthropic SDK 직접. 교차 테스트 → 반복 실행 편차 측정 | 교수님이 제출물의 공급자(Claude)로 재현하심을 확인 |
 | 2026-10-04 | 모델 운용 2단계화: 개발(W2~W3 구현·디버깅)은 `claude-haiku-4-5`, 품질 측정·제출 run 은 `claude-sonnet-5-5`, judge 는 `claude-opus-5-5`. config 단가표를 현행 모델로 갱신 (sonnet-4-5·opus-4-1 제거) | API 크레딧 $20 로 시작. 동작 확인 단계에서 상위 모델은 낭비. 제출 전 config 의 `model` 을 sonnet-5-5 로 교체하는 것을 W4 체크리스트(4.4)에 포함 |
+| 2026-10-04 | **W3 완료 (3.1~3.4).** 3.1 Critic LLM 비판 + Replan 루프 (ADR-7, `nodes/critic.py`·`nodes/replan.py`, `prompts/critic.md`·`replan.md`). **Replan 이 결과를 바꾼 증거**: 11:34 실행에서 rq2 관련 문헌 1편 → Replan 1 → 2편 → Replan 2 → 3편 이상으로 결정적 검사 통과 (`critique_1~3.json`, `replan_1~2.json`). 3.2 **같은 주제(T1) 3회 반복, 최종 코드, Haiku, OpenAlex 소진으로 Crossref 폴백 상태**: <br>`| run | status | cost | min | calls | cite_ok | claim_src | subrq | gaps | gaps_ok | critic | replans |`<br>`| 12:07 | ok | $0.236 | 6.0 | 24 | 100% | 13/13 | 5/6 | 6 | 6 | 3 | 2 |`<br>`| 12:13 | ok | $0.322 | 8.1 | 26 | 100% | 13/13 | 6/6 | 5 | 5 | 3 | 2 |`<br>`| 12:33 | ok | $0.320 | 7.5 | 23 | 100% | 10/10 | 6/6 | 7 | 7 | 2 | 1 |`<br>**L3 불변 지표(인용 검증 100%, claim 출처 100%, Gap 근거 ≥2, 완주) 3/3 통과.** sub-RQ 커버리지는 5/6·6/6·6/6 — 문헌 자체가 없는 sub-RQ 는 Replan 2회로도 못 채우며, 그 경우 §7 한계에 자동 기재됨(구조가 보장하는 것은 "채움" 이 아니라 "솔직한 기재"). 달라져도 되는 것의 편차: 비용 $0.29±0.04, 시간 6.0~8.1분, Gap 5~7개, 인용 문헌 집합 Jaccard 0.06(계획 쿼리가 실행마다 달라 선택 문헌은 거의 겹치지 않음), Gap 근거집합 겹침 0. LLM 비판은 3회 모두 마지막 라운드까지 major 를 냄(Haiku 가 "실험 연구 없음" 류를 major 로 판정) → 상한·예산 규칙으로 종료. 3.3 프롬프트: 아래 결함 수정이 곧 다듬기. 3.4 MCP: §7 잠정 미적용. `scripts/compare_repeats.py` 추가 | 반복 측정은 Crossref 폴백 상태라 OpenAlex 정상 상태보다 초록이 적어 커버리지에 불리한 조건이었음. W4 ablation 은 OpenAlex 일일 예산(실행당 ~30회, 하루 ~100회)을 먼저 계산하고 날짜를 나눠 돌릴 것 |
+| 2026-10-04 | **W3 하네스 결함 5건 — 실제 반복 실행에서 드러나 수정.** (0) evaluate 의 HTTP 요청 하나가 7분 넘게 멈춤(SDK 기본 타임아웃 600초) → 10분 상한을 통째로 소모. `llm.request_timeout_sec: 180`, `sdk_max_retries: 2` 로 config 화. (1) Replan 이 `items: []` + rationale 에만 쿼리를 글로 적음(Haiku, 2회 연속) → 라운드 통째 낭비. `ReplanPlan.check(required=Critic 이 지목한 sub-RQ)` 로 되먹이고, 끝까지 비면 sub-RQ 질문에서 뽑은 결정적 fallback 쿼리 사용. (2) `ReplanPlan.queries` 에 `max_length=3` 을 두자 Haiku 가 4~6개를 내서 SDK `messages.parse` 가 **SDK 안에서** pydantic ValidationError 를 던져 실행 전체가 죽음 (2회). `llm.call` 이 SDK 측 검증 실패도 잡아 되먹이도록 수정(응답·usage 는 SDK 가 삼켜 비용 0 으로 기록), 쿼리 상한은 스키마가 아니라 코드에서 자름. `graph.run_graph` 는 예상 밖 예외에도 `status=error` + traceback.txt + state.json 을 남기고 정상 종료 (O1). (3) Replan 라운드 gap 호출에서 Haiku 가 7만 자 JSON 을 쏟다 `max_tokens` 16384 에서 잘려 json_invalid → 3분×2회 → **10분 상한 초과, 완주 실패** (반복 2회차). 노드 호출 상한 `llm.node_max_tokens: 6000` 분리, json_invalid 에는 "더 짧게" 힌트 되먹임, gap·synthesize 프롬프트에 길이 상한 명시. (4) OpenAlex 일일 크레딧 소진 → ADR-8 Crossref 폴백 | 셋 다 "LLM 의 운" 이 아니라 하네스가 막아야 할 결함. 단위 테스트 31 → 47개. W3-3.3(프롬프트 다듬기)은 스키마 재시도가 아니라 이 결함들이 실제 불안정 지점이었음 |
 | 2026-10-04 | **W2 완료 (2.1~2.5).** search(OpenAlex 병렬 + arXiv 보강)·evaluate(sub-RQ 당 12편 선별, 10편 배치)·synthesize·gap·critic(결정적 5종)·write(구조는 상태에서 조립, LLM 은 한국어 요약·한계만) 노드. `report.py` 로 렌더링·지표를 베이스라인과 공유. **T1 end-to-end: $0.113 · 11회 · 8.4분(arXiv 실패 342초 포함) · Critic 이 rq4 커버 부족 적발 → 한계에 자동 기재. T2: $0.125 · 13회 · 3.9분 · Critic 통과.** 두 주제 모두 인용 검증 100%(55편·72편), claim 출처 100%, 모든 노드 1차 시도에 스키마·검사 통과 | 베이스라인 대비 질적 차이가 이미 보임: method 에 설계·표본 수 명시, 리뷰·논평은 reliability 2~3, 상충마다 원인 가설, Gap 마다 설계·데이터 구체화. 2 gaps(T2) 처럼 적게 나오는 경우는 W3 LLM 비판 대상. ADR-6 추가 |
 | 2026-10-04 | **W2-2.1 완료: understand·plan 노드 + 그래프 러너 골격.** `nodes/__init__.py` 의 `checked_call` 이 "구조화 호출 → 스키마 `check()` → 실패 시 이슈를 되먹여 1회 재호출" 공통 루프. `graph.py` 는 NODES 리스트 순서 실행, `--until <node>` 로 부분 실행. T1·T2·T5 실제 실행: 모두 1차 시도에 검사 통과, 각 2회 호출 $0.01. sub-RQ 5~6개, 쿼리 4개씩, source_pref 가 CS→arxiv·경제→openalex 로 분기 | 단위 테스트 24개. 관찰: sub-RQ 6 × 쿼리 4 = 최대 24회 검색 → 후보 문헌 200~300편. 2.2 search 노드는 sub-RQ 당 상한을 두고, evaluate 는 배치 처리로 토큰을 묶어야 함 |
 | 2026-10-04 | **W1-1.5 완료: 베이스라인 주제 5개 완주 (Haiku, 합계 $0.73).** 인용 검증률·주장-출처 연결 5/5 주제 모두 100%, sub-RQ 커버리지 4/4·4/5·5/5·5/6·6/6. 로그에서 드러난 낭비 3종 수정: (1) 모델이 검색 결과를 `verify_doi` 로 재검증하느라 최대 7 step 소모 (T5: 35회) → 이미 verified 인 문헌·arxiv id 는 Crossref 호출 없이 즉시 응답 + 도구 설명·프롬프트에 "검색 결과는 이미 검증됨" 명시, (2) `{'brief': {...}}` 래퍼 제출 (T2, 2회 거절) → 자동 언래핑, (3) `limitations` 누락 재제출 (T4 2회·T5 1회, 회당 ~$0.04) → 누락 필드만 콕 집는 피드백 메시지 | 베이스라인 약점(측정 대상)과 하네스 낭비(수정 대상)를 구분. 수정한 셋은 모두 후자. 베이스라인 약점으로 기록할 것: evidence `sample` 컬럼 전부 공란, 리뷰·논평 논문에 reliability 5 부여, T2(CS) 인용 11편으로 적음 |
