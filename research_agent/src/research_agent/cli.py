@@ -12,9 +12,10 @@ app = typer.Typer(add_completion=False, help="AI Research Agent (DAS6035 hackath
 @app.command()
 def run(
     topic: str = typer.Option(..., "--topic", "-t", help="연구 주제 (한국어/영어)"),
-    mode: str = typer.Option("baseline", "--mode", "-m", help="baseline | graph (graph 는 W2 에서 구현)"),
+    mode: str = typer.Option("baseline", "--mode", "-m", help="baseline (단일 ReAct) | graph (역할 분리 노드)"),
     model: str | None = typer.Option(None, "--model", help="config/models.yaml 의 model 을 이번 실행만 덮어씀"),
     no_cache: bool = typer.Option(False, "--no-cache", help="도구 캐시 끄기 (live 재현)"),
+    until: str | None = typer.Option(None, "--until", help="graph 모드: 이 노드까지만 실행 (예: plan)"),
 ):
     """연구 주제 하나로 파이프라인 실행. 결과는 runs/<timestamp>_<mode>_<topic>/ 에 저장."""
     s = load_settings()
@@ -27,16 +28,24 @@ def run(
     if mode == "baseline":
         from .baseline import run_baseline
         brief, log = run_baseline(topic, s, use_cache=not no_cache)
+        done = brief is not None
     elif mode == "graph":
-        typer.echo("graph 모드는 W2 에서 구현됩니다.", err=True)
-        raise typer.Exit(2)
+        from .graph import run_graph
+        state, log = run_graph(topic, s, use_cache=not no_cache, until=until)
+        done = state.brief is not None
+        if state.plan:
+            typer.echo(f"sub-RQ {len(state.plan.sub_rqs)}개: " + "; ".join(sq.question[:60] for sq in state.plan.sub_rqs))
+        if state.notes:
+            typer.echo("미해결 검사: " + " | ".join(state.notes))
     else:
         raise typer.BadParameter(f"unknown mode {mode}")
 
     typer.echo(f"\n결과 폴더: {log.dir}")
     typer.echo(f"비용 ${log.cost_usd:.3f} · LLM 호출 {log.llm_calls}회 · {log.elapsed_min:.1f}분")
-    if brief:
+    if done:
         typer.echo(f"리포트: {log.dir / 'report.md'}")
+    elif mode == "graph":
+        typer.echo("(리포트 없음 — 구현된 노드까지만 실행됨. 중간 산출물은 결과 폴더의 *.json)")
     else:
         typer.echo("리포트 생성 실패 (events.jsonl 확인)")
 

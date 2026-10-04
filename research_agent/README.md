@@ -45,9 +45,10 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 | 모드 | 설명 | 상태 |
 |---|---|---|
 | `--mode baseline` | 단일 ReAct 루프 (ablation 기준점) | 구현 |
-| `--mode graph` | 역할 분리 그래프 + Critic + Replanning (최종) | W2 |
+| `--mode graph` | 역할 분리 그래프 + Critic + Replanning (최종) | understand·plan 구현, 나머지 W2~W3 |
 
 `--no-cache` 를 붙이면 도구 캐시 없이 live 로 검색합니다.
+graph 모드에서 `--until plan` 처럼 노드 이름을 주면 그 노드까지만 실행합니다 (개발·디버깅용).
 
 ## 재현성 설계
 
