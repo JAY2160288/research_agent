@@ -92,3 +92,24 @@ def test_dispatch_format(tmp_path, monkeypatch):
     monkeypatch.setattr(crossref, "verify_doi", lambda doi, **kw: None)
     t = Tools(_settings(tmp_path), use_cache=False)
     assert "NOT FOUND" in t.dispatch("verify_doi", {"doi": "10.1/x"})
+
+
+def test_verify_doi_skips_already_verified_and_arxiv(tmp_path, monkeypatch):
+    """검색 도구가 돌려준 문헌(verified=True)과 arxiv id 는 Crossref 를 호출하지 않고 바로 EXISTS."""
+    calls = {"n": 0}
+
+    def fake_verify(doi, **kw):
+        calls["n"] += 1
+        return None
+
+    monkeypatch.setattr(crossref, "verify_doi", fake_verify)
+    t = Tools(_settings(tmp_path), use_cache=False)
+    from research_agent.schemas import Paper
+    t.papers["10.1000/abc"] = Paper(id="10.1000/abc", title="T", doi="10.1000/abc", source="openalex", verified=True)
+    t.papers["arxiv:2401.00001"] = Paper(id="arxiv:2401.00001", title="A", arxiv_id="2401.00001", source="arxiv", verified=True)
+
+    assert "EXISTS" in t.dispatch("verify_doi", {"doi": "10.1000/abc"})
+    assert "EXISTS" in t.dispatch("verify_doi", {"doi": "arxiv:2401.00001"})
+    assert calls["n"] == 0  # Crossref 미호출
+    assert "NOT FOUND" in t.dispatch("verify_doi", {"doi": "10.9999/unknown"})
+    assert calls["n"] == 1  # 모르는 DOI 만 Crossref 로

@@ -12,6 +12,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from pydantic import ValidationError
+
 from .config import Settings, load_prompt
 from .llm import LLM, CostLimitExceeded, TimeLimitExceeded, schema_as_tool
 from .runlog import RunLogger
@@ -63,13 +65,13 @@ def run_baseline(topic: str, settings: Settings, *, use_cache: bool = True) -> t
                     results.append({"type": "tool_result", "tool_use_id": tu.id, "is_error": True, "content": TRUNCATED_MSG})
                 elif tu.name == "submit_brief":
                     try:
-                        brief = ResearchBrief.model_validate(tu.input)
+                        brief = ResearchBrief.model_validate(_unwrap_submit(tu.input))
                         results.append({"type": "tool_result", "tool_use_id": tu.id, "content": "accepted"})
-                    except Exception as e:  # noqa: BLE001
+                    except ValidationError as e:
                         err = str(e)[:800]
                         log.event("submit_rejected", error=err)
                         results.append({"type": "tool_result", "tool_use_id": tu.id, "is_error": True,
-                                        "content": f"schema error: {err}. Fix and call submit_brief again."})
+                                        "content": _schema_feedback(e)})
                 else:
                     out = tools.dispatch(tu.name, tu.input)
                     results.append({"type": "tool_result", "tool_use_id": tu.id, "content": out})
@@ -90,6 +92,27 @@ def run_baseline(topic: str, settings: Settings, *, use_cache: bool = True) -> t
     log.save("papers", {k: v.model_dump() for k, v in tools.papers.items()})
     log.finish(status, checks=checks, papers_seen=len(tools.papers))
     return brief, log
+
+
+def _unwrap_submit(inp: Any) -> Any:
+    """{'brief': {...}} 처럼 한 겹 감싼 제출을 벗긴다 (T2 실행에서 2회 거절 관찰). 그 외는 그대로."""
+    if isinstance(inp, dict) and set(inp) == {"brief"} and isinstance(inp["brief"], dict):
+        return inp["brief"]
+    return inp
+
+
+def _schema_feedback(e: ValidationError) -> str:
+    """누락 필드를 콕 집어 알려 준다. 긴 pydantic 메시지보다 재제출 성공률이 높고 토큰도 적다."""
+    errs = e.errors(include_url=False)
+    missing = sorted({".".join(str(p) for p in x["loc"]) for x in errs if x["type"] == "missing"})
+    other = [f"{'.'.join(str(p) for p in x['loc'])}: {x['msg']}" for x in errs if x["type"] != "missing"][:5]
+    parts = []
+    if missing:
+        parts.append(f"MISSING required fields: {', '.join(missing)}. Resend the COMPLETE brief with these added "
+                     "at the top level (no wrapper object); keep everything else the same.")
+    if other:
+        parts.append("Other errors: " + "; ".join(other))
+    return "schema error — " + " ".join(parts) + " Call submit_brief again."
 
 
 def _post_checks(brief: ResearchBrief, tools: Tools) -> dict[str, Any]:

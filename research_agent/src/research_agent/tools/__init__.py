@@ -41,7 +41,8 @@ TOOL_DEFS: list[dict[str, Any]] = [
     },
     {
         "name": "verify_doi",
-        "description": "Check that a DOI exists in Crossref. Every DOI you cite in the final report must pass this check.",
+        "description": "Check that a DOI exists in Crossref. Papers returned by search_openalex / search_arxiv are ALREADY "
+                       "verified — do not call this on them (it wastes steps). Use it only for a DOI you did not get from a search tool.",
         "input_schema": {
             "type": "object",
             "properties": {"doi": {"type": "string"}},
@@ -77,13 +78,25 @@ class Tools:
         return self._register(papers, sub_rq_id, "search_arxiv", args, cached)
 
     def verify_doi(self, doi: str) -> dict | None:
-        args = {"doi": doi.lower().strip()}
+        """검색 도구가 이미 검증한 문헌(또는 arxiv id)은 Crossref 를 부르지 않고 즉시 EXISTS.
+        (T2·T5 실행에서 모델이 arxiv id 를 Crossref 로 검증하려다 NOT FOUND 를 받고 멀쩡한 문헌을 버림.)"""
+        key = doi.lower().strip().replace("https://doi.org/", "")
+        args = {"doi": key}
+        known = self.papers.get(key)
+        if known is not None and known.verified:
+            if self.log:
+                self.log.tool("verify_doi", args, 1, True)
+            return {"doi": key, "title": known.title, "year": known.year, "note": "already verified by search tool"}
+        if key.startswith("arxiv:"):
+            if self.log:
+                self.log.tool("verify_doi", args, 0, True)
+            return None  # arXiv id 는 Crossref 대상이 아님. 검색 결과에 없는 arxiv id 는 인용 불가
         res, cached = self.cache.get_or_call("crossref", args, lambda: crossref.verify_doi(
-            doi, mailto=self.s.contact_email, user_agent=self.s.tools.user_agent))
+            key, mailto=self.s.contact_email, user_agent=self.s.tools.user_agent))
         if self.log:
             self.log.tool("verify_doi", args, 1 if res else 0, cached)
-        if res and args["doi"] in self.papers:
-            self.papers[args["doi"]].verified = True
+        if res and key in self.papers:
+            self.papers[key].verified = True
         return res
 
     # ---- tool use 디스패치 (베이스라인 ReAct 용) --------------------------

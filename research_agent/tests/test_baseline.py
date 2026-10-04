@@ -112,3 +112,10 @@ def test_limit_exceeded_finishes_gracefully(tmp_path, monkeypatch):
     import json
     cost = json.loads((log.dir / "cost.json").read_text())
     assert brief is None and cost["status"] == "limit_exceeded"
+
+
+def test_submit_unwraps_brief_wrapper():
+    """Haiku 가 {'brief': {...}} 로 감싸서 제출한 경우 래퍼를 벗겨 검증한다 (T2 실행에서 2회 거절 관찰)."""
+    assert baseline._unwrap_submit({"brief": BRIEF}) == BRIEF
+    assert baseline._unwrap_submit(BRIEF) == BRIEF
+    assert baseline._unwrap_submit({"brief": "not a dict"}) == {"brief": "not a dict"}
