@@ -1,8 +1,13 @@
 # 모델·비용 설정. 모델명만 바꾸면 다른 Claude 모델로 실행됩니다.
 # (현 SDK 는 temperature 파라미터를 받지 않음 — 실행 간 편차는 Critic 게이트로 통제, goals.md O7-L3)
+#
+# 모델 운용 원칙 (비용 절감)
+#   - 개발 단계(W2~W3 노드 구현·디버깅): claude-haiku-4-5  — 동작·스키마 통과 확인용. 품질 판단 안 함
+#   - 품질 측정(W3 반복 실행, W4 ablation, 제출 run): claude-sonnet-5-5 — `--model` 로 덮어쓰거나 아래 값 교체
+#   - LLM-judge: claude-opus-5-5 — 실행 모델과 다른 상위 모델 (자기 채점 편향 완화)
 llm:
-  model: claude-sonnet-4-5          # 실행용. `agent models` 로 계정에서 쓸 수 있는 모델명 확인
-  judge_model: claude-opus-4-1      # LLM-judge 전용 (실행 모델과 다르게 — 자기 채점 편향 완화)
+  model: claude-haiku-4-5           # 개발용. 제출 전 claude-sonnet-5-5 로 교체. `agent models` 로 계정 모델명 확인
+  judge_model: claude-opus-5-5      # LLM-judge 전용
   max_tokens: 8192
   max_retries: 2                    # 스키마 검증 실패 시 재요청 횟수
 
@@ -12,12 +17,12 @@ limits:
   max_minutes: 10
   max_react_steps: 15               # 베이스라인 ReAct 전용
 
-# 비용 계산용 단가 (USD / 1M tokens). 모델 변경 시 함께 수정
+# 비용 계산용 단가 (USD / 1M tokens, Anthropic 공식 API 기준 2026-10). 모델 변경 시 함께 수정
 pricing:
-  claude-sonnet-4-5:  {input: 3.00,  output: 15.00}
-  claude-opus-4-1:    {input: 15.00, output: 75.00}
   claude-haiku-4-5:   {input: 1.00,  output: 5.00}
-  default:            {input: 3.00,  output: 15.00}
+  claude-sonnet-5-5:  {input: 2.00,  output: 10.00}
+  claude-opus-5-5:    {input: 4.00,  output: 20.00}
+  default:            {input: 4.00,  output: 20.00}   # 표에 없는 모델은 보수적으로 Opus 단가 적용
 
 tools:
   openalex_per_query: 15

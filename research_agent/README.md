@@ -31,6 +31,15 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 `config/models.yaml` 의 `model` 을 수정하거나 `--model <이름>` 으로 한 번만 덮어씁니다.
 계정에서 쓸 수 있는 모델명은 `uv run agent models` 로 확인합니다.
 
+| 용도 | 모델 | 비고 |
+|---|---|---|
+| 개발·디버깅 (기본값) | `claude-haiku-4-5` | 동작·스키마 통과 확인용. 비용 최소 |
+| 품질 측정·제출 실행 | `claude-sonnet-5-5` | `--model claude-sonnet-5-5` 또는 config 교체 |
+| LLM-judge | `claude-opus-5-5` | 실행 모델과 다르게 두어 자기 채점 편향 완화 |
+
+평가자가 다른 Claude 모델로 재현할 때는 `model` 과 `pricing` 표에 그 모델명을 추가하면 됩니다.
+`pricing` 에 없는 모델은 `default` 단가(Opus 기준, 보수적)로 비용을 집계합니다.
+
 ### 실행 모드
 
 | 모드 | 설명 | 상태 |

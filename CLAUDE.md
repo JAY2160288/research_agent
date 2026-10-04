@@ -56,7 +56,7 @@ uv run agent schema                              # ResearchBrief JSON Schema →
 | 모듈 | 역할 | 주의 |
 |---|---|---|
 | `llm.py` | **프로젝트의 유일한 LLM 호출 지점** (ADR-2). `call()` 은 SDK `messages.parse(output_format=PydanticModel)` 로 구조화 출력, 검증 실패 시 오류를 되먹여 `max_retries` 회 재시도. `call_with_tools()` 는 ReAct 한 턴 | 다른 곳에서 `anthropic` 클라이언트를 직접 만들지 않는다. 모든 호출은 `RunLogger` 에 토큰·비용 기록, 상한 초과 시 `CostLimitExceeded`/`TimeLimitExceeded` |
-| `config.py` | `config/models.yaml` + `.env` → `Settings`. `load_prompt(name)` 으로 `prompts/<name>.md` 로딩 | **프롬프트 문자열을 코드에 두지 않는다.** 모델명·단가·상한은 yaml 에서만 바꾼다. SDK 가 `temperature` 를 받지 않아 config 에 없음 |
+| `config.py` | `config/models.yaml` + `.env` → `Settings`. `load_prompt(name)` 으로 `prompts/<name>.md` 로딩 | **프롬프트 문자열을 코드에 두지 않는다.** 모델명·단가·상한은 yaml 에서만 바꾼다. SDK 가 `temperature` 를 받지 않아 config 에 없음. 개발 중 기본 모델은 `claude-haiku-4-5`(비용 절감), 품질 측정·제출은 `claude-sonnet-5-5`, judge 는 `claude-opus-5-5` |
 | `tools/` | OpenAlex(기본, 전 분야), arXiv(CS 보강), Crossref(DOI 실존 검증). `tools/__init__.py` 의 `Tools` 가 캐시·로깅·중복 제거(`papers` 레지스트리)를 붙이고, `TOOL_DEFS` 가 LLM 에 노출할 tool 정의 | **키 필요 API 추가 금지** (ADR-3). `Paper` 는 도구 출력 그대로이며 LLM 이 만들지 않는다. DOI 없는 OpenAlex 문헌은 검증 불가라 버린다. `Paper.id` 는 소문자 DOI 또는 `arxiv:<id>` 로 정규화 |
 | `tools/cache.py` | diskcache, 키 = 도구명 + 정규화 인자. ablation 공정성용(같은 검색 스냅샷 위에서 구조만 비교) | live 재현은 `--no-cache` |
 | `runlog.py` | `runs/` 에 JSONL 이벤트·비용·산출물 기록. 외부 서비스 없음 | Planning/Reflection/Replanning 이 실제로 일어났음을 보여주는 설계평가 증거이므로 단계 전이는 꼭 `event()` 로 남긴다 |

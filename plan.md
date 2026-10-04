@@ -207,7 +207,7 @@ Replan 상한 2회. 상한 도달 시 미달 항목을 리포트 §7 "한계"에
 | 4.1 | ablation: 조건 A~D × 주제 5개 | 매트릭스 (품질 지표, 비용, 시간) |
 | 4.2 | LLM-judge 채점 | rubric 점수표 |
 | 4.3 | **클린룸**: 새 컨테이너/Colab, 새 키, README만으로 L1~L3. 다른 Claude 모델명으로도 1회 | 체크리스트 전부 통과 |
-| 4.4 | 키·경로 누출 검사, zip 용량 확인 (1GB 한도, 예상 100MB 미만) | – |
+| 4.4 | 키·경로 누출 검사, zip 용량 확인 (1GB 한도, 예상 100MB 미만). **config `model` 을 개발용 haiku → 제출용 sonnet-5-5 로 교체했는지 확인** | – |
 
 ### 마무리 (10/30–11/2)
 
@@ -278,3 +278,4 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 | 2026-10-02 | **W1 1.1~1.7 코드 작성 완료** (`research_agent/`). 단위 테스트 15개 통과. 실제 API 스모크(`scripts/smoke_*.py`)는 Jay 맥에서 실행 대기 | 클라우드·샌드박스 모두 학술 API·Anthropic 네트워크 차단 |
 | 2026-10-02 | ADR-2 보완: Anthropic SDK 1.11 의 `messages.parse(output_format=PydanticModel)` 네이티브 구조화 출력 사용. tool use 강제는 베이스라인 최종 제출(`submit_brief`)에만. SDK 가 `temperature` 파라미터를 받지 않아 config 에서 제거 | SDK 확인 |
 | 2026-10-02 | 공급자 전환(OpenAI↔Claude) 요구 제거. LiteLLM → Anthropic SDK 직접. 교차 테스트 → 반복 실행 편차 측정 | 교수님이 제출물의 공급자(Claude)로 재현하심을 확인 |
+| 2026-10-04 | 모델 운용 2단계화: 개발(W2~W3 구현·디버깅)은 `claude-haiku-4-5`, 품질 측정·제출 run 은 `claude-sonnet-5-5`, judge 는 `claude-opus-5-5`. config 단가표를 현행 모델로 갱신 (sonnet-4-5·opus-4-1 제거) | API 크레딧 $20 로 시작. 동작 확인 단계에서 상위 모델은 낭비. 제출 전 config 의 `model` 을 sonnet-5-5 로 교체하는 것을 W4 체크리스트(4.4)에 포함 |
