@@ -16,6 +16,7 @@ from pydantic import ValidationError
 
 from .config import Settings, load_prompt
 from .llm import LLM, CostLimitExceeded, TimeLimitExceeded, schema_as_tool
+from .report import post_checks, render_markdown
 from .runlog import RunLogger
 from .schemas import ResearchBrief
 from .tools import TOOL_DEFS, Tools
@@ -85,10 +86,10 @@ def run_baseline(topic: str, settings: Settings, *, use_cache: bool = True) -> t
         log.event("limit_exceeded", error=str(e))
 
     # ---- 사후 결정적 검사 (재시도 없음) ----------------------------------
-    checks = _post_checks(brief, tools) if brief else {"submitted": False}
+    checks = post_checks(brief, tools.papers, settings.tools.min_evidence_per_subrq, settings.tools.min_relevance) if brief else {"submitted": False}
     if brief:
         log.save("brief", brief)
-        log.save("report.md", render_markdown(brief))
+        log.save("report.md", render_markdown(brief, tools.papers))
     log.save("papers", {k: v.model_dump() for k, v in tools.papers.items()})
     log.finish(status, checks=checks, papers_seen=len(tools.papers))
     return brief, log
@@ -113,54 +114,3 @@ def _schema_feedback(e: ValidationError) -> str:
     if other:
         parts.append("Other errors: " + "; ".join(other))
     return "schema error — " + " ".join(parts) + " Call submit_brief again."
-
-
-def _post_checks(brief: ResearchBrief, tools: Tools) -> dict[str, Any]:
-    known = {pid for pid, p in tools.papers.items() if p.verified}
-    cited = {i for c in brief.synthesis.all_claims() for i in c.evidence_ids}
-    cited |= {i for g in brief.gaps.gaps for i in g.evidence_ids}
-    cited |= {e.paper_id for e in brief.evidence.items}
-    verified = cited & known
-    claims = brief.synthesis.all_claims()
-    return {
-        "submitted": True,
-        "citations_total": len(cited),
-        "citations_verified": len(verified),
-        "citation_verified_rate": round(len(verified) / len(cited), 3) if cited else None,
-        "claims_total": len(claims),
-        "claims_with_source": sum(1 for c in claims if c.evidence_ids),
-        "sub_rqs": len(brief.plan.sub_rqs),
-        "sub_rqs_covered": sum(1 for s in brief.plan.sub_rqs
-                               if sum(1 for e in brief.evidence.items if s.id in e.sub_rq_ids) >= 3),
-        "gaps": len(brief.gaps.gaps),
-        "unknown_ids": sorted(cited - set(tools.papers)),
-    }
-
-
-def render_markdown(b: ResearchBrief) -> str:
-    tf, lines = b.topic_frame, []
-    lines += [f"# Research Brief: {tf.original_topic}", "", "## 요약", b.executive_summary, ""]
-    lines += ["## 1. 주제 재정의", f"- RQ: {tf.research_question}", f"- 독립변수: {', '.join(tf.variables.independent)}",
-              f"- 종속변수: {', '.join(tf.variables.dependent)}", f"- 대상: {tf.variables.population}",
-              f"- 핵심 개념: {', '.join(tf.concepts)}", ""]
-    lines += ["## 2. 조사 계획", f"전략: {b.plan.search_strategy}", ""]
-    for s in b.plan.sub_rqs:
-        lines.append(f"- **{s.id}** {s.question}  \n  쿼리: {'; '.join(s.queries)}")
-    lines += ["", "## 3. Evidence Table", "", "| id | rel | reli | method | sample | finding | sub-RQ |", "|---|---|---|---|---|---|---|"]
-    for e in b.evidence.items:
-        lines.append(f"| {e.paper_id} | {e.relevance} | {e.reliability} | {e.method} | {e.sample} | {e.finding} | {','.join(e.sub_rq_ids)} |")
-    lines += ["", "## 4. 종합", "### 합의"]
-    lines += [f"- {c.statement} [{', '.join(c.evidence_ids)}]" for c in b.synthesis.consensus]
-    lines += ["### 상충"]
-    for c in b.synthesis.conflicts:
-        lines += [f"- **{c.claim}**", f"  - A: {c.side_a.statement} [{', '.join(c.side_a.evidence_ids)}]",
-                  f"  - B: {c.side_b.statement} [{', '.join(c.side_b.evidence_ids)}]", f"  - 가설: {c.hypothesis_for_conflict}"]
-    lines += ["### 조건부"]
-    lines += [f"- {c.statement} [{', '.join(c.evidence_ids)}]" for c in b.synthesis.conditional]
-    lines += ["", f"커버리지: {b.synthesis.coverage_note}", "", "## 5. Research Gap"]
-    for g in b.gaps.gaps:
-        lines += [f"- **{g.description}** [{', '.join(g.evidence_ids)}]", f"  - 제안 RQ: {g.proposed_rq}",
-                  f"  - 방법: {g.method}", f"  - 데이터: {g.data}"]
-    lines += ["", "## 6. 향후 연구 방향", "(§5 의 제안 RQ 참조)", "", "## 7. 한계와 신뢰도"]
-    lines += [f"- {x}" for x in b.limitations]
-    return "\n".join(lines) + "\n"

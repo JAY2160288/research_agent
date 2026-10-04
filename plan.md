@@ -1,7 +1,7 @@
 # AI Research Agent — 구현 계획 (plan.md)
 
 - 상위 문서: `goals.md` (O1~O7, 성공 기준). 이 문서는 "어떻게"를 다룸
-- 작성일: 2026-10-02 · 상태: **W1 완료 (2026-10-04): 베이스라인 주제 5개 완주, 결정적 지표 100%. W2 노드 구현 착수 가능** (`research_agent/README.md` 참고)
+- 작성일: 2026-10-02 · 상태: **W2 완료 (2026-10-04): 그래프 8노드 end-to-end (T1·T2), Critic 결정적 검사 작동. 다음은 W3 — Critic LLM 비판 + Replan 루프, 반복 실행 편차 측정** (`research_agent/README.md` 참고)
 - 갱신 규칙: 설계가 바뀌면 §4 ADR에 결정 추가, §8 변경 로그에 날짜와 이유 기록. goals.md는 건드리지 않음
 
 ---
@@ -165,6 +165,12 @@ Replan 상한 2회. 상한 도달 시 미달 항목을 리포트 §7 "한계"에
 ### ADR-5. 품질은 Critic이 보장, 모델 출력의 운에 의존하지 않음
 - 이유: L3. 실행마다 문장·문헌이 달라져도 결정적 검사가 하한을 지킴. LLM 비판은 그 위에서만
 
+### ADR-6. OpenAlex 가 모든 sub-RQ 의 주력, arXiv 는 보강 + circuit breaker (2026-10-04)
+- 결정: search 노드는 `source_pref` 와 무관하게 모든 쿼리를 OpenAlex 로 보낸다. arXiv 는 arxiv/both 인 sub-RQ 에만 sub-RQ 당 2개 쿼리, 3초 간격, 연속 2회 실패 시 그 실행에서 차단
+- 계기: T1·T2 그래프 실행에서 arXiv 가 429·타임아웃으로 28회 연속 실패, search 노드가 5.7~8분 소요 → 10분 상한 위협. OpenAlex 는 arXiv 프리프린트(DOI 10.48550/arxiv.*)도 색인하므로 CS 주제 커버리지 손실이 작음 (T2: arXiv 없이 sub-RQ 당 54~59편)
+- 이유: 평가자 환경의 외부 API 상태에 리포트 구조·완주 여부가 흔들리면 안 됨 (O1, O7-L1). 차단 사실은 `notes` → 리포트 §7 한계에 자동 기재되어 투명함
+- 재검토 조건: Semantic Scholar 등 키 없는 보조 소스가 필요해지면 같은 breaker 패턴으로 추가
+
 ---
 
 ## 5. 작업 분해
@@ -279,6 +285,7 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 | 2026-10-02 | ADR-2 보완: Anthropic SDK 1.11 의 `messages.parse(output_format=PydanticModel)` 네이티브 구조화 출력 사용. tool use 강제는 베이스라인 최종 제출(`submit_brief`)에만. SDK 가 `temperature` 파라미터를 받지 않아 config 에서 제거 | SDK 확인 |
 | 2026-10-02 | 공급자 전환(OpenAI↔Claude) 요구 제거. LiteLLM → Anthropic SDK 직접. 교차 테스트 → 반복 실행 편차 측정 | 교수님이 제출물의 공급자(Claude)로 재현하심을 확인 |
 | 2026-10-04 | 모델 운용 2단계화: 개발(W2~W3 구현·디버깅)은 `claude-haiku-4-5`, 품질 측정·제출 run 은 `claude-sonnet-5-5`, judge 는 `claude-opus-5-5`. config 단가표를 현행 모델로 갱신 (sonnet-4-5·opus-4-1 제거) | API 크레딧 $20 로 시작. 동작 확인 단계에서 상위 모델은 낭비. 제출 전 config 의 `model` 을 sonnet-5-5 로 교체하는 것을 W4 체크리스트(4.4)에 포함 |
+| 2026-10-04 | **W2 완료 (2.1~2.5).** search(OpenAlex 병렬 + arXiv 보강)·evaluate(sub-RQ 당 12편 선별, 10편 배치)·synthesize·gap·critic(결정적 5종)·write(구조는 상태에서 조립, LLM 은 한국어 요약·한계만) 노드. `report.py` 로 렌더링·지표를 베이스라인과 공유. **T1 end-to-end: $0.113 · 11회 · 8.4분(arXiv 실패 342초 포함) · Critic 이 rq4 커버 부족 적발 → 한계에 자동 기재. T2: $0.125 · 13회 · 3.9분 · Critic 통과.** 두 주제 모두 인용 검증 100%(55편·72편), claim 출처 100%, 모든 노드 1차 시도에 스키마·검사 통과 | 베이스라인 대비 질적 차이가 이미 보임: method 에 설계·표본 수 명시, 리뷰·논평은 reliability 2~3, 상충마다 원인 가설, Gap 마다 설계·데이터 구체화. 2 gaps(T2) 처럼 적게 나오는 경우는 W3 LLM 비판 대상. ADR-6 추가 |
 | 2026-10-04 | **W2-2.1 완료: understand·plan 노드 + 그래프 러너 골격.** `nodes/__init__.py` 의 `checked_call` 이 "구조화 호출 → 스키마 `check()` → 실패 시 이슈를 되먹여 1회 재호출" 공통 루프. `graph.py` 는 NODES 리스트 순서 실행, `--until <node>` 로 부분 실행. T1·T2·T5 실제 실행: 모두 1차 시도에 검사 통과, 각 2회 호출 $0.01. sub-RQ 5~6개, 쿼리 4개씩, source_pref 가 CS→arxiv·경제→openalex 로 분기 | 단위 테스트 24개. 관찰: sub-RQ 6 × 쿼리 4 = 최대 24회 검색 → 후보 문헌 200~300편. 2.2 search 노드는 sub-RQ 당 상한을 두고, evaluate 는 배치 처리로 토큰을 묶어야 함 |
 | 2026-10-04 | **W1-1.5 완료: 베이스라인 주제 5개 완주 (Haiku, 합계 $0.73).** 인용 검증률·주장-출처 연결 5/5 주제 모두 100%, sub-RQ 커버리지 4/4·4/5·5/5·5/6·6/6. 로그에서 드러난 낭비 3종 수정: (1) 모델이 검색 결과를 `verify_doi` 로 재검증하느라 최대 7 step 소모 (T5: 35회) → 이미 verified 인 문헌·arxiv id 는 Crossref 호출 없이 즉시 응답 + 도구 설명·프롬프트에 "검색 결과는 이미 검증됨" 명시, (2) `{'brief': {...}}` 래퍼 제출 (T2, 2회 거절) → 자동 언래핑, (3) `limitations` 누락 재제출 (T4 2회·T5 1회, 회당 ~$0.04) → 누락 필드만 콕 집는 피드백 메시지 | 베이스라인 약점(측정 대상)과 하네스 낭비(수정 대상)를 구분. 수정한 셋은 모두 후자. 베이스라인 약점으로 기록할 것: evidence `sample` 컬럼 전부 공란, 리뷰·논평 논문에 reliability 5 부여, T2(CS) 인용 11편으로 적음 |
 | 2026-10-04 | **T1 베이스라인 첫 실행 실패 → 수정.** (1) `max_tokens` 8192 → 16384, (2) `stop_reason=max_tokens` 감지 시 잘린 tool_use 를 실행하지 않고 "압축해서 재제출" 피드백, (3) 프롬프트에 검색 6~10회·evidence 15~25편 상한, (4) `call_with_tools` 에 프롬프트 캐싱(system + 마지막 user 블록), 비용 집계에 캐시 읽기(10%)·생성(125%) 반영, (5) 비용·시간 상한 초과 시 예외로 죽지 않고 `status=limit_exceeded` 로 정상 종료 | 첫 실행: Haiku 가 문헌 190편을 전부 evidence 에 넣으려다 8192 토큰에서 7회 연속 잘림, $0.79 낭비 후 10분 상한. 수정 후 재실행: **$0.076 · 4 step · 1.4분**, 결정적 지표 전부 100% (인용 24/24 검증, claim 9/9 출처, sub-RQ 4/4 커버, gap 3). 캐시 적중으로 step 당 미적중 입력 ≤ 7 토큰 |

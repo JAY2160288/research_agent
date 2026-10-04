@@ -7,6 +7,7 @@ DOI 가 있으면 id 를 DOI 로 통일해 OpenAlex 결과와 중복 제거가 �
 from __future__ import annotations
 
 import re
+import time
 import xml.etree.ElementTree as ET
 
 import httpx
@@ -48,10 +49,23 @@ def _parse(xml_text: str, sub_rq_id: str | None) -> list[Paper]:
 
 
 def search(query: str, *, max_results: int = 10, user_agent: str = "research-agent",
-           sub_rq_id: str | None = None, client: httpx.Client | None = None) -> list[Paper]:
+           sub_rq_id: str | None = None, client: httpx.Client | None = None,
+           timeout: float = 20.0, retry_wait: float = 5.0) -> list[Paper]:
+    """arXiv 는 공식적으로 3초에 1요청. 몰아 보내면 429 또는 느린 응답이 온다 (2026-10-04 T1 그래프 실행에서
+    16회 전부 실패). 타임아웃을 짧게 두고 429·타임아웃이면 retry_wait 후 딱 한 번 더 시도한다."""
     params = {"search_query": f"all:{query}", "start": 0, "max_results": max_results,
               "sortBy": "relevance", "sortOrder": "descending"}
-    c = client or httpx.Client(timeout=30, headers={"User-Agent": user_agent})
-    r = c.get(BASE, params=params)
-    r.raise_for_status()
-    return _parse(r.text, sub_rq_id)
+    c = client or httpx.Client(timeout=timeout, headers={"User-Agent": user_agent})
+    for attempt in (1, 2):
+        try:
+            r = c.get(BASE, params=params)
+            if r.status_code == 429 and attempt == 1:
+                time.sleep(retry_wait)
+                continue
+            r.raise_for_status()
+            return _parse(r.text, sub_rq_id)
+        except httpx.TimeoutException:
+            if attempt == 2:
+                raise
+            time.sleep(retry_wait)
+    return []  # unreachable

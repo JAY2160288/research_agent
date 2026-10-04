@@ -38,6 +38,16 @@ class ToolsConfig(BaseModel):
     arxiv_per_query: int = 10
     cache_dir: str = ".cache"
     user_agent: str = "research-agent/0.1"
+    # 그래프 노드 상한 (plan.md §3.2)
+    search_min_per_subrq: int = 10     # search 결정적 검증: sub-RQ 당 후보 ≥ 이 값
+    search_workers: int = 4            # OpenAlex 병렬 요청 수 (arXiv 는 순차)
+    arxiv_max_queries_per_subrq: int = 2  # arXiv 는 3초/요청 → sub-RQ 당 쿼리 상한
+    arxiv_interval_sec: float = 3.0    # arXiv 요청 간격 (공식 권고 3초)
+    arxiv_max_failures: int = 2        # 연속 실패 시 이 실행에서 arXiv 차단 (circuit breaker)
+    evaluate_per_subrq: int = 12       # evaluate 에 넘길 sub-RQ 당 후보 상한 (초록 있음·피인용·최신 순)
+    evaluate_batch: int = 10           # evaluate LLM 1회 호출당 문헌 수
+    min_relevance: int = 3             # synthesize·coverage 계산에 쓰는 relevance 하한
+    min_evidence_per_subrq: int = 3    # Critic: sub-RQ 당 evidence ≥ 이 값
 
 
 class Settings(BaseModel):

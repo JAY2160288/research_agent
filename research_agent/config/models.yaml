@@ -29,3 +29,13 @@ tools:
   arxiv_per_query: 10
   cache_dir: .cache
   user_agent: "research-agent/0.1 (yonsei DAS6035 hackathon)"
+  # 그래프 노드 상한 (plan.md §3.2). 비용의 주요 손잡이는 evaluate_per_subrq × sub-RQ 수
+  search_min_per_subrq: 10
+  search_workers: 4
+  arxiv_max_queries_per_subrq: 2    # arXiv 는 3초/요청 예절 → 과하면 429·타임아웃
+  arxiv_interval_sec: 3.0
+  arxiv_max_failures: 2             # 연속 실패 시 arXiv 차단. OpenAlex 가 모든 sub-RQ 의 주력이라 결과 구조는 유지됨
+  evaluate_per_subrq: 12
+  evaluate_batch: 10
+  min_relevance: 3
+  min_evidence_per_subrq: 3

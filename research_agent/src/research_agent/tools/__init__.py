@@ -8,6 +8,7 @@ tool use 에 노출되는 도구 3개 (키 불필요):
 
 from __future__ import annotations
 
+import threading
 from typing import Any
 
 from ..config import Settings
@@ -58,6 +59,7 @@ class Tools:
         self.log = log
         self.cache = ToolCache(settings.tools.cache_dir, enabled=use_cache)
         self.papers: dict[str, Paper] = {}  # 이번 실행에서 본 모든 문헌 (id → Paper)
+        self._lock = threading.Lock()       # search 노드가 쿼리를 병렬로 돌리므로 레지스트리 갱신은 직렬화
 
     # ---- 개별 도구 ----------------------------------------------------
     def search_openalex(self, query: str, from_year: int | None = None, sub_rq_id: str | None = None) -> list[Paper]:
@@ -115,19 +117,21 @@ class Tools:
 
     # ---- 내부 ----------------------------------------------------------
     def _register(self, papers: list[Paper], sub_rq_id: str | None, name: str, args: dict, cached: bool) -> list[Paper]:
-        for p in papers:
-            if sub_rq_id and sub_rq_id not in p.sub_rq_ids:
-                p.sub_rq_ids.append(sub_rq_id)
-            if p.id in self.papers:
-                ex = self.papers[p.id]
-                ex.sub_rq_ids = sorted(set(ex.sub_rq_ids) | set(p.sub_rq_ids))
-                if not ex.abstract and p.abstract:
-                    ex.abstract = p.abstract
-            else:
-                self.papers[p.id] = p
+        with self._lock:
+            for p in papers:
+                if sub_rq_id and sub_rq_id not in p.sub_rq_ids:
+                    p.sub_rq_ids.append(sub_rq_id)
+                if p.id in self.papers:
+                    ex = self.papers[p.id]
+                    ex.sub_rq_ids = sorted(set(ex.sub_rq_ids) | set(p.sub_rq_ids))
+                    if not ex.abstract and p.abstract:
+                        ex.abstract = p.abstract
+                else:
+                    self.papers[p.id] = p
+            out = [self.papers[p.id] for p in papers]
         if self.log:
             self.log.tool(name, {k: v for k, v in args.items() if v is not None}, len(papers), cached)
-        return [self.papers[p.id] for p in papers]
+        return out
 
 
 def _format_papers(ps: list[Paper], abstract_chars: int = 600) -> str:

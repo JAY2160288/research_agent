@@ -10,7 +10,8 @@ from typing import Callable
 
 from .config import Settings
 from .llm import LLM, CostLimitExceeded, TimeLimitExceeded
-from .nodes import NodeContext, plan, understand
+from .nodes import NodeContext, critic, evaluate, gap, plan, search, synthesize, understand, write
+from .report import post_checks
 from .runlog import RunLogger
 from .schemas import RunState
 from .tools import Tools
@@ -20,8 +21,12 @@ Node = Callable[[RunState, NodeContext], None]
 NODES: list[tuple[str, Node]] = [
     ("understand", understand.run),
     ("plan", plan.run),
-    # W2: ("search", ...), ("evaluate", ...), ("synthesize", ...), ("gap", ...), ("write", ...)
-    # W3: critic → replan 루프
+    ("search", search.run),
+    ("evaluate", evaluate.run),
+    ("synthesize", synthesize.run),
+    ("gap", gap.run),
+    ("critic", critic.run),      # W2: 결정적 검사만 기록. W3: 미달 시 replan → search 로 되돌아가는 루프
+    ("write", write.run),
 ]
 
 
@@ -44,5 +49,9 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
         status = "limit_exceeded"
         log.event("limit_exceeded", error=str(e))
     log.save("state", state)
-    log.finish(status, notes=state.notes, papers_seen=len(ctx.tools.papers))
+    log.save("papers", {k: v.model_dump() for k, v in ctx.tools.papers.items()})
+    checks = (post_checks(state.brief, state.papers, settings.tools.min_evidence_per_subrq, settings.tools.min_relevance)
+              if state.brief else {"submitted": False})
+    log.finish(status, checks=checks, notes=state.notes, papers_seen=len(ctx.tools.papers),
+               critic_rounds=len(state.critiques), replans=state.replan_count)
     return state, log

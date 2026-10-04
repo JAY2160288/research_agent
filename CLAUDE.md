@@ -61,7 +61,8 @@ uv run agent schema                              # ResearchBrief JSON Schema →
 | `tools/cache.py` | diskcache, 키 = 도구명 + 정규화 인자. ablation 공정성용(같은 검색 스냅샷 위에서 구조만 비교) | live 재현은 `--no-cache` |
 | `runlog.py` | `runs/` 에 JSONL 이벤트·비용·산출물 기록. 외부 서비스 없음 | Planning/Reflection/Replanning 이 실제로 일어났음을 보여주는 설계평가 증거이므로 단계 전이는 꼭 `event()` 로 남긴다 |
 | `baseline.py` | 단일 ReAct 루프 (ablation 조건 A). 마지막 step 에 `tool_choice` 로 `submit_brief` 강제. 사후 결정적 검사는 하되 **재시도하지 않고 그대로 기록** — 베이스라인의 약점을 측정하는 것이 목적 | `render_markdown()` 이 리포트 7개 섹션을 만든다 |
-| `nodes/` | 노드 = `run(state: RunState, ctx: NodeContext) -> None`. `nodes/__init__.py` 의 `checked_call` 이 공통 루프(구조화 호출 → 스키마 `check()` → 실패 시 이슈 되먹여 재호출). 구현됨: understand, plan. 예정: search / evaluate / synthesize / critic / gap / write | 노드 입출력·결정적 검증 기준은 plan.md §3.2, Critic 6종 검사는 §3.3. 검사 미해결은 `state.notes` 에 적고 계속 진행 — **실패로 죽지 않는다**. 각 노드 프롬프트는 `prompts/<role>.md` |
+| `nodes/` | 노드 = `run(state: RunState, ctx: NodeContext) -> None`. `nodes/__init__.py` 의 `checked_call` 이 공통 루프(구조화 호출 → 스키마 `check()` → 실패 시 이슈 되먹여 재호출). 8개 구현: understand, plan, search(LLM 없음, OpenAlex 주력 + arXiv 보강·circuit breaker, ADR-6), evaluate(sub-RQ 당 `evaluate_per_subrq` 편 선별 → `evaluate_batch` 편씩 LLM), synthesize, gap, critic(결정적 5종, LLM 비판은 W3), write(구조 섹션은 상태에서 조립, LLM 은 한국어 요약·한계만) | 노드 입출력·결정적 검증 기준은 plan.md §3.2, Critic 검사는 §3.3. 검사 미해결은 `state.notes` 에 적고 계속 진행 — **실패로 죽지 않는다**. notes 는 write 에서 리포트 §7 한계에 `[auto]` 로 자동 편입. 각 노드 프롬프트는 `prompts/<role>.md`. 비용 손잡이는 `config/models.yaml` 의 `tools.evaluate_per_subrq` |
+| `report.py` | `render_markdown`·`post_checks` — 베이스라인과 그래프가 같은 렌더러·지표를 쓴다 (ablation 공정성) | 지표 정의를 바꾸면 양쪽에 동시에 반영됨 |
 | `graph.py` | `NODES` 리스트 순서대로 실행하는 러너. **프레임워크 없이 직접 구현** (ADR-1, LangGraph 사용 안 함). `--until <node>` 로 부분 실행 | 새 노드는 `NODES` 에 추가. W3 에서 critic → replan 루프(상한 2회)가 여기 붙는다. 노드 전후를 `node_start/node_end` 이벤트로 남겨 설계평가 증거로 쓴다 |
 
 ### 테스트 방식

@@ -207,6 +207,21 @@ class GapList(BaseModel):
 # ---------------------------------------------------------------------------
 
 
+class BriefText(BaseModel):
+    """Writer 노드가 LLM 으로 만드는 유일한 자유 텍스트. 나머지 섹션은 상태에서 결정적으로 조립한다."""
+
+    executive_summary: str = Field(description="연구자가 1분 안에 읽을 요약 (한국어, 5~8문장). 합의·상충·핵심 Gap 을 포함")
+    limitations: list[str] = Field(min_length=1, description="Agent 가 확신하지 못하는 부분, 검색 범위 한계, 근거가 얇은 sub-RQ (영어, 3~6개)")
+
+    def check(self) -> list[str]:
+        issues = []
+        if not any("가" <= ch <= "힣" for ch in self.executive_summary):
+            issues.append("executive_summary must be written in Korean")
+        if len(self.executive_summary) < 150:
+            issues.append("executive_summary too short (< 150 chars)")
+        return issues
+
+
 class ResearchBrief(BaseModel):
     topic_frame: TopicFrame
     plan: ResearchPlan
