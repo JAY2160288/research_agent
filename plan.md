@@ -1,7 +1,7 @@
 # AI Research Agent — 구현 계획 (plan.md)
 
 - 상위 문서: `goals.md` (O1~O7, 성공 기준). 이 문서는 "어떻게"를 다룸
-- 작성일: 2026-10-02 · 상태: **W3 완료 (2026-10-04): Critic LLM 비판 + Replan 루프(ADR-7), 같은 주제 3회 반복 실행에서 L3 불변 지표 전부 통과, OpenAlex 할당량 대응 Crossref 폴백(ADR-8). 다음은 W4 — ablation A~D, LLM-judge, 클린룸, config `model` → sonnet** (`research_agent/README.md` 참고)
+- 작성일: 2026-10-02 · 상태: **W4 Day 2 완료 (2026-10-05): ablation 1차 T1·T2 × B/C/D (sonnet) + judge — §8. Day 1 (2026-10-04): LLM-judge(`agent judge`), ablation 러너(`scripts/run_ablation.py`, 계획 재사용 ADR-9), 매트릭스 집계. 다음은 W4 Day 3~4 — T3·T4·T5 × D/B/C + A × 5주제 (§5 W4 일별 계획), Day 5 클린룸 + config `model` → sonnet** (`research_agent/README.md` 참고)
 - 갱신 규칙: 설계가 바뀌면 §4 ADR에 결정 추가, §8 변경 로그에 날짜와 이유 기록. goals.md는 건드리지 않음
 
 ---
@@ -102,15 +102,15 @@ src/research_agent/
 ├── baseline.py       # 단일 ReAct (ablation용)
 ├── report.py         # 렌더링·사후 지표 (베이스라인·그래프 공용)
 ├── runlog.py         # runs/ 이벤트 기록
-└── cli.py
-prompts/<node>.md     # 노드별 시스템 프롬프트. 코드에 문자열 없음
-config/models.yaml    # model, 단가, max_cost_usd, max_minutes, 노드 상한, graph.critic / max_replans
+├── judge.py          # LLM-judge (W4): 끝난 실행의 report.md → J1~J7 점수 + 인용. `agent judge` (초안의 eval/judge.py 는 패키지 안으로 옮김)
+└── cli.py            # run / judge / models / schema
+prompts/<node>.md     # 노드별 시스템 프롬프트 + judge.md. 코드에 문자열 없음
+config/models.yaml    # model, judge_model, 단가, max_cost_usd, max_minutes, 노드 상한, graph.critic / max_replans
 schemas/brief.json    # ResearchBrief JSON Schema export (문서용)
-scripts/              # smoke_tools, smoke_llm, summarize_runs
+scripts/              # smoke_tools, smoke_llm, summarize_runs(--ablation), compare_repeats, run_ablation
 eval/
 ├── topics.yaml       # 테스트 주제 5개
-├── rubric.md         # LLM-judge 루브릭
-└── judge.py          # W4 예정
+└── rubric.md         # LLM-judge 루브릭
 ```
 
 ### 3.2 노드 입출력
@@ -175,7 +175,7 @@ Replan 상한 2회(`graph.max_replans`). 상한 도달 시 미달 항목을 리�
 - 미달 노트는 루프 종료 후 **최종 라운드 기준**으로만 남긴다. 중간 라운드에서 걸렸다가 Replan 으로 풀린 항목이 리포트 한계에 남으면 거짓 한계가 된다
 - ablation 손잡이: `graph.critic` = none(B) | deterministic(C) | full(D), `graph.max_replans`. CLI `--critic`, `--max-replans`
 - **루프 종료 규칙 2개 추가 (같은 날 반복 실행에서 필요해짐)**: (a) 이미 재검색한 sub-RQ 에 같은 `search` major 가 또 나오면 문헌이 없는 것이므로 한계로 기록하고 통과 — T1 에서 "rq2 에 실험 연구가 없다" 가 3라운드 연속 major 로 나와 재검색이 무의미했음. (b) 경과 시간·비용이 상한의 `graph.replan_budget_fraction`(0.6) 을 넘으면 Replan 을 생략하고 write 로 간다. 그래도 상한에 걸리면 `grace_write` 가 마지막 종합으로 브리프를 쓴다(`status=ok_after_limit`) — Replan 2회 뒤 write 직전 10.1분에 걸려 34회 호출을 통째로 잃은 사례
-- 재검토 조건: 상위 모델(Sonnet)에서는 호출당 시간이 늘어 Replan 1회로도 10분을 넘길 수 있다. W4 제출 실행 전 `max_minutes` 또는 `replan_budget_fraction` 재조정
+- 재검토 조건: 상위 모델(Sonnet)에서는 호출당 시간이 늘어 Replan 1회로도 10분을 넘길 수 있다. W4 제출 실행 전 `max_minutes` 또는 `replan_budget_fraction` 재조정 → **확인 (2026-10-05)**: sonnet D 실행 T1 7.5분(Replan 2회)·T2 7.1분(Replan 1회)으로 상한 안. 재조정 불필요
 
 ### ADR-8. OpenAlex 일일 크레딧 소진 시 Crossref works 검색으로 자동 폴백 (2026-10-04)
 - 발견: OpenAlex 가 크레딧 기반 제한을 적용 중 — 응답 헤더 `x-ratelimit-limit: 1000`, 검색 1회 = 10 크레딧, 소진 시 429 + `retry-after` 약 12시간. 즉 **IP 당 하루 검색 약 100회**. 그래프 1회 실행이 sub-RQ 6 × 쿼리 4 + Replan ≈ 30회를 쓰므로 하루 3회 실행이면 막힌다. 반복 실행 측정 도중 3회 연속으로 당했다 (W3 §8). ADR-3 의 "키 없이 넉넉한 rate limit" 전제가 깨짐 — 평가자가 주제 5개를 연속으로 돌리면 3번째부터 실패할 수 있는 L1 리스크
@@ -191,6 +191,13 @@ Replan 상한 2회(`graph.max_replans`). 상한 도달 시 미달 항목을 리�
 - 재검토 조건: Semantic Scholar 등 키 없는 보조 소스가 필요해지면 같은 breaker 패턴으로 추가
 
 ---
+
+### ADR-9. ablation 의 B/C 조건은 D 실행의 TopicFrame·Plan 을 재사용한다 (`--plan-from`, 2026-10-04)
+
+- 결정: 한 주제에서 D(최종 구조)를 먼저 돌려 `topic_frame.json`·`plan.json` 을 만들고, B(critic none)·C(critic deterministic) 는 그 둘을 그대로 읽어 understand·plan 노드를 건너뛴다. 주제 문자열이 다르면 거부.
+- 이유: (1) **공정성** — 조건 간 차이가 "계획이 달라서" 가 아니라 "품질 게이트가 달라서" 임을 보장한다. W3 반복 실행에서 계획 쿼리가 실행마다 달라 인용 문헌 Jaccard 가 0.06 이었으므로, 계획을 고정하지 않으면 B/C/D 비교는 검색 변동에 묻힌다. (2) **OpenAlex 예산** — 첫 라운드 쿼리가 완전히 같아 검색 캐시가 그대로 맞고(캐시 키 = 도구명 + 인자, TTL 없음) B 는 OpenAlex 호출 0, C 는 Replan 분만 쓴다. 그래프 1회 ≈ 30회·하루 ≈ 100회 한도에서 주제 5개 × 4조건을 3일로 나눌 수 있다.
+- 대안·기각: 조건마다 독립 실행(계획까지 포함한 분산 측정) — 반복 3회 × 4조건 × 5주제 = 60회로 예산·일정 밖. 베이스라인 A 는 계획 노드가 없으므로 재사용 대상이 아니다 (A 의 검색은 모델이 고르는 것 자체가 측정 대상).
+- 흔적: `cost.json` 의 `plan_from`, `events.jsonl` 의 `node_reused`, 실행 폴더의 `ablation.json`.
 
 ## 5. 작업 분해
 
@@ -225,14 +232,30 @@ Replan 상한 2회(`graph.max_replans`). 상한 도달 시 미달 항목을 리�
 | 3.3 | 프롬프트 다듬기 | 불안정 노드(스키마 재시도 잦은 곳) 우선 — replan 프롬프트·결정적 검사 보강 (§8) |
 | 3.4 | MCP 적용 여부 결정 | 잠정 미적용 (§7). 7주차 수업 후 최종 |
 
-### W4 (10/23–10/29) — 실험 + 클린룸
+### W4 (당초 10/23–10/29, 실제 10/04 착수) — 실험 + 클린룸
 
 | # | 태스크 | DoD |
 |---|---|---|
-| 4.1 | ablation: 조건 A~D × 주제 5개 | 매트릭스 (품질 지표, 비용, 시간) |
-| 4.2 | LLM-judge 채점 | rubric 점수표 |
+| 4.1 | ablation: 조건 A~D × 주제 5개 (`scripts/run_ablation.py`, ADR-9) | 매트릭스 (품질 지표, 비용, 시간) — `summarize_runs.py --ablation --md` |
+| 4.2 | LLM-judge 채점 (`agent judge`, `judge.py`, `prompts/judge.md`) | rubric 점수표 — 실행 폴더마다 `judge.json` |
 | 4.3 | **클린룸**: 새 컨테이너/Colab, 새 키, README만으로 L1~L3. 다른 Claude 모델명으로도 1회 | 체크리스트 전부 통과 |
 | 4.4 | 키·경로 누출 검사, zip 용량 확인 (1GB 한도, 예상 100MB 미만). **config `model` 을 개발용 haiku → 제출용 sonnet-5-5 로 교체했는지 확인** | – |
+| 4.5 | (선택) judge 가 지적한 결정적 검사 2종 추가 검토: 프리프린트 중복 레코드(zenodo·techrxiv·SSRN 같은 제목) 병합, 같은 문헌이 상충 A·B 양측에 인용되면 Critic 미통과 | 단위 테스트. 시간 남을 때만 |
+
+**일별 계획 (OpenAlex 하루 ≈ 100회 검색이 병목. 추정: D 36회 · C 12회 · B 0회(계획 재사용) · A 10회 → 주제당 58회).**
+실행 모델은 sonnet-5-5 (품질 측정용, §8 2026-10-04 모델 운용), judge 는 opus-5-5. 예상 비용: 실행 20회 ≈ $8, judge 20회 × $0.2 ≈ $4, 합계 ≈ $12 (크레딧 $20 중 10/04 까지 $3.2 사용).
+
+| Day | 날짜 | 작업 | OpenAlex | 끝났을 때 |
+|---|---|---|---|---|
+| 1 | 10/04 (일) | **4.2 judge + 4.1 인프라** — `judge.py`·`prompts/judge.md`·`agent judge`, graph `--plan-from`(ADR-9), `run_ablation.py`(예산 가드·dry-run·완료 조합 건너뛰기), `summarize_runs.py --ablation`. 단위 테스트 51 → 60. judge 실전 1회 (T1 D, Opus: 평균 3.57, 인용 7/7 원문 일치, $0.195, 34초) | 0 | ✅ 완료 |
+| 2 | 10/05 (월) | ablation 1차: `run_ablation.py --topics T1,T2 --conditions D,B,C --model claude-sonnet-5-5 --judge --wait`. 6회 전부 완주, 결정적 불변 지표 6/6 통과, OpenAlex 실제 57회 (추정 96회보다 적음 — B/C 는 캐시 적중 0회, C 는 Replan 0회). 비용 $2.74 + judge $0.81 | 57 | ✅ 완료 (§8 2026-10-05) |
+| 3 | 10/06 (화) | ablation 2차: T3, T4 × D,B,C | ≈ 96 | 4주제 D/B/C |
+| 4 | 10/07 (수) | ablation 3차: T5 × D,B,C (48) + A × 5주제 (50). `summarize_runs.py --ablation --md` → design.md 매트릭스 초안. 조건별 평균·불변 지표 PASS 여부 정리 | ≈ 98 | **4.1·4.2 DoD** |
+| 5 | 10/08 (목) | **4.3 클린룸**: 임시 폴더에 `git clone` → 새 `.env` → README 3단계만으로 1회 완주(sonnet), `--model claude-haiku-4-5` 로 1회. **4.4**: `git grep -n "sk-ant\|/Users/"` 누출 검사, `git archive` zip 용량, config `model` → sonnet-5-5, README 최종 | ≈ 72 | 체크리스트 통과 |
+| 6 | 10/09 (금) | (선택) D 조건 sonnet 반복 3회 (T1) → `compare_repeats.py` 로 L3 불변 지표 재확인. 4.5 검토 | ≈ 108 → 하루 전부 | 반복 편차 표 (sonnet) |
+| – | 10/10~ | 마무리 5.1·5.2 (design.md, README) | 0 | 제출 |
+
+OpenAlex 가 429 로 Crossref 폴백 상태에 들어가면 그날 ablation 은 중단한다 (폴백 상태는 초록이 적어 조건 비교가 오염됨). `run_ablation.py` 는 추정 누적이 예산을 넘기는 실행 앞에서 스스로 멈추고, 다음 날 같은 명령을 다시 돌리면 끝난 조합은 건너뛴다. 예산을 더 쓰려면 다른 네트워크(IP)에서 돌린다.
 
 ### 마무리 (10/30–11/2)
 
@@ -282,6 +305,8 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 
 같은 검색 캐시 위에서 실행해 검색 변동을 통제. 주제 5개 × 조건 4개 = 20회 (+ D 조건 반복 3회 = 10회 추가). 비용 상한 고려해 A·D는 전수, B·C는 주제 2개로 축소 가능.
 
+**실행 방식 확정 (2026-10-04~05, ADR-9):** 주제마다 D 를 먼저 돌려 계획을 만들고 B·C 는 `--plan-from` 으로 같은 TopicFrame·Plan 에서 출발 → 첫 라운드 검색이 동일(캐시 적중, OpenAlex 호출 0). 실행 모델 sonnet-5-5, judge opus-5-5. OpenAlex 일일 한도 때문에 3일로 분할 (§5 W4 일별 계획). Day 2 실측으로 sonnet 비용이 D $0.66~0.83 · B/C $0.31 이라 B·C 도 전수 가능 (총 ≈ $14.4). 진행 결과는 §8, 매트릭스는 `scripts/summarize_runs.py --ablation --md`.
+
 ---
 
 ## 7. 열린 질문
@@ -289,7 +314,7 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 | 질문 | 확인 대상 | 기한 |
 |---|---|---|
 | MCP 적용 여부 | **잠정 결정(2026-10-04): 미적용.** 도구 3개가 이미 `TOOL_DEFS` 로 tool use 에 노출되어 있어 MCP 서버로 감싸도 기능은 같고, 평가자 환경에 MCP 서버 프로세스 하나가 추가되어 L1 재현 리스크만 늘어남. 7주차 수업에서 설계평가 가산이 명시되면 `tools/` 하나를 MCP 서버로 노출하는 선택 모드로 재검토 (Jay 확인 필요) | W3 → 보류 |
-| 웹 검색 추가 여부 | W4 여유 보고 | W4 |
+| 웹 검색 추가 여부 | **결정(2026-10-05): 미적용.** W4 는 ablation·클린룸에 예산(크레딧·OpenAlex 일일 한도)을 다 쓰고, 키 의존 도구는 L1 재현 리스크 (ADR-3 과 같은 이유) | 종결 |
 
 ---
 
@@ -304,6 +329,8 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 | 2026-10-02 | ADR-2 보완: Anthropic SDK 1.11 의 `messages.parse(output_format=PydanticModel)` 네이티브 구조화 출력 사용. tool use 강제는 베이스라인 최종 제출(`submit_brief`)에만. SDK 가 `temperature` 파라미터를 받지 않아 config 에서 제거 | SDK 확인 |
 | 2026-10-02 | 공급자 전환(OpenAI↔Claude) 요구 제거. LiteLLM → Anthropic SDK 직접. 교차 테스트 → 반복 실행 편차 측정 | 교수님이 제출물의 공급자(Claude)로 재현하심을 확인 |
 | 2026-10-04 | 모델 운용 2단계화: 개발(W2~W3 구현·디버깅)은 `claude-haiku-4-5`, 품질 측정·제출 run 은 `claude-sonnet-5-5`, judge 는 `claude-opus-5-5`. config 단가표를 현행 모델로 갱신 (sonnet-4-5·opus-4-1 제거) | API 크레딧 $20 로 시작. 동작 확인 단계에서 상위 모델은 낭비. 제출 전 config 의 `model` 을 sonnet-5-5 로 교체하는 것을 W4 체크리스트(4.4)에 포함 |
+| 2026-10-05 | **W4 Day 2 완료: ablation 1차 (T1·T2 × B/C/D, sonnet-5-5, judge opus-5-5).** 러너에 OpenAlex 잔량 사전 점검(`x-ratelimit-remaining` 헤더, 일일 리셋 00:00 UTC)과 `--wait` 추가. 결과:<br>`| topic | cond | cost | min | calls | cite_ok | claim_src | subrq | gaps_ok | replans | judge |`<br>`| T1 | D | $0.825 | 7.5 | 25 | 100% | 13/13 | 6/6 | 5/5 | 2 | 4.14 |`<br>`| T1 | B | $0.307 | 3.2 | 10 | 100% | 12/12 | 6/6 | 5/5 | 0 | 4.14 |`<br>`| T1 | C | $0.305 | 4.0 | 10 | 100% | 11/11 | 6/6 | 5/5 | 0 | 4.29 |`<br>`| T2 | D | $0.662 | 7.1 | 19 | 100% | 12/12 | 6/6 | 5/5 | 1 | 4.00 |`<br>`| T2 | B | $0.321 | 3.7 | 10 | 100% | 12/12 | 6/6 | 5/5 | 0 | 4.14 |`<br>`| T2 | C | $0.318 | 3.6 | 10 | 100% | 11/11 | 6/6 | 5/5 | 0 | 3.86 |`<br>**관찰 (design.md 에 그대로 쓸 것):** (1) ADR-9 작동 — B/C 는 understand·plan 재사용, OpenAlex 24/24 캐시 적중, 실제 호출 0. (2) **B(critic 없음)도 결정적 불변 지표를 전부 통과** — 노드별 `check()`(checked_call) 가 이미 인용 실존·출처·Gap 근거를 지키므로 Critic 의 결정적 5종은 두 주제에서 1라운드에 통과했고 C 는 B 와 사실상 같은 실행(Replan 0). (3) D 만 LLM 비판이 major 를 내 Replan 2회·1회를 돌았고 비용 2.1~2.7배(evaluate 11회·synthesize/gap/critic 3회씩)인데 **judge 평균은 B/C 와 같은 수준(D 4.07 vs B 4.14 vs C 4.08)** — LLM 비판·Replan 은 결정적 지표도 judge 점수도 올리지 못했다. 한계로 솔직히 쓰고, 구조가 보장하는 것은 "하한(불변 지표)" 이지 "judge 가 보는 깊이" 가 아님을 명시. (4) judge 변별력 낮음 — T1 D·T1 B·T2 B 가 항목별 점수까지 동일(5,4,3,4,4,5,4), J3 는 6회 전부 3점. 조건 비교의 주 지표는 결정적 지표 + 비용·시간, judge 는 보조로만 (rubric 원칙 그대로). (5) **arXiv 전 실행 차단** — API 자체가 503/타임아웃(직접 호출도 61초 후 503). circuit breaker 가 설계대로 작동해 완주엔 지장 없었으나 T2(CS) 는 arXiv 쿼리 10개를 건너뛰어 OpenAlex 만으로 구성됨 → 리포트 §7 에 자동 기재됨. 비용 누적 $6.74 (실행 $5.73 + judge $1.01). 남은 계획(T3~T5 D/B/C + A×5 + judge) 추정 ≈ $7.7 → 총 ≈ $14.4 로 B/C 축소 불필요 | sonnet D 1회 $0.66~0.83 은 Haiku 의 2.1~2.6배. 10분 상한엔 7.1~7.5분으로 여유. Day 3 는 T3·T4 × D/B/C (추정 실제 ≈ 60회) |
+| 2026-10-04 | **W4 Day 1 완료 (4.2 + 4.1 인프라).** (1) LLM-judge: `src/research_agent/judge.py`(초안의 `eval/judge.py` 대신 패키지 안 — llm.py 단일 호출점 유지), `prompts/judge.md`(J1~J7 5점/1점 기준, 인용 verbatim 강제, 결정적 지표를 ground truth 로 제시), `JudgeResult.check()`(7항목 정확히 1회·점수 1~5·인용 비어있지 않음 — 범위는 스키마 ge/le 가 아니라 코드 검사), `consistency_flags`(지표 미달인데 ≥4점이면 표시만, 점수 수정 없음), `agent judge <dir>|--all`. 결과는 실행 폴더의 `judge.json`·`judge_events.jsonl` 로, 원 `cost.json` 과 분리(ablation 비용 비교 오염 방지) — `RunLogger(into=, prefix=)` 추가. **실전 1회 (T1 D 12:33 실행, Opus): 평균 3.57 (J1 4·J2 4·J3 3·J4 3·J5 3·J6 4·J7 4), 인용 7/7 리포트 원문과 일치, flags 0, $0.195, 34초, 1회 호출.** judge 지적: 프리프린트 중복 레코드가 별개 근거로 수록, 같은 논문이 상충 A·B 양측에 인용, 지역 편중 Gap 이 표의 근거와 모순 → 4.5 선택 과제. (2) ablation 인프라: graph `plan_from`(ADR-9, CLI `--plan-from`), `scripts/run_ablation.py`(D→B→C→A 순, 완료 조합 건너뛰기, OpenAlex 추정 예산 가드, `--dry-run`, `--judge`, 실행 폴더에 `ablation.json`), `summarize_runs.py --ablation`(주제×조건 매트릭스 + 조건별 평균, judge 평균·flags 포함, 옛 실행은 slug·critic_mode 로 추정). `cost.json` 에 `model`·`max_replans`·`plan_from` 기록. 단위 테스트 51 → 60 | W4 를 일별로 나눔(§5): OpenAlex 하루 ≈100회가 병목이라 주제 5개 × 조건 4개를 3일(10/05~07)로 분할, 클린룸 10/08. dry-run 추정: 주제 2개 × D/B/C ≈ 96회 |
 | 2026-10-04 | **W3 완료 (3.1~3.4).** 3.1 Critic LLM 비판 + Replan 루프 (ADR-7, `nodes/critic.py`·`nodes/replan.py`, `prompts/critic.md`·`replan.md`). **Replan 이 결과를 바꾼 증거**: 11:34 실행에서 rq2 관련 문헌 1편 → Replan 1 → 2편 → Replan 2 → 3편 이상으로 결정적 검사 통과 (`critique_1~3.json`, `replan_1~2.json`). 3.2 **같은 주제(T1) 3회 반복, 최종 코드, Haiku, OpenAlex 소진으로 Crossref 폴백 상태**: <br>`| run | status | cost | min | calls | cite_ok | claim_src | subrq | gaps | gaps_ok | critic | replans |`<br>`| 12:07 | ok | $0.236 | 6.0 | 24 | 100% | 13/13 | 5/6 | 6 | 6 | 3 | 2 |`<br>`| 12:13 | ok | $0.322 | 8.1 | 26 | 100% | 13/13 | 6/6 | 5 | 5 | 3 | 2 |`<br>`| 12:33 | ok | $0.320 | 7.5 | 23 | 100% | 10/10 | 6/6 | 7 | 7 | 2 | 1 |`<br>**L3 불변 지표(인용 검증 100%, claim 출처 100%, Gap 근거 ≥2, 완주) 3/3 통과.** sub-RQ 커버리지는 5/6·6/6·6/6 — 문헌 자체가 없는 sub-RQ 는 Replan 2회로도 못 채우며, 그 경우 §7 한계에 자동 기재됨(구조가 보장하는 것은 "채움" 이 아니라 "솔직한 기재"). 달라져도 되는 것의 편차: 비용 $0.29±0.04, 시간 6.0~8.1분, Gap 5~7개, 인용 문헌 집합 Jaccard 0.06(계획 쿼리가 실행마다 달라 선택 문헌은 거의 겹치지 않음), Gap 근거집합 겹침 0. LLM 비판은 3회 모두 마지막 라운드까지 major 를 냄(Haiku 가 "실험 연구 없음" 류를 major 로 판정) → 상한·예산 규칙으로 종료. 3.3 프롬프트: 아래 결함 수정이 곧 다듬기. 3.4 MCP: §7 잠정 미적용. `scripts/compare_repeats.py` 추가 | 반복 측정은 Crossref 폴백 상태라 OpenAlex 정상 상태보다 초록이 적어 커버리지에 불리한 조건이었음. W4 ablation 은 OpenAlex 일일 예산(실행당 ~30회, 하루 ~100회)을 먼저 계산하고 날짜를 나눠 돌릴 것 |
 | 2026-10-04 | **W3 하네스 결함 5건 — 실제 반복 실행에서 드러나 수정.** (0) evaluate 의 HTTP 요청 하나가 7분 넘게 멈춤(SDK 기본 타임아웃 600초) → 10분 상한을 통째로 소모. `llm.request_timeout_sec: 180`, `sdk_max_retries: 2` 로 config 화. (1) Replan 이 `items: []` + rationale 에만 쿼리를 글로 적음(Haiku, 2회 연속) → 라운드 통째 낭비. `ReplanPlan.check(required=Critic 이 지목한 sub-RQ)` 로 되먹이고, 끝까지 비면 sub-RQ 질문에서 뽑은 결정적 fallback 쿼리 사용. (2) `ReplanPlan.queries` 에 `max_length=3` 을 두자 Haiku 가 4~6개를 내서 SDK `messages.parse` 가 **SDK 안에서** pydantic ValidationError 를 던져 실행 전체가 죽음 (2회). `llm.call` 이 SDK 측 검증 실패도 잡아 되먹이도록 수정(응답·usage 는 SDK 가 삼켜 비용 0 으로 기록), 쿼리 상한은 스키마가 아니라 코드에서 자름. `graph.run_graph` 는 예상 밖 예외에도 `status=error` + traceback.txt + state.json 을 남기고 정상 종료 (O1). (3) Replan 라운드 gap 호출에서 Haiku 가 7만 자 JSON 을 쏟다 `max_tokens` 16384 에서 잘려 json_invalid → 3분×2회 → **10분 상한 초과, 완주 실패** (반복 2회차). 노드 호출 상한 `llm.node_max_tokens: 6000` 분리, json_invalid 에는 "더 짧게" 힌트 되먹임, gap·synthesize 프롬프트에 길이 상한 명시. (4) OpenAlex 일일 크레딧 소진 → ADR-8 Crossref 폴백 | 셋 다 "LLM 의 운" 이 아니라 하네스가 막아야 할 결함. 단위 테스트 31 → 47개. W3-3.3(프롬프트 다듬기)은 스키마 재시도가 아니라 이 결함들이 실제 불안정 지점이었음 |
 | 2026-10-04 | **W2 완료 (2.1~2.5).** search(OpenAlex 병렬 + arXiv 보강)·evaluate(sub-RQ 당 12편 선별, 10편 배치)·synthesize·gap·critic(결정적 5종)·write(구조는 상태에서 조립, LLM 은 한국어 요약·한계만) 노드. `report.py` 로 렌더링·지표를 베이스라인과 공유. **T1 end-to-end: $0.113 · 11회 · 8.4분(arXiv 실패 342초 포함) · Critic 이 rq4 커버 부족 적발 → 한계에 자동 기재. T2: $0.125 · 13회 · 3.9분 · Critic 통과.** 두 주제 모두 인용 검증 100%(55편·72편), claim 출처 100%, 모든 노드 1차 시도에 스키마·검사 통과 | 베이스라인 대비 질적 차이가 이미 보임: method 에 설계·표본 수 명시, 리뷰·논평은 reliability 2~3, 상충마다 원인 가설, Gap 마다 설계·데이터 구체화. 2 gaps(T2) 처럼 적게 나오는 경우는 W3 LLM 비판 대상. ADR-6 추가 |
