@@ -29,6 +29,11 @@ judge 도 Claude 로 돌리므로 자기 채점 편향이 있다 → judge 는 �
 
 judge 출력 형식: 항목별 `{score, quote, reason}` JSON. 총점은 단순 평균.
 
+구현 (W4): `src/research_agent/judge.py` + `prompts/judge.md`, 실행은 `uv run agent judge <실행 폴더>` 또는 `--all`.
+결과는 그 실행 폴더의 `judge.json` (`scores`, `mean`, `items[{id,name,score,quote,reason}]`, `overall_comment`, `flags`, 비용) 과
+`judge_events.jsonl`. 원 실행의 `cost.json` 에는 judge 비용이 섞이지 않는다. `flags` 는 결정적 지표가 목표 미달인데 4점 이상을 준
+항목(예: sub-RQ 커버리지 < 80% 인데 J2 ≥ 4) — 점수는 그대로 두고 표시만 한다. 모델은 `config/models.yaml` 의 `judge_model`.
+
 ## C. 설계평가 대응 (교수자 평가, 문서로 증빙)
 
 | 항목 | 증빙 위치 |

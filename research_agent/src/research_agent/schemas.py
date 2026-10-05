@@ -332,3 +332,54 @@ class RunState(BaseModel):
 
     def verified_ids(self) -> set[str]:
         return {pid for pid, p in self.papers.items() if p.verified}
+
+
+# ---------------------------------------------------------------------------
+# LLM-judge (eval/rubric.md §B) — 실행 결과 채점. 파이프라인 밖(사후) 에서만 쓴다
+# ---------------------------------------------------------------------------
+
+JUDGE_ITEMS: dict[str, str] = {
+    "J1": "주제 이해의 정확성",
+    "J2": "조사 계획의 완결성",
+    "J3": "근거 평가의 충실성",
+    "J4": "종합의 깊이",
+    "J5": "Research Gap 의 타당성",
+    "J6": "향후 연구 제안의 구체성",
+    "J7": "한계 서술의 정직성",
+}
+
+
+class JudgeItem(BaseModel):
+    id: Literal["J1", "J2", "J3", "J4", "J5", "J6", "J7"]
+    score: int = Field(description="1~5 정수. 5 = 루브릭의 5점 기준 충족, 1 = 1점 기준")
+    quote: str = Field(description="점수의 근거가 되는 리포트 문장을 **그대로** 인용 (의역 금지, 1~3문장)")
+    reason: str = Field(description="왜 그 점수인지 한국어 1~2문장. 루브릭 기준을 지목")
+
+
+class JudgeResult(BaseModel):
+    """J1~J7 각 1개. 총점은 코드에서 단순 평균으로 계산한다 (rubric §B)."""
+
+    items: list[JudgeItem]
+    overall_comment: str = Field(description="브리프 전체에 대한 총평 (한국어, 2~4문장)")
+
+    def check(self) -> list[str]:
+        """결정적 검증: 7항목이 정확히 한 번씩, 점수 1~5, 인용 비어있지 않음.
+        점수 범위는 스키마 제약(ge/le)이 아니라 여기서 본다 — SDK parse 단계 실패는 호출을 통째로 버리기 때문 (CLAUDE.md)."""
+        issues = []
+        ids = [it.id for it in self.items]
+        missing = sorted(set(JUDGE_ITEMS) - set(ids))
+        dup = sorted({i for i in ids if ids.count(i) > 1})
+        if missing:
+            issues.append(f"missing items {missing}")
+        if dup:
+            issues.append(f"duplicated items {dup}")
+        for it in self.items:
+            if not 1 <= it.score <= 5:
+                issues.append(f"{it.id}: score {it.score} not in 1..5")
+            if not it.quote.strip():
+                issues.append(f"{it.id}: quote is empty — cite the report verbatim")
+        return issues
+
+    @property
+    def mean(self) -> float:
+        return round(sum(it.score for it in self.items) / len(self.items), 2) if self.items else 0.0

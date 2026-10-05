@@ -50,7 +50,22 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 `--no-cache` 를 붙이면 도구 캐시 없이 live 로 검색합니다.
 graph 모드에서 `--until plan` 처럼 노드 이름을 주면 그 노드까지만 실행합니다 (개발·디버깅용).
 `--critic none|deterministic|full` 과 `--max-replans N` 으로 품질 게이트를 끄거나 줄일 수 있습니다 (ablation 조건 B/C/D).
+`--plan-from <실행 폴더>` 를 주면 그 실행의 `topic_frame.json`·`plan.json` 을 재사용해 understand·plan 을 건너뜁니다 (조건 비교 시 계획 고정, 검색 캐시 재사용).
 Critic 판정과 Replan 쿼리는 `events.jsonl` 의 `critique` / `replan` 이벤트와 `critique_N.json` / `replan_N.json` 에 남습니다.
+
+### 평가 (LLM-judge · ablation)
+
+```bash
+uv run agent judge runs/<실행 폴더>            # 완주한 실행의 report.md 를 루브릭 J1~J7 로 채점 → 그 폴더에 judge.json
+uv run agent judge --all [--mode graph]        # judge.json 이 없는 완주 실행 전부
+uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C,A --dry-run   # 계획·OpenAlex 예산만 출력
+uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C --model claude-sonnet-5-5 --judge --wait   # --wait: OpenAlex 잔량 부족 시 일일 리셋(00:00 UTC)까지 대기
+uv run python scripts/summarize_runs.py --ablation --md   # 주제 × 조건 매트릭스 + 조건별 평균 (judge 평균 포함)
+```
+
+judge 는 `config/models.yaml` 의 `judge_model`(기본 Opus — 실행 모델과 다르게 두어 자기 채점 편향 완화)로 돌고, 항목마다 리포트 문장을 그대로 인용해야 하며,
+결정적 지표(`cost.json` 의 `checks`)와 모순되는 점수는 `judge.json` 의 `flags` 에 표시됩니다. 루브릭은 `eval/rubric.md`.
+ablation 러너는 주제마다 D(최종 구조)를 먼저 돌리고 B·C 는 그 계획을 재사용합니다. 시작 전 OpenAlex 응답 헤더로 실제 잔량을 확인하고, 추정 검색 횟수가 잔량이나 `--openalex-budget`(기본 100)을 넘기면 멈춥니다(`--wait` 면 리셋까지 대기). 다음 날 같은 명령으로 이어서 돌리면 끝난 조합은 건너뜁니다.
 
 ## 재현성 설계
 
@@ -70,6 +85,7 @@ uv run python scripts/smoke_tools.py   # 학술 API 실제 호출 확인
 uv run python scripts/smoke_llm.py     # Anthropic 구조화 출력 확인
 uv run python scripts/summarize_runs.py --md   # runs/ 전체의 결정적 지표·비용·Critic/Replan 횟수 표
 uv run python scripts/compare_repeats.py "<주제 slug 일부>" --since <타임스탬프>   # 같은 주제 반복 실행의 불변 지표 확인 + 편차
+uv run python scripts/summarize_runs.py --ablation       # 주제 × 조건(A~D) 매트릭스
 ```
 
 설계 문서: `../goals.md` (목표·성공 기준), `../plan.md` (아키텍처·ADR·작업 분해).

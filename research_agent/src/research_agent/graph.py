@@ -12,12 +12,14 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from .config import Settings
 from .llm import LLM, CostLimitExceeded, TimeLimitExceeded
 from .nodes import NodeContext, critic, evaluate, gap, plan, replan, search, synthesize, understand, write
 from .report import post_checks
 from .runlog import RunLogger
-from .schemas import RunState
+from .schemas import ResearchPlan, RunState, TopicFrame
 from .tools import Tools
 
 # `--until` 로 지정할 수 있는 노드 이름 (실행 순서)
@@ -51,8 +53,27 @@ def grace_write(state: RunState, ctx: NodeContext) -> bool:
         ctx.llm.grace_calls = 0
 
 
+def _reuse_plan(state: RunState, plan_from: Path, log: RunLogger) -> None:
+    """이전 실행의 topic_frame.json·plan.json 을 그대로 쓴다 (ADR-9, ablation 공정성).
+
+    B/C/D 조건이 같은 TopicFrame·ResearchPlan 에서 출발하면 첫 라운드 검색 쿼리가 완전히 같아 (1) 검색 캐시가 그대로
+    맞고 OpenAlex 일일 예산을 쓰지 않으며, (2) 조건 간 차이가 "계획이 달라서" 가 아니라 "품질 게이트가 달라서" 임이 보장된다.
+    주제 문자열이 다르면 거부한다 — 다른 주제의 계획을 끼워 넣는 실수를 막는다."""
+    tf_f, plan_f = plan_from / "topic_frame.json", plan_from / "plan.json"
+    if not tf_f.exists() or not plan_f.exists():
+        raise ValueError(f"--plan-from {plan_from}: topic_frame.json / plan.json 이 없다 (plan 노드까지 간 실행이어야 함)")
+    tf = TopicFrame.model_validate_json(tf_f.read_text(encoding="utf-8"))
+    if tf.original_topic.strip() != state.topic.strip():
+        raise ValueError(f"--plan-from 의 주제가 다르다: {tf.original_topic!r} != {state.topic!r}")
+    state.topic_frame = tf
+    state.plan = ResearchPlan.model_validate_json(plan_f.read_text(encoding="utf-8"))
+    for name, obj in (("understand", tf), ("plan", state.plan)):
+        log.event("node_reused", node=name, source=plan_from.name)
+        log.save(name if name == "plan" else "topic_frame", obj)
+
+
 def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
-              until: str | None = None) -> tuple[RunState, RunLogger]:
+              until: str | None = None, plan_from: Path | None = None) -> tuple[RunState, RunLogger]:
     if until is not None and until not in NODES:
         raise ValueError(f"unknown node {until!r}; choose from {NODES}")
     log = RunLogger(topic, "graph")
@@ -70,8 +91,11 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
             raise _Until
 
     try:
-        step("understand", understand.run)
-        step("plan", plan.run)
+        if plan_from is None:
+            step("understand", understand.run)
+            step("plan", plan.run)
+        else:
+            _reuse_plan(state, plan_from, log)
         extra: dict[str, list[str]] | None = None   # 첫 라운드는 계획의 모든 쿼리, 이후는 Replan 쿼리만
         while True:
             step("search", search.run, extra_queries=extra)
@@ -117,5 +141,7 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
               if state.brief else {"submitted": False})
     log.finish(status, checks=checks, notes=state.notes, papers_seen=len(ctx.tools.papers),
                critic_rounds=len(state.critiques), replans=state.replan_count,
-               critic_mode=g.critic, final_critic_passed=(state.critiques[-1].passed if state.critiques else None))
+               critic_mode=g.critic, max_replans=g.max_replans, model=settings.llm.model,
+               plan_from=(plan_from.name if plan_from else None),
+               final_critic_passed=(state.critiques[-1].passed if state.critiques else None))
     return state, log
