@@ -113,8 +113,9 @@ def run(state: RunState, ctx: NodeContext) -> None:
             cr.actions += [i.action for i in actionable]
             cr.uncovered_sub_rqs = sorted({i.sub_rq_id for i in actionable if i.sub_rq_id and i.action.startswith("search")})
         elif persisting:
+            # problem 은 스키마상 "한 문장" — 자르지 않는다. 160자에서 자르자 리포트 §7 [auto] 항목이 문장 중간에서 끊겼음 (2026-10-06 T3 D, judge J7 지적)
             state.notes.append("critic: major issue(s) persist after re-search, recorded as limitation: " +
-                               " | ".join(f"{i.sub_rq_id}: {i.problem[:160]}" for i in persisting))
+                               " | ".join(f"{i.sub_rq_id}: {i.problem}" for i in persisting))
             ctx.log.event("critic_persisting", sub_rqs=sorted({i.sub_rq_id for i in persisting if i.sub_rq_id}))
     state.critiques.append(cr)
     ctx.log.event("critique", round=cr.round, passed=cr.passed, issues=cr.deterministic_issues, llm_ran=cr.llm_ran,

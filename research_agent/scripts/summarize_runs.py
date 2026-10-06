@@ -76,8 +76,10 @@ def _topic_slugs() -> dict[str, str]:
     return {_slug(t[k]): t["id"] for t in raw["topics"] for k in ("ko", "en") if t.get(k)}
 
 
-def load_ablation(all_runs: bool) -> list[dict]:
+def load_ablation(all_runs: bool, model: str | None = None) -> list[dict]:
+    """model 이 주어지면 그 모델(접두 'claude-' 생략 가능)의 실행만. 조건별 평균이 haiku·sonnet 을 섞지 않게 하는 용도."""
     slugs = _topic_slugs()
+    want = model.replace("claude-", "") if model else None
     rows = []
     for d in sorted(RUNS_DIR.iterdir()):
         f = d / "cost.json"
@@ -93,6 +95,8 @@ def load_ablation(all_runs: bool) -> list[dict]:
             continue
         ck = c.get("checks") or {}
         model = meta.get("model") or c.get("model") or _model_from_events(d) or "?"
+        if want and model.replace("claude-", "") != want:
+            continue
         j_f = d / "judge.json"
         j = json.loads(j_f.read_text(encoding="utf-8")) if j_f.exists() else None
         rows.append({
@@ -157,8 +161,8 @@ def print_table(cols: list[str], rows: list[dict], md: bool) -> None:
             print("  ".join(str(r[c]).ljust(w[c]) for c in cols))
 
 
-def ablation(md: bool, all_runs: bool) -> None:
-    rows = load_ablation(all_runs)
+def ablation(md: bool, all_runs: bool, model: str | None = None) -> None:
+    rows = load_ablation(all_runs, model)
     if not rows:
         print("no runs")
         return
@@ -185,9 +189,10 @@ def main() -> None:
     ap.add_argument("--md", action="store_true")
     ap.add_argument("--ablation", action="store_true", help="주제 × 조건 매트릭스 (ablation.json / judge.json 반영)")
     ap.add_argument("--all-runs", action="store_true", help="--ablation 에서 (주제, 조건, 모델) 당 최근 1개가 아니라 전부")
+    ap.add_argument("--model", help="--ablation 에서 이 모델의 실행만 (예: claude-sonnet-5-5). 조건별 평균에 개발용 haiku 실행이 섞이지 않게")
     a = ap.parse_args()
     if a.ablation:
-        ablation(a.md, a.all_runs)
+        ablation(a.md, a.all_runs, a.model)
         return
     rows = load(a.mode)
     if not rows:

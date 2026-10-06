@@ -104,3 +104,27 @@ def test_graph_runner_until_plan(tmp_path, monkeypatch):
     assert cost["status"] == "partial:plan" and cost["llm_calls"] == 2
     kinds = [json.loads(l)["kind"] for l in (log.dir / "events.jsonl").read_text().splitlines()]
     assert kinds.count("node_start") == 2 and kinds.count("node_end") == 2
+
+
+def test_residue_issues_flags_json_markup_residue():
+    """구조화 출력 문자열에 섞인 JSON 잔해(괄호·<br>·코드펜스)를 잡는다 (2026-10-06 T3 D coverage_note 사례)."""
+    from research_agent.nodes import residue_issues
+    from research_agent.schemas import TopicFrame
+    clean = TopicFrame(**FRAME)
+    assert residue_issues(clean) == []
+    dirty = TopicFrame(**dict(FRAME, research_question="Does x affect y?}</br>Correction: the JSON above must be a single object.</br>{"))
+    issues = residue_issues(dirty)
+    assert len(issues) == 1 and "research_question" in issues[0]
+    nested = TopicFrame(**dict(FRAME, synonyms_en=["s1", "```json", "s3"]))   # 리스트 안 문자열도 검사
+    assert any("synonyms_en[1]" in i for i in residue_issues(nested))
+
+
+def test_checked_call_retries_on_residue(tmp_path):
+    """잔해가 있으면 스키마·노드 검사가 통과해도 이슈를 되먹여 재호출한다."""
+    dirty = dict(FRAME, research_question="Does x affect y? }</br>{")
+    ctx, fake = _ctx(tmp_path, [dirty, FRAME])
+    state = RunState(topic="t")
+    understand.run(state, ctx)
+    assert len(fake.messages.calls) == 2
+    assert "residue" in fake.messages.calls[1]["messages"][0]["content"]
+    assert state.topic_frame.research_question == "Does x affect y?"

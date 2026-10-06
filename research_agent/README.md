@@ -60,7 +60,7 @@ uv run agent judge runs/<실행 폴더>            # 완주한 실행의 report.
 uv run agent judge --all [--mode graph]        # judge.json 이 없는 완주 실행 전부
 uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C,A --dry-run   # 계획·OpenAlex 예산만 출력
 uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C --model claude-sonnet-5-5 --judge --wait   # --wait: OpenAlex 잔량 부족 시 일일 리셋(00:00 UTC)까지 대기
-uv run python scripts/summarize_runs.py --ablation --md   # 주제 × 조건 매트릭스 + 조건별 평균 (judge 평균 포함)
+uv run python scripts/summarize_runs.py --ablation --md [--model claude-sonnet-5-5]   # 주제 × 조건 매트릭스 + 조건별 평균 (judge 평균 포함, --model 로 한 모델만)
 ```
 
 judge 는 `config/models.yaml` 의 `judge_model`(기본 Opus — 실행 모델과 다르게 두어 자기 채점 편향 완화)로 돌고, 항목마다 리포트 문장을 그대로 인용해야 하며,
