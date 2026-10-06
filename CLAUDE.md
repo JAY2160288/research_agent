@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
     §3.1 디렉터리 트리는 초안 기준이라 실제와 조금 다를 수 있다 (`logging.py` → 실제는 `runlog.py`,
     LLM-judge 는 `eval/judge.py` 가 아니라 `src/research_agent/judge.py`). 파일 위치는 코드를 기준으로 판단한다.
 - 코드는 전부 `research_agent/` 아래. 문서는 한국어, 코드 주석도 한국어.
-- 진행 상태: W1~W3 + W4 Day 2 완료 (2026-10-05, ablation 1차 T1·T2 × B/C/D sonnet). 다음은 W4 Day 3 (plan.md §5 W4 일별 계획) — `uv run python scripts/run_ablation.py --topics T3,T4 --conditions D,B,C --model claude-sonnet-5-5 --judge --wait`, Day 4 T5 + A×5, 10/08 클린룸 재현 + config `model` 을 sonnet 으로 교체. OpenAlex 는 00:00 UTC(09:00 KST) 리셋, 러너가 헤더로 잔량을 확인하고 `--wait` 면 리셋까지 기다린다.
+- 진행 상태: W1~W3 + W4 Day 3 완료 (2026-10-06, ablation T1~T4 × B/C/D + A × T1~T4, sonnet). 다음은 W4 Day 4 (plan.md §5 W4 일별 계획) — `uv run python scripts/run_ablation.py --topics T5 --conditions D,B,C,A --model claude-sonnet-5-5 --judge` (OpenAlex 리셋 09:00 KST 이후), 그 다음 `summarize_runs.py --ablation --md --model claude-sonnet-5-5` 로 design.md 매트릭스, 10/08 클린룸 재현 + config `model` 을 sonnet 으로 교체. OpenAlex 는 00:00 UTC(09:00 KST) 리셋, 러너가 헤더로 잔량을 확인하고 추정치보다 적으면 멈춘다(`--wait` 는 리셋까지 잠드니 잔량이 20시간 뒤에나 돌아올 땐 쓰지 말고 `--topics` 를 줄일 것).
 
 ## 명령어 (`research_agent/` 에서 실행)
 
@@ -42,7 +42,7 @@ uv run agent models                              # 계정에서 쓸 수 있는 C
 uv run agent schema                              # ResearchBrief JSON Schema → schemas/brief.json
 
 uv run python scripts/summarize_runs.py [--mode graph] [--md]   # runs/ 전체 cost.json → 결정적 지표 표 (--md 는 design.md 용)
-uv run python scripts/summarize_runs.py --ablation [--md]        # 주제 × 조건(A~D) 매트릭스 + 조건별 평균 (ablation.json·judge.json 반영)
+uv run python scripts/summarize_runs.py --ablation [--md] [--model claude-sonnet-5-5]   # 주제 × 조건(A~D) 매트릭스 + 조건별 평균 (ablation.json·judge.json 반영)
 uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C,A [--model claude-sonnet-5-5] [--judge] [--dry-run]   # ablation 러너. D→B→C→A, B/C 는 D 의 계획 재사용, OpenAlex 예산 가드
 ```
 
