@@ -1,0 +1,34 @@
+# 정답 서베이 (gold surveys) — 주제별 "참고문헌 회수율" 의 정답 집합 (plan.md §6.2, ADR-10).
+#
+# 방식은 ReportBench (arXiv 서베이를 정답으로) 를 따른다: 사람이 쓴 체계적 문헌고찰·서베이의 참고문헌 목록을
+# 그 주제의 "찾았어야 할 문헌" 으로 보고, 우리 실행이 그중 몇 편을 (검색 → 평가 → 인용 단계별로) 건졌는지 센다.
+# 절대값은 낮을 수밖에 없다 — 우리는 sub-RQ 당 12편만 선별하고 초록만 본다. 조건(A~D) 간 **상대 비교**와
+# "Replan 이 회수율을 올렸는가" 를 보는 지표다. LLM 비용 0, 결정적.
+#
+# 선정 기준: OpenAlex 에서 주제 영문 문장으로 검색해 참고문헌 20편 이상인 리뷰/서베이 중 주제와 가장 가까운 것 (2026-10-07).
+# 참고문헌 목록은 scripts/gold_recall.py 가 OpenAlex `referenced_works` 로 한 번 받아 eval/gold_refs.json 에 캐시한다
+# (평가자는 네트워크 없이 재계산 가능). 주제가 바뀌면 여기만 고치고 `--refresh`.
+gold:
+  T1:
+    - doi: 10.1007/s44163-025-00495-3
+      title: "A systematic review of the impact of generative AI on postgraduate research: opportunities, challenges and future directions (2025)"
+  T2:
+    - doi: 10.1145/3748302
+      title: "A Survey on the Memory Mechanism of Large Language Model-based Agents (ACM TOIS, 2025)"
+  T3:
+    - doi: 10.4236/ojbm.2022.101026
+      title: "Artificial Intelligence (AI) in Accounting & Auditing: A Literature Review (2022)"
+    - doi: 10.1007/s11142-022-09697-x
+      title: "Is artificial intelligence improving the audit process? (Review of Accounting Studies, 2022)"
+      note: 실증 논문이지만 감사 품질·수수료 × AI 문헌을 가장 체계적으로 인용
+  T4:
+    - doi: 10.1038/s41746-021-00386-8
+      title: "Smartphone apps for depression and anxiety: a systematic review and meta-analysis of techniques (npj Digit. Med., 2021)"
+    - doi: 10.3390/jpm14020157
+      title: "Meta-Analysis of Studies on the Effects of Digital Therapeutics (J. Pers. Med., 2024)"
+  T6:
+    - doi: 10.48550/arxiv.2112.10508
+      title: "Between words and characters: A Brief History of Open-Vocabulary Modeling and Tokenization in NLP (2021)"
+      note: 토크나이징 전반 서베이 (한국어 전용 서베이는 없음)
+    - doi: 10.1080/08839514.2023.2175112
+      title: "A study on the evaluation of tokenizer performance in natural language processing (Korean, 2023)"

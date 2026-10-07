@@ -63,7 +63,7 @@ def _frac(a, b) -> str:
 # ---- ablation 매트릭스 -----------------------------------------------------------
 
 ABL_COLS = ["topic", "cond", "model", "run", "status", "cost", "min", "calls", "cite_ok", "claim_src", "subrq", "gaps_ok",
-            "replans", "judge", "flags"]
+            "replans", "judge", "flags", "cite_sup", "claim_sup"]
 CRITIC_TO_COND = {"none": "B", "deterministic": "C", "full": "D"}
 
 
@@ -99,6 +99,8 @@ def load_ablation(all_runs: bool, model: str | None = None) -> list[dict]:
             continue
         j_f = d / "judge.json"
         j = json.loads(j_f.read_text(encoding="utf-8")) if j_f.exists() else None
+        s_f = d / "support.json"          # 주장-근거 지지 검증 (agent support, ADR-10) — 있는 실행만 채운다
+        sup = json.loads(s_f.read_text(encoding="utf-8")) if s_f.exists() else {}
         rows.append({
             "topic": topic, "cond": cond, "model": model.replace("claude-", ""),
             "run": f"{ts[4:8]}-{ts[9:13]}", "status": c.get("status"),
@@ -115,6 +117,8 @@ def load_ablation(all_runs: bool, model: str | None = None) -> list[dict]:
             "replans": c.get("replans", "-") if m == "graph" else "-",
             "_judge": j["mean"] if j else None, "judge": f"{j['mean']:.2f}" if j else "-",
             "flags": len(j["flags"]) if j else "-",
+            "_csup": sup.get("citation_support_rate"), "cite_sup": _rate(sup.get("citation_support_rate")),
+            "_ksup": sup.get("claim_support_rate"), "claim_sup": _rate(sup.get("claim_support_rate")),
             # 완주 = 브리프까지 썼음. (옛 `--until` 부분 실행은 status 가 ok 였으므로 report.md 로 다시 확인)
             "_done": c.get("status") in ("ok", "ok_after_limit") and (d / "report.md").exists(),
         })
@@ -169,7 +173,7 @@ def ablation(md: bool, all_runs: bool, model: str | None = None) -> None:
     print_table(ABL_COLS, rows, md)
     # 조건별 평균 — 불변 지표는 비율 평균, 비용·시간·judge 는 산술 평균
     print()
-    agg_cols = ["cond", "n", "done", "cost", "min", "cite_ok", "claim_src", "subrq", "gaps_ok", "judge"]
+    agg_cols = ["cond", "n", "done", "cost", "min", "cite_ok", "claim_src", "subrq", "gaps_ok", "judge", "cite_sup", "claim_sup"]
     agg = []
     for cond in sorted({r["cond"] for r in rows}):
         rs = [r for r in rows if r["cond"] == cond]
@@ -179,6 +183,7 @@ def ablation(md: bool, all_runs: bool, model: str | None = None) -> None:
             "cite_ok": _mean([r["_cite"] for r in rs]), "claim_src": _mean([r["_claim"] for r in rs]),
             "subrq": _mean([r["_subrq"] for r in rs]), "gaps_ok": _mean([r["_gaps"] for r in rs]),
             "judge": _mean([r["_judge"] for r in rs]),
+            "cite_sup": _mean([r["_csup"] for r in rs]), "claim_sup": _mean([r["_ksup"] for r in rs]),
         })
     print_table(agg_cols, agg, md)
 

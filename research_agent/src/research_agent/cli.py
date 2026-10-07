@@ -109,6 +109,51 @@ def judge(
 
 
 @app.command()
+def support(
+    run_dirs: list[str] = typer.Argument(None, help="검증할 실행 폴더 (runs/<timestamp>_<mode>_<slug>). 생략하면 --all"),
+    all_runs: bool = typer.Option(False, "--all", help="runs/ 의 완주 실행 중 support.json 이 없는 것 전부"),
+    mode: str | None = typer.Option(None, "--mode", help="--all 일 때 baseline | graph 만"),
+    since: str = typer.Option("", "--since", help="--all 일 때 이 타임스탬프(폴더명 접두) 이후만"),
+    force: bool = typer.Option(False, "--force", help="이미 support.json 이 있어도 다시 검증"),
+    model: str | None = typer.Option(None, "--model", help="config llm.judge_model 을 이번만 덮어씀"),
+):
+    """주장-근거 지지 검증: §4 종합의 claim 마다 인용 초록이 실제로 뒷받침하는지 (claim, paper) 쌍 단위로 판정해 support.json 을 남긴다 (ADR-10)."""
+    from pathlib import Path
+    from .config import RUNS_DIR
+    from .judge import judgeable_runs, support_run
+    s = load_settings()
+    if not s.anthropic_api_key:
+        typer.echo("ANTHROPIC_API_KEY 가 없습니다 (.env 확인)", err=True)
+        raise typer.Exit(1)
+    if run_dirs:
+        targets = [Path(d) for d in run_dirs]
+    elif all_runs:
+        targets = judgeable_runs(RUNS_DIR, mode=mode, since=since, force=force, marker="support.json")
+    else:
+        typer.echo("실행 폴더를 주거나 --all 을 붙이세요", err=True)
+        raise typer.Exit(1)
+    if not targets:
+        typer.echo("검증할 실행이 없습니다 (이미 support.json 이 있으면 --force)")
+        return
+    total = 0.0
+    for d in targets:
+        if (d / "support.json").exists() and not force and run_dirs:
+            typer.echo(f"skip (support.json 있음, --force 로 재검증): {d.name}")
+            continue
+        try:
+            r = support_run(d, s, model=model)
+        except ValueError as e:
+            typer.echo(f"skip: {e}")
+            continue
+        total += r["cost_usd"]
+        rate = lambda x: "-" if x is None else f"{x:.0%}"
+        typer.echo(f"{d.name[:60]}  citation {rate(r['citation_support_rate'])} (lenient {rate(r['citation_support_rate_lenient'])})"
+                   f"  claim {rate(r['claim_support_rate'])}  pairs {r['pairs_supported']}/{r['pairs_partial']}/{r['pairs_unsupported']} sup/par/unsup"
+                   f"  no_abstract {r['pairs_no_abstract']}  ${r['cost_usd']:.3f}" + (f"  ⚠ {r['notes']}" if r["notes"] else ""))
+    typer.echo(f"\n{len(targets)}개 검증, 비용 합계 ${total:.3f} (원 실행 cost.json 에는 포함되지 않음)")
+
+
+@app.command()
 def models():
     """계정에서 사용 가능한 Claude 모델명 출력 (config/models.yaml 설정용)."""
     import anthropic

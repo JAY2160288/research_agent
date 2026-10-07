@@ -6,6 +6,11 @@
   `flags` 로 남긴다 — 점수를 고치지는 않고 표시만 한다 (judge 가 지표를 무시했는지 사람이 볼 수 있게).
 - 결과는 그 실행 폴더에 `judge.json` (점수·인용·비용), `judge_events.jsonl` (LLM 호출 기록) 으로 남는다.
   원 실행의 events.jsonl·cost.json 은 건드리지 않는다 — ablation 의 비용 비교에 judge 비용이 섞이면 안 된다.
+
+주장-근거 지지 검증 (`support_run`, ADR-10): 같은 사후 작업이지만 묻는 것이 다르다. J1~J7 은 리포트 전체의 질을,
+support 는 "§4 종합의 각 claim 을 그 claim 이 인용한 초록이 실제로 뒷받침하는가" 를 (claim, paper) 쌍마다 판정한다.
+결정적 지표 `citation_verified_rate` 는 **실존**(DOI/arXiv id) 검증일 뿐이라 100% 여도 인용이 주장을 지지한다는 뜻이 아니다
+(ReportBench·DeepResearch Bench FACT 가 재는 "유효 인용" 이 이것). 결과는 `support.json` / `support_events.jsonl`.
 """
 
 from __future__ import annotations
@@ -17,7 +22,7 @@ from typing import Any
 from .config import Settings, load_prompt
 from .llm import LLM
 from .runlog import RunLogger
-from .schemas import JUDGE_ITEMS, JudgeResult
+from .schemas import JUDGE_ITEMS, JudgeResult, SupportResult, _squash
 
 MAX_REPORT_CHARS = 150_000   # ~40k 토큰. 리포트는 60~90k 자 — 넘으면 Evidence Table 뒷부분이 잘린다 (notes 에 기록)
 
@@ -118,8 +123,9 @@ def judge_run(run_dir: Path, settings: Settings, *, model: str | None = None,
     return out
 
 
-def judgeable_runs(runs_dir: Path, *, mode: str | None = None, since: str = "", force: bool = False) -> list[Path]:
-    """report.md 가 있고(완주) 아직 judge.json 이 없는 실행 폴더. force 면 이미 채점한 것도 포함."""
+def judgeable_runs(runs_dir: Path, *, mode: str | None = None, since: str = "", force: bool = False,
+                   marker: str = "judge.json") -> list[Path]:
+    """report.md 가 있고(완주) 아직 `marker`(judge.json / support.json) 가 없는 실행 폴더. force 면 이미 채점한 것도 포함."""
     out = []
     for d in sorted(runs_dir.iterdir()):
         if not d.is_dir() or not (d / "report.md").exists() or d.name < since:
@@ -127,7 +133,128 @@ def judgeable_runs(runs_dir: Path, *, mode: str | None = None, since: str = "", 
         parts = d.name.split("_", 2)
         if mode and (len(parts) < 2 or parts[1] != mode):
             continue
-        if (d / "judge.json").exists() and not force:
+        if (d / marker).exists() and not force:
             continue
         out.append(d)
+    return out
+
+
+# ---------------------------------------------------------------------------
+# 주장-근거 지지 검증 (claim support)
+# ---------------------------------------------------------------------------
+
+SUPPORT_BATCH_PAIRS = 24     # 한 LLM 호출에 넣는 (claim, paper) 쌍 상한. 초록 ~1.5k 자 × 24 ≈ 36k 자 — 출력도 node_max_tokens 안
+
+
+def _claims_from_brief(brief: dict[str, Any]) -> list[dict[str, Any]]:
+    """brief.json 의 §4 종합 claim 을 순서대로 c1, c2, … 로 번호 붙여 꺼낸다 (consensus → conditional → conflicts side_a/side_b).
+    Synthesis.all_claims() 와 같은 순서. Gap 의 evidence_ids 는 '공백을 드러내는 문헌' 이라 지지 판정 대상이 아니다."""
+    syn = brief.get("synthesis") or {}
+    raw = list(syn.get("consensus") or []) + list(syn.get("conditional") or [])
+    for cf in syn.get("conflicts") or []:
+        raw += [cf["side_a"], cf["side_b"]]
+    return [{"id": f"c{i}", "statement": c["statement"], "evidence_ids": list(c.get("evidence_ids") or [])}
+            for i, c in enumerate(raw, 1)]
+
+
+def _support_block(claims: list[dict[str, Any]], abstracts: dict[str, str]) -> str:
+    lines = []
+    for c in claims:
+        lines.append(f"### claim {c['id']}\n{c['statement']}\n")
+        for pid in c["evidence_ids"]:
+            lines.append(f"--- paper_id: {pid}\n{abstracts[pid]}\n")
+    return "\n".join(lines)
+
+
+def support_run(run_dir: Path, settings: Settings, *, model: str | None = None,
+                client: Any | None = None) -> dict[str, Any]:
+    """한 실행의 §4 종합 claim 마다 인용 초록이 그 claim 을 지지하는지 판정해 support.json 을 쓴다.
+    초록이 없는 문헌(Crossref 폴백 등)은 LLM 에 묻지 않고 `no_abstract` 로 기록 — 비율 분모에서 뺀다."""
+    brief_f, papers_f = run_dir / "brief.json", run_dir / "papers.json"
+    if not brief_f.exists() or not papers_f.exists():
+        raise ValueError(f"{run_dir.name}: brief.json / papers.json 없음 (완주한 실행만 검증한다)")
+    brief = json.loads(brief_f.read_text(encoding="utf-8"))
+    papers = json.loads(papers_f.read_text(encoding="utf-8"))
+    claims = _claims_from_brief(brief)
+    abstracts = {pid: (p.get("abstract") or "") for pid, p in papers.items()}
+
+    pairs: list[dict[str, Any]] = []         # 최종 결과 행
+    todo: list[dict[str, Any]] = []          # LLM 에 물을 claim (초록 있는 문헌만)
+    for c in claims:
+        with_abs = [pid for pid in c["evidence_ids"] if abstracts.get(pid, "").strip()]
+        for pid in c["evidence_ids"]:
+            if pid not in with_abs:
+                pairs.append({"claim_id": c["id"], "paper_id": pid, "verdict": "no_abstract", "quote": "", "reason": "초록 없음 — 판정 불가"})
+        if with_abs:
+            todo.append({**c, "evidence_ids": with_abs})
+
+    model = model or settings.llm.judge_model
+    log = RunLogger(run_dir.name, "support", into=run_dir, prefix="support_")
+    llm = LLM(settings, log, client=client)
+    system = load_prompt("support")
+    notes: list[str] = []
+
+    # claim 단위로 묶되 한 배치의 쌍 수가 상한을 넘지 않게
+    batches: list[list[dict[str, Any]]] = []
+    for c in todo:
+        if batches and sum(len(x["evidence_ids"]) for x in batches[-1]) + len(c["evidence_ids"]) <= SUPPORT_BATCH_PAIRS:
+            batches[-1].append(c)
+        else:
+            batches.append([c])
+    for bi, batch in enumerate(batches, 1):
+        expected = {(c["id"], pid) for c in batch for pid in c["evidence_ids"]}
+        user = (f"Claims and the abstracts they cite ({len(expected)} claim-paper pairs). "
+                "Return one verdict per pair.\n\n" + _support_block(batch, abstracts))
+        issues: list[str] = []
+        result: SupportResult | None = None
+        for attempt in range(2):                    # 결정적 검증 실패 시 1회 되먹임 — judge_run 과 같은 규약
+            prompt = user if not issues else user + "\n\nYour previous answer failed these checks:\n- " + "\n- ".join(issues) + "\nFix and return the complete object."
+            result = llm.call(role="support", system=system, user=prompt, schema=SupportResult, model=model,
+                              max_tokens=settings.llm.node_max_tokens)
+            issues = result.check(expected, abstracts)
+            log.event("support_check", batch=bi, attempt=attempt + 1, issues=issues)
+            if not issues:
+                break
+        assert result is not None
+        if issues:
+            notes.append(f"batch {bi} unresolved checks: {issues}")
+        got = {(v.claim_id, v.paper_id): v for v in result.verdicts}
+        for cid, pid in sorted(expected):
+            v = got.get((cid, pid))
+            if v is None:                            # 되먹임 뒤에도 빠진 쌍 — 판정 없음으로 기록
+                pairs.append({"claim_id": cid, "paper_id": pid, "verdict": "missing", "quote": "", "reason": "judge 가 이 쌍을 돌려주지 않음"})
+                continue
+            verdict = v.verdict
+            if verdict != "unsupported" and _squash(v.quote) not in _squash(abstracts[pid]):
+                verdict = "unverified_quote"         # 인용이 초록에 없으면 supported 로 세지 않는다
+            pairs.append({"claim_id": cid, "paper_id": pid, "verdict": verdict, "quote": v.quote, "reason": v.reason})
+
+    pairs.sort(key=lambda r: (int(r["claim_id"][1:]), r["paper_id"]))
+    judged = [r for r in pairs if r["verdict"] in ("supported", "partial", "unsupported", "unverified_quote")]
+    n_sup = sum(r["verdict"] == "supported" for r in judged)
+    n_par = sum(r["verdict"] == "partial" for r in judged)
+    claim_ok = {r["claim_id"] for r in judged if r["verdict"] == "supported"}
+    out = {
+        "model": model,
+        "claims_total": len(claims),
+        "pairs_total": len(pairs),
+        "pairs_judged": len(judged),
+        "pairs_supported": n_sup, "pairs_partial": n_par,
+        "pairs_unsupported": sum(r["verdict"] == "unsupported" for r in judged),
+        "pairs_unverified_quote": sum(r["verdict"] == "unverified_quote" for r in judged),
+        "pairs_no_abstract": sum(r["verdict"] == "no_abstract" for r in pairs),
+        # 비율 — FACT 의 citation accuracy(쌍 단위) / effective citation(주장 단위) 에 대응
+        "citation_support_rate": round(n_sup / len(judged), 4) if judged else None,
+        "citation_support_rate_lenient": round((n_sup + n_par) / len(judged), 4) if judged else None,
+        "claim_support_rate": round(len(claim_ok) / len(claims), 4) if claims else None,
+        "claims": [{"id": c["id"], "statement": c["statement"], "supported": c["id"] in claim_ok} for c in claims],
+        "pairs": pairs,
+        "notes": notes,
+        "cost_usd": round(log.cost_usd, 4),
+        "llm_calls": log.llm_calls,
+        "elapsed_sec": round(log.elapsed_min * 60, 1),
+    }
+    (run_dir / "support.json").write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
+    log.event("support_end", citation_support_rate=out["citation_support_rate"], claim_support_rate=out["claim_support_rate"],
+              cost_usd=out["cost_usd"])
     return out

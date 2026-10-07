@@ -383,3 +383,52 @@ class JudgeResult(BaseModel):
     @property
     def mean(self) -> float:
         return round(sum(it.score for it in self.items) / len(self.items), 2) if self.items else 0.0
+
+
+# ---------------------------------------------------------------------------
+# 주장-근거 지지 검증 (claim support) — judge 와 같은 사후 작업. plan.md §6.2, ADR-10
+# "인용이 실존한다"(citation_verified_rate) 와 "인용이 주장을 뒷받침한다" 는 다른 지표다.
+# ---------------------------------------------------------------------------
+
+SUPPORT_VERDICTS = ("supported", "partial", "unsupported")
+
+
+class SupportVerdict(BaseModel):
+    claim_id: str = Field(description="입력에 적힌 claim id 를 그대로 (예: c3)")
+    paper_id: str = Field(description="입력에 적힌 paper id 를 그대로")
+    verdict: Literal["supported", "partial", "unsupported"] = Field(
+        description="supported = 초록이 주장을 직접 뒷받침 · partial = 방향은 같지만 범위·조건·강도가 다름 · unsupported = 초록에 근거 없음 또는 반대")
+    quote: str = Field(default="", description="supported/partial 이면 근거가 되는 초록 문장을 **그대로** 복사 (의역 금지, 1~2문장). unsupported 면 빈 문자열")
+    reason: str = Field(description="판정 이유 한국어 1문장")
+
+
+class SupportResult(BaseModel):
+    verdicts: list[SupportVerdict]
+
+    def check(self, expected: set[tuple[str, str]], abstracts: dict[str, str]) -> list[str]:
+        """결정적 검증: (claim, paper) 쌍이 빠짐·중복 없이 한 번씩, quote 가 그 초록에 실제로 있는 문자열인지."""
+        issues = []
+        seen = [(v.claim_id, v.paper_id) for v in self.verdicts]
+        missing = sorted(expected - set(seen))
+        extra = sorted(set(seen) - expected)
+        dup = sorted({p for p in seen if seen.count(p) > 1})
+        if missing:
+            issues.append(f"missing pairs {missing[:5]}{'...' if len(missing) > 5 else ''}")
+        if extra:
+            issues.append(f"unknown pairs {extra[:5]}")
+        if dup:
+            issues.append(f"duplicated pairs {dup[:5]}")
+        for v in self.verdicts:
+            if v.verdict == "unsupported":
+                continue
+            q = _squash(v.quote)
+            if not q:
+                issues.append(f"{v.claim_id}/{v.paper_id}: {v.verdict} needs a verbatim quote from the abstract")
+            elif q not in _squash(abstracts.get(v.paper_id, "")):
+                issues.append(f"{v.claim_id}/{v.paper_id}: quote is not verbatim from that abstract — copy exact text")
+        return issues
+
+
+def _squash(text: str) -> str:
+    """인용 대조용 정규화: 공백 압축 + 소문자. 따옴표·대시 같은 기호 차이는 그대로 둔다 (LLM 이 베껴 쓰게 강제)."""
+    return " ".join(text.split()).lower()

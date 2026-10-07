@@ -177,3 +177,101 @@ def test_graph_plan_from_rejects_other_topic_or_missing_files(tmp_path, monkeypa
     assert "주제가 다르다" in (log.dir / "traceback.txt").read_text(encoding="utf-8")
     state, log = graph.run_graph(TF.original_topic, s, plan_from=tmp_path / "nope")
     assert json.loads((log.dir / "cost.json").read_text(encoding="utf-8"))["status"] == "error"
+
+
+# ---- claim support (judge.support_run, ADR-10) --------------------------------------------
+
+from research_agent.schemas import SupportResult, SupportVerdict
+
+ABS_A = "We ran a randomized trial. Morpheme-aware tokenization improved F1 by 2 points on Korean NER."
+ABS_B = "A survey of tokenizers. Nothing about Korean here."
+
+
+def _support_dir(tmp_path, name="20261007T000000Z_graph_t"):
+    d = tmp_path / name
+    d.mkdir()
+    syn = Synthesis(consensus=[Claim(statement="Morpheme-aware tokenization helps Korean NER", evidence_ids=["10.1/a", "10.1/b"])],
+                    conflicts=[], conditional=[Claim(statement="No abstract claim", evidence_ids=["10.1/c"])], coverage_note="n")
+    brief = {"topic_frame": {}, "plan": {}, "evidence": {"items": []}, "synthesis": syn.model_dump(),
+             "gaps": {"gaps": []}, "limitations": [], "executive_summary": ""}
+    (d / "brief.json").write_text(json.dumps(brief), encoding="utf-8")
+    (d / "papers.json").write_text(json.dumps({"10.1/a": {"abstract": ABS_A}, "10.1/b": {"abstract": ABS_B}, "10.1/c": {"abstract": None}}), encoding="utf-8")
+    (d / "report.md").write_text("# r", encoding="utf-8")
+    return d
+
+
+def _verdicts(quote_a=ABS_A.split(". ")[1]):
+    return {"verdicts": [
+        {"claim_id": "c1", "paper_id": "10.1/a", "verdict": "supported", "quote": quote_a, "reason": "r"},
+        {"claim_id": "c1", "paper_id": "10.1/b", "verdict": "unsupported", "quote": "", "reason": "r"},
+    ]}
+
+
+def test_support_result_check_pairs_and_verbatim_quote():
+    expected = {("c1", "10.1/a"), ("c1", "10.1/b")}
+    abstracts = {"10.1/a": ABS_A, "10.1/b": ABS_B}
+    ok = SupportResult(**_verdicts())
+    assert ok.check(expected, abstracts) == []
+    # 공백·대소문자 차이는 허용, 의역은 거부
+    loose = SupportResult(**_verdicts(quote_a="  morpheme-aware   tokenization improved F1 by 2 points on Korean NER. "))
+    assert loose.check(expected, abstracts) == []
+    para = SupportResult(**_verdicts(quote_a="Tokenization improved F1 by two points"))
+    assert any("not verbatim" in i for i in para.check(expected, abstracts))
+    # 쌍 누락·미지·중복
+    r = SupportResult(verdicts=[SupportVerdict(claim_id="c1", paper_id="10.1/a", verdict="unsupported", reason="r")] * 2
+                      + [SupportVerdict(claim_id="c9", paper_id="10.1/a", verdict="unsupported", reason="r")])
+    issues = r.check(expected, abstracts)
+    assert any("missing pairs [('c1', '10.1/b')]" in i for i in issues) and any("unknown pairs" in i for i in issues) \
+        and any("duplicated pairs" in i for i in issues)
+    # supported 인데 quote 없음
+    r = SupportResult(verdicts=[SupportVerdict(claim_id="c1", paper_id="10.1/a", verdict="partial", quote="", reason="r"),
+                                SupportVerdict(claim_id="c1", paper_id="10.1/b", verdict="unsupported", reason="r")])
+    assert any("needs a verbatim quote" in i for i in r.check(expected, abstracts))
+
+
+def test_support_run_writes_support_json_and_skips_papers_without_abstract(tmp_path):
+    d = _support_dir(tmp_path)
+    s, client = _client(tmp_path, [_verdicts()])
+    out = judge.support_run(d, s, client=client)
+    assert out["model"] == "j" and out["llm_calls"] == 1 and out["notes"] == []
+    assert out["claims_total"] == 2 and out["pairs_total"] == 3 and out["pairs_judged"] == 2
+    assert out["pairs_supported"] == 1 and out["pairs_unsupported"] == 1 and out["pairs_no_abstract"] == 1
+    assert out["citation_support_rate"] == 0.5 and out["claim_support_rate"] == 0.5          # c2 는 초록 없는 문헌만 인용
+    assert [p["verdict"] for p in out["pairs"]] == ["supported", "unsupported", "no_abstract"]
+    j = json.loads((d / "support.json").read_text(encoding="utf-8"))
+    assert j["claims"][0]["supported"] is True and j["claims"][1]["supported"] is False
+    assert (d / "support_events.jsonl").exists() and not (d / "events.jsonl").exists()
+    content = client.messages.calls[0]["messages"][0]["content"]
+    assert "### claim c1" in content and "paper_id: 10.1/a" in content and "10.1/c" not in content   # 초록 없는 문헌은 LLM 에 안 보냄
+
+
+def test_support_run_feeds_back_bad_quote_and_marks_unverified(tmp_path):
+    d = _support_dir(tmp_path)
+    bad = _verdicts(quote_a="paraphrased, not in abstract")
+    s, client = _client(tmp_path, [bad, bad])                      # 되먹여도 또 틀림
+    out = judge.support_run(d, s, client=client)
+    assert out["llm_calls"] == 2 and any("unresolved" in n for n in out["notes"])
+    assert "not verbatim" in client.messages.calls[1]["messages"][0]["content"]
+    assert out["pairs"][0]["verdict"] == "unverified_quote" and out["pairs_supported"] == 0   # 인용 못 댄 supported 는 세지 않는다
+    assert out["citation_support_rate"] == 0.0
+
+
+def test_support_run_batches_pairs_and_refuses_unfinished(tmp_path, monkeypatch):
+    d = _support_dir(tmp_path)
+    monkeypatch.setattr(judge, "SUPPORT_BATCH_PAIRS", 1)              # claim 단위로 묶되 상한을 넘으면 새 배치
+    s, client = _client(tmp_path, [_verdicts()])
+    out = judge.support_run(d, s, client=client)
+    assert out["llm_calls"] == 1 and out["pairs_judged"] == 2          # c1 의 쌍 2개는 쪼개지 않는다 (claim 이 최소 단위)
+    e = tmp_path / "20261007T000001Z_graph_e"
+    e.mkdir()
+    with pytest.raises(ValueError, match="brief.json"):
+        judge.support_run(e, s, client=SimpleNamespace())
+
+
+def test_judgeable_runs_marker_selects_support_targets(tmp_path):
+    a = _run_dir(tmp_path, name="20261004T000001Z_graph_a")
+    b = _run_dir(tmp_path, name="20261004T000002Z_graph_b")
+    (a / "judge.json").write_text("{}", encoding="utf-8")
+    (b / "support.json").write_text("{}", encoding="utf-8")
+    assert judge.judgeable_runs(tmp_path) == [b]
+    assert judge.judgeable_runs(tmp_path, marker="support.json") == [a]
