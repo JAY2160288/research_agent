@@ -58,6 +58,8 @@ Critic 판정과 Replan 쿼리는 `events.jsonl` 의 `critique` / `replan` 이�
 ```bash
 uv run agent judge runs/<실행 폴더>            # 완주한 실행의 report.md 를 루브릭 J1~J7 로 채점 → 그 폴더에 judge.json
 uv run agent judge --all [--mode graph]        # judge.json 이 없는 완주 실행 전부
+uv run agent support runs/<실행 폴더> | --all   # 주장-근거 지지 검증: §4 claim 마다 인용 초록이 실제로 뒷받침하는지 → support.json (ADR-10)
+uv run python scripts/gold_recall.py --md [--model claude-sonnet-5-5]   # 정답 서베이(eval/gold.yaml) 참고문헌 회수율 — 네트워크·LLM 없이 캐시로 계산
 uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C,A --dry-run   # 계획·OpenAlex 예산만 출력
 uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C --model claude-sonnet-5-5 --judge --wait   # --wait: OpenAlex 잔량 부족 시 일일 리셋(00:00 UTC)까지 대기
 uv run python scripts/summarize_runs.py --ablation --md [--model claude-sonnet-5-5]   # 주제 × 조건 매트릭스 + 조건별 평균 (judge 평균 포함, --model 로 한 모델만)

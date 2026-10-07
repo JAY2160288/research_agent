@@ -1,6 +1,6 @@
 # design.md — 설계 문서 (초안)
 
-- 상태: **W4 Day 4 초안 (2026-10-07)** — §3 ablation 결과·§4 불변 지표만 채움. 아키텍처·설계 의도(§1~2)·반복 실행 편차(§5)·한계(§6) 는 마무리(plan.md §5 5.1, 10/10~) 에서 채운다.
+- 상태: **W4 Day 4 초안 (2026-10-07)** — §3 ablation 결과(§3.5 외부 벤치마크 대응·§3.6 사후 지표 2종 포함)·§4 불변 지표만 채움. 아키텍처·설계 의도(§1~2)·반복 실행 편차(§5)·한계(§6) 는 마무리(plan.md §5 5.1, 10/10~) 에서 채운다.
 - 상위 문서: `../../goals.md` (목표 O1~O7), `../../plan.md` (ADR, 작업 분해, 평가 설계). 이 문서는 두 문서의 결론 + 실험 결과를 한 곳에 모은 제출용 설명서다.
 - 표의 원천: `uv run python scripts/summarize_runs.py --ablation --md --model claude-sonnet-5-5` (각 실행 폴더의 `cost.json` `checks` + `judge.json`). 손으로 고치지 않는다 — 실행이 늘면 다시 생성해 붙여 넣는다.
 
@@ -71,6 +71,46 @@ goals.md O7: 실행마다 문장·선택 문헌은 달라져도 **리포트 섹�
 4. **비용·시간**: A $0.19·1.2분 → B/C $0.30~0.33·3분 → D $0.77·6.9분. 전부 goals.md O6 상한(≤ $1, ≤ 10분) 안. D 는 Replan 라운드마다 evaluate 증분 호출이 늘어 호출 수가 19~25회.
 5. **judge 는 보조 지표**: 같은 Claude 로 채점하므로 자기 채점 편향이 있다 (plan.md §6.2). 결정적 지표와 모순된 점수(`flags`)는 20회 중 0건. A 와 D 의 차이 0.54 는 J3(종합 깊이)·J4(Gap 근거)에서 주로 난다 — 항목별 표는 5.1 에서.
 
+### 3.5 외부 벤치마크의 평가 축과의 대응 (ADR-10)
+
+공개 벤치마크 중 우리 과제(주제 → 착수 브리프, 한국어 입력)를 그대로 재는 것은 없다 — ReportBench·DeepScholar-bench 는 서베이/related-work 생성, DeepResearch Bench 는 웹 리서치 리포트(EN/ZH), ScholarQABench 는 질의응답이다. 그래서 벤치마크를 통째로 돌리는 대신 **평가 축을 빌려** 우리 지표가 어디에 대응하고 무엇이 비어 있었는지 표시한다.
+
+| 외부 축 | 출처 | 우리 지표 | 비고 |
+|---|---|---|---|
+| Comprehensiveness / Insight / Instruction-following / Readability | DeepResearch Bench **RACE** | J2 계획 완결성 / J4 종합 깊이·J5 Gap / J1 주제 이해 / (요약 가독성은 미측정) | judge 가 같은 축을 5점 척도로 |
+| Citation accuracy (인용이 주장을 지지) | DeepResearch Bench **FACT**, ReportBench faithfulness, DeepScholar verifiability | **`citation_support_rate`** (`agent support`, 2026-10-07 추가) | 이전엔 실존 검증(`citation_verified_rate`)만 있었다 — 문헌이 공통으로 지적하는 맹점 |
+| Effective citations (주장당 유효 인용) | FACT | **`claim_support_rate`** + `claims_with_source` | |
+| Reference coverage (정답 서베이 참고문헌 회수) | ReportBench, SurveyBench, DeepScholar retrieval quality | **`gold_recall.py`** retrieved / evaluated / cited | 결정적, LLM 비용 0 |
+| Link validity / 인용 실존 | FACT, "Cited but Not Verified" | `citation_verified_rate` = 100% (도구 레이어가 보장) | 프런티어 모델도 링크 유효 94%+ vs 사실 정확도 39~77% — 둘을 분리해 보고해야 한다 |
+| Planning / Retrieval / Reasoning 모듈별 평가 | ADRA-Bank | 노드 단위 결정적 검증(`check()`) + ablation B/C/D | 모듈 분리 구조가 같은 평가 단위 |
+| 아이디어 참신성 | IdeaBench, AI Idea Bench 2025 | 미측정 (non-goal) | "미래 논문" 이 정답이라 지식 누출 문제 |
+
+### 3.6 사후 지표 2종 결과 (ADR-10, 2026-10-07)
+
+**정답 서베이 참고문헌 회수율** (`uv run python scripts/gold_recall.py --md --model claude-sonnet-5-5`, 정답 = `eval/gold.yaml` 의 사람 서베이 7편 참고문헌 47~189편):
+
+| cond | n | retrieved | evaluated | cited |
+|---|---|---|---|---|
+| A | 5 | 0.6% | 0.6% | 0.5% |
+| B | 5 | 3.4% | 3.0% | 2.0% |
+| C | 5 | 3.4% | 3.0% | 1.8% |
+| D | 5 | 3.6% | 3.2% | 1.7% |
+
+읽는 법: (1) 절대값이 낮은 것은 설계상 예상된 결과다 — sub-RQ 당 12편만 선별하고 키워드 검색 상위 15편씩만 보며, 정답 서베이는 방법론·배경 문헌까지 인용한다 (DeepScholar-bench 도 어떤 시스템이든 기하평균 31% 미만). (2) 그래도 두 가지는 분명하다. **베이스라인(A)은 그래프의 1/6** — 검색 횟수 6~10회 vs sub-RQ 6 × 쿼리 4 = 24회 차이가 그대로 회수율 차이다. **D 가 B 보다 retrieved 는 높지만 cited 는 낮다** — Replan 이 후보는 늘리지만 인용은 주제 적합도로 고르므로 정답 서베이 참고문헌과 겹치지 않을 수 있다. (3) 가장 큰 손실은 **검색 단계**(retrieved ≤ 6%)에서 난다: 그래프가 300~400편을 모아도 사람 서베이 참고문헌과 거의 겹치지 않는다. 키워드 검색이 아니라 **인용 그래프 확장**(평가 상위 문헌의 `referenced_works`·`cited_by` 를 따라가는 snowballing)이 다음 개선점이다 — §6.
+
+**주장-근거 지지율** (`agent support`, A·D 조건 10건, judge opus, 합계 $1.64; B·C 는 크레딧을 아껴 생략 — 같은 계획·검색 위에서 synthesize 가 같은 노드라 D 와 다를 이유가 적다). cite = supported 쌍 / 판정 쌍, (lenient) = supported+partial, claim = 지지 문헌 ≥1 인 claim 비율. 초록 없는 문헌 0건, 인용문 대조 실패 0건.
+
+| topic | A cite (lenient) | A claim | D cite (lenient) | D claim |
+|---|---|---|---|---|
+| T1 | 38% (100%) | 71% | 60% (97%) | 92% |
+| T2 | 68% (96%) | 89% | 69% (97%) | 92% |
+| T3 | 65% (96%) | 78% | 83% (100%) | 100% |
+| T4 | 38% (81%) | 67% | 83% (100%) | 85% |
+| T6 | 50% (95%) | 75% | 94% (100%) | 100% |
+| **평균** | **52%** (94%) | **76%** | **78%** (99%) | **94%** |
+
+읽는 법: (1) **인용 실존 100% 와 지지율은 다른 지표**라는 문헌의 지적이 우리 데이터에서도 그대로 나온다 — 실존은 양쪽 다 100% 인데 "초록이 그 주장을 직접 뒷받침" 하는 비율은 A 52% · D 78%. (2) 차이의 대부분은 **partial** 에서 난다 (unsupported 는 A 7쌍 / D 2쌍 뿐): 베이스라인은 초록보다 넓은 집단·강한 표현으로 주장을 쓰고, 그래프는 evaluate 노드가 문헌마다 `finding` 을 먼저 적게 한 뒤 synthesize 가 그 필드만 보고 쓰므로 주장이 초록 범위 안에 머문다 — 구조가 보장하는 품질(O7)의 또 한 예. (3) 남은 unsupported 는 "문헌이 X 를 다루지 않는다" 류의 **부재 주장**을 그 문헌에 인용한 경우가 대부분 (예: T4 A c5 "비안내형으로의 일반화 문제" 를 안내형 RCT 2편에 인용) — Gap 성격의 문장이 §4 종합에 섞인 것이라, synthesize 프롬프트에서 부재 주장은 Gap 으로 보내도록 하는 것이 개선점.
+
 ## 4. 불변 지표 PASS 여부 (goals.md O2·O7)
 
 | 지표 | 기준 | 결과 (sonnet, 20회) | 판정 |
@@ -82,6 +122,8 @@ goals.md O7: 실행마다 문장·선택 문헌은 달라져도 **리포트 섹�
 | sub-RQ 커버리지 (evidence ≥ 3) | 최종 구조(D) 100% | D 5/5 주제 100%, C 5/5, B 4/5, A 4/5 | PASS (D 기준) |
 | 비용·시간 상한 | ≤ $1 · ≤ 10분 | 최대 $0.825 · 7.5분 (T1 D) | PASS |
 | 분야 범용성 (O1) | 서로 다른 분야 5개 이상 | 교육·사회과학, CS, 경영·회계, 의학·보건, NLP | PASS — 단 §6 한계 참고 |
+| 주장-근거 지지율 (ADR-10, 보조) | 목표 없음 — 기록 | D claim 94% · cite 78% (A 76% · 52%) | 기록 (§3.6) |
+| 정답 서베이 참고문헌 회수율 (ADR-10, 보조) | 목표 없음 — 기록 | D retrieved 3.6% · cited 1.7% (A 0.6% · 0.5%) | 기록 (§3.6) |
 
 ## 5. 반복 실행 편차 (TODO 5.1 / W4 Day 6 선택)
 
@@ -93,4 +135,7 @@ W3 에서 Haiku 로 같은 주제 3회 반복 (plan.md §8 2026-10-04): 구조 �
 - **분야 분산 약화**: 2026-10-06 에 T5(경제·공공정책) 를 빼고 T6(NLP) 를 넣어 사회과학은 T1 이 겸하고 T2·T6 은 넓게 보면 둘 다 CS 다 (plan.md §6.1).
 - **검색 캐시 위 비교**: B/C/D 는 같은 검색 스냅샷을 쓰므로 "검색 변동" 은 통제됐지만 측정되지도 않았다. live 재현은 `--no-cache`.
 - **sub-RQ 커버리지는 편수 기준**: T6 D 가 보여주듯 편수는 채워도 언어·대상이 빗나간 문헌일 수 있다. LLM Critic 이 이를 잡지만 결정적 지표에는 반영되지 않는다.
+- **검색 레이어의 회수율이 낮다** (§3.6): 사람 서베이 참고문헌의 ≤ 6% 만 후보에 들어온다. 키워드 검색(OpenAlex 상위 15편 × 쿼리)만 쓰고 인용 그래프를 따라가지 않기 때문. 개선안: evaluate 상위 문헌의 `referenced_works`·`cited_by` 를 한 홉 확장하는 snowballing (OpenAlex 호출 ≈ 편당 1회 → 일일 한도 안에서 sub-RQ 당 3~5편). 파이프라인 변경이라 ablation 재실행이 필요해 이번 제출에선 넣지 않는다.
+- **지지 검증도 초록 기준**: `agent support` 는 초록만 보고 판정하므로 본문에만 있는 결과는 partial/unsupported 로 나올 수 있고, 반대로 초록이 과장된 경우를 잡지 못한다. judge 와 같은 자기 채점 편향도 있다 (인용문 verbatim 대조로 일부 완화).
+- **정답 서베이 선택의 임의성**: 주제당 1~2편을 OpenAlex 검색 상위에서 골랐다 (`eval/gold.yaml`). 서베이의 범위가 주제보다 넓거나(T6 의 토크나이징 전반 서베이) 좁으면 회수율이 그만큼 왜곡된다. 조건 간 상대 비교로만 쓴다.
 - OpenAlex 일일 한도(검색 ≈ 100회/IP) 때문에 반복 횟수를 늘리지 못했다.

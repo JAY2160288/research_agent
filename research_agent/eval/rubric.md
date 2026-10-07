@@ -14,6 +14,11 @@ judge 도 Claude 로 돌리므로 자기 채점 편향이 있다 → judge 는 �
 | Gap 근거 | 모든 Gap 에 evidence ≥2 | 100% (O3) |
 | 스키마 1차 통과율 | 재시도 없이 통과 / 호출 | 기록 (L2) |
 | 비용 / 시간 | cost_usd, elapsed_sec | ≤ $1, ≤ 10분 (O6) |
+| 정답 서베이 참고문헌 회수율 | `scripts/gold_recall.py` — 사람 서베이(`eval/gold.yaml`) 참고문헌 중 retrieved / evaluated / cited 비율 | 기록 (조건 간 상대 비교, ADR-10) |
+
+지지 검증 (`agent support` → `support.json`, ADR-10): 인용 검증률이 **실존**만 보는 것을 보완한다. §4 종합의 (claim, 인용 문헌) 쌍마다 judge 모델이
+초록을 읽고 supported / partial / unsupported 를 판정하되 인용문을 초록에서 그대로 베껴야 하고 코드가 대조한다 (못 대면 supported 아님).
+`citation_support_rate` = supported 쌍 / 판정 쌍, `claim_support_rate` = 지지 문헌이 1편 이상인 claim / 전체 claim. 초록 없는 문헌은 분모에서 뺀다.
 
 ## B. LLM-judge (1~5점, 항목마다 근거 인용 필수)
 
