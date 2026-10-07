@@ -44,6 +44,12 @@ def load_topics() -> dict[str, dict]:
     return {t["id"]: t for t in raw["topics"]}
 
 
+def topic_order(topics: dict[str, dict]) -> list[str]:
+    """--topics 를 안 줬을 때의 실행 순서: priority 오름차순 (없으면 맨 뒤), 같으면 topics.yaml 에 적힌 순서.
+    sorted 는 안정 정렬이라 priority 가 같은 주제끼리는 원래 순서가 유지된다."""
+    return sorted(topics, key=lambda tid: topics[tid].get("priority", 99))
+
+
 def existing_runs() -> list[tuple[Path, dict]]:
     out = []
     for d in sorted(RUNS_DIR.iterdir()):
@@ -98,9 +104,9 @@ def estimate(cond: str, max_replans: int, plan_reused: bool) -> int:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--topics", default="T1,T2,T3,T4,T5", help="eval/topics.yaml 의 id, 쉼표 구분")
+    ap.add_argument("--topics", default=None, help="eval/topics.yaml 의 id, 쉼표 구분 (기본: 전체, priority 순)")
     ap.add_argument("--conditions", default="D,B,C,A", help="A~D, 쉼표 구분. D 는 항상 먼저 실행된다")
-    ap.add_argument("--lang", default="ko", choices=["ko", "en"], help="주제 언어 (T5 는 ko 만 있음)")
+    ap.add_argument("--lang", default="ko", choices=["ko", "en"], help="주제 언어 (en 이 없는 주제는 ko 로 돈다)")
     ap.add_argument("--model", default=None, help="실행 모델 (기본 config llm.model). 품질 측정은 claude-sonnet-5-5")
     ap.add_argument("--max-replans", type=int, default=None, help="C/D 의 Replan 상한 (기본 config graph.max_replans)")
     ap.add_argument("--openalex-budget", type=int, default=100, help="이번 세션에서 쓸 OpenAlex 검색 추정 상한")
@@ -124,7 +130,8 @@ def main() -> None:
     # ---- 계획 ------------------------------------------------------------
     jobs = []   # (topic_id, lang, cond, topic_text, plan_source | None | "from-D-in-this-batch", est)
     used = 0
-    for tid in [t.strip().upper() for t in a.topics.split(",") if t.strip()]:
+    topic_ids = [t.strip().upper() for t in a.topics.split(",") if t.strip()] if a.topics else topic_order(topics)
+    for tid in topic_ids:
         t = topics.get(tid)
         if t is None:
             sys.exit(f"unknown topic {tid}; choose from {list(topics)}")
