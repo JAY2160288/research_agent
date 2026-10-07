@@ -39,4 +39,4 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 | W1 | 스키마, LLM 래퍼, 학술 도구, 베이스라인 ReAct, 평가 세트 | 완료 |
 | W2 | 역할 분리 그래프(Planner·Searcher·Evaluator·Synthesizer·Critic·Writer) | 완료 (Critic 결정적 검사까지. Replan 루프는 W3) |
 | W3 | Reflection·Replanning 루프, 반복 실행 안정성 | 완료 (Critic LLM 비판 + Replan 루프, 같은 주제 3회 반복 측정) |
-| W4 | 베이스라인 vs 최종 구조 ablation, LLM-judge, 클린룸 재현 테스트 | 진행 중 — Day 1 judge·ablation 인프라, Day 2 T1·T2 × B/C/D (sonnet) 완료 (2026-10-05). 남은 것: T3~T5, 베이스라인 A 재실행, 클린룸 |
+| W4 | 베이스라인 vs 최종 구조 ablation, LLM-judge, 클린룸 재현 테스트 | 진행 중 — ablation 주제 5개 × 조건 4개 = 20회 완주 + judge, `research_agent/docs/design.md` 초안 (2026-10-07). 남은 것: 클린룸 재현, 누출 검사 |

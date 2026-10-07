@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
     §3.1 디렉터리 트리는 초안 기준이라 실제와 조금 다를 수 있다 (`logging.py` → 실제는 `runlog.py`,
     LLM-judge 는 `eval/judge.py` 가 아니라 `src/research_agent/judge.py`). 파일 위치는 코드를 기준으로 판단한다.
 - 코드는 전부 `research_agent/` 아래. 문서는 한국어, 코드 주석도 한국어.
-- 진행 상태: W1~W3 + W4 Day 3 완료 (2026-10-06, ablation T1~T4 × B/C/D + A × T1~T4, sonnet). 다음은 W4 Day 4 (plan.md §5 W4 일별 계획) — `uv run python scripts/run_ablation.py --topics T5 --conditions D,B,C,A --model claude-sonnet-5-5 --judge` (OpenAlex 리셋 09:00 KST 이후), 그 다음 `summarize_runs.py --ablation --md --model claude-sonnet-5-5` 로 design.md 매트릭스, 10/08 클린룸 재현 + config `model` 을 sonnet 으로 교체. OpenAlex 는 00:00 UTC(09:00 KST) 리셋, 러너가 헤더로 잔량을 확인하고 추정치보다 적으면 멈춘다(`--wait` 는 리셋까지 잠드니 잔량이 20시간 뒤에나 돌아올 땐 쓰지 말고 `--topics` 를 줄일 것).
+- 진행 상태: W1~W3 + W4 Day 4 완료 (2026-10-07, ablation 주제 5개 × 조건 4개 = 20회 완주, sonnet; `docs/design.md` 초안 §3·§4). 다음은 W4 Day 5 (plan.md §5 W4 일별 계획) — 10/08 클린룸 재현(임시 폴더 `git clone` → 새 `.env` → README 3단계, sonnet 1회 + `--model claude-haiku-4-5` 1회), 누출 검사 `git grep -n "sk-ant\|/Users/"`, zip 용량, config `model` 을 sonnet 으로 교체. design.md §1·2·5·6 은 마무리(5.1)에서. 매트릭스가 바뀌면 `summarize_runs.py --ablation --md --model claude-sonnet-5-5` 출력을 design.md §3 에 다시 붙인다. OpenAlex 는 00:00 UTC(09:00 KST) 리셋, 러너가 헤더로 잔량을 확인하고 추정치보다 적으면 멈춘다(`--wait` 는 리셋까지 잠드니 잔량이 20시간 뒤에나 돌아올 땐 쓰지 말고 `--topics` 를 줄일 것).
 
 ## 명령어 (`research_agent/` 에서 실행)
 
@@ -90,7 +90,7 @@ uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C,A [--mod
 - LLM 은 `messages.parse` 를 흉내 내는 `FakeMessages` 로, HTTP 는 `httpx.MockTransport` 로 모킹. 실제 네트워크 테스트는 `scripts/smoke_*.py` 로만.
 - `RunLogger(..., runs_dir=tmp_path)` 로 테스트 중 `runs/` 오염을 막는다. 러너(`graph.run_graph`·`baseline.run_baseline`)를 통째로 돌리는 테스트는 `monkeypatch.setattr(graph, "RunLogger", ...)` 로 같은 효과를 낸다 (`tests/test_graph.py` 참고).
 - 노드 테스트는 `FakeMessages([출력1, 출력2, ...])` 에 호출 순서대로 Pydantic 객체를 넣어 LLM 응답을 정한다. 검사 실패 → 재호출 흐름을 검증하려면 첫 출력에 일부러 결함을 넣는다. `graph.critic: full` 이 기본이므로 그래프 통째 테스트는 critic 의 LLM 비판 출력(`{"issues": []}`)도 순서에 넣어야 한다. Replan 루프 테스트는 `tests/test_replan.py`.
-- 테스트 주제 5개는 `eval/topics.yaml` (T1~T5, 분야 분산, 한·영 혼합). 특정 주제에 맞춘 프롬프트 튜닝은 금지 — 실제 평가 주제는 다를 수 있다.
+- 테스트 주제 5개는 `eval/topics.yaml` (T1~T4·T6, 분야 분산, 한·영 혼합). `priority` 필드가 중요도(T1 → T6 → 나머지)이고 id 는 실행 기록과 묶여 있어 재번호하지 않는다 (T5 는 2026-10-06 삭제, 결번). 특정 주제에 맞춘 프롬프트 튜닝은 금지 — 실제 평가 주제는 다를 수 있다.
 
 ## 작업 시 지킬 것
 
