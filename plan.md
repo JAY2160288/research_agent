@@ -271,7 +271,7 @@ OpenAlex 가 429 로 Crossref 폴백 상태에 들어가면 그날 ablation 은 
 | # | 태스크 |
 |---|---|
 | 5.1 | `docs/design.md` = goals + plan + 실험 결과 + "달라지는 것/아닌 것" 표 + 한계 — ✅ 2026-10-08 (당겨서 완료, §8) |
-| 5.2 | README 최종, 제출 — README 는 10/08 정리 완료, 제출 직전 누출 검사·zip 재확인만 남음 |
+| 5.2 | README 최종, 제출 — README 는 10/08 정리 완료. **제출 직전 체크리스트**: (1) `git grep -n "sk-ant\|/Users/"` 누출 재검사, (2) **zip 은 `git archive` 가 아니라 `runs/` 를 포함해 만든다** — `runs/` 는 gitignore 라 GitHub 에 없고, 지침의 "입출력 결과" 가 바로 이 폴더 (goals.md §6). 2026-10-08 기준 50개 실행 50MB (최대 2.6MB/실행), 1GB 한도 안이라 전부 포함. `.cache/`·`.venv/`·`.env` 는 제외: `cd research_agent/.. && zip -r submission.zip research_agent goals.md plan.md -x "*/.venv/*" "*/.cache/*" "*/.env" "*/__pycache__/*"`, (3) zip 을 다른 폴더에 풀어 README 3단계가 그대로 도는지 1회 확인 (OpenAlex 잔량 ≥ 40회일 때), (4) GitHub 링크 병기 |
 
 ---
 
