@@ -21,14 +21,17 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 
 | 파일 | 내용 |
 |---|---|
-| `report.md` | 최종 리포트 — 맨 위 "한눈에" 카드(결정적 지표), 요약, 7개 섹션, 번호 인용 [n] + 참고문헌 목록 |
-| `brief.json` | 같은 내용의 구조화 데이터 (스키마: `schemas/brief.json`) |
+| `report.md` | 최종 리포트 — 요약, 먼저 읽을 문헌 Top 10, 품질 카드(결정적 지표), 7개 섹션, 번호 인용 [n] + 참고문헌 목록. `agent translate` 를 거친 실행은 한국어본 |
+| `report.en.md` | (번역한 실행만) 영어 원문 리포트 |
+| `brief.json` | 같은 내용의 구조화 데이터 (스키마: `schemas/brief.json`). 영어 — 진실 원천 |
+| `brief.ko.json` | (번역한 실행만) 산문 필드의 한국어 사전 + 번역 검사 결과 |
 | `events.jsonl` | 모든 LLM 호출·도구 호출·단계 전이 로그 |
 | `cost.json` | 토큰·비용·시간·결정적 품질 지표 |
 | `papers.json` | 이번 실행에서 수집한 모든 문헌 |
 
 리포트 7개 섹션은 지침의 Agent 역할 6단계에 대응합니다: §1 주제 재정의(이해) → §2 조사 계획 → §3 Evidence Table(탐색·평가) → §4 종합(합의·상충·조건부) → §5 Research Gap → §6 향후 연구 방향 → §7 한계와 신뢰도.
-**출력 언어**: 주제는 한국어·영어 모두 받습니다. 리포트의 요약(§0)은 한국어, 본문(§1~§7)은 영어입니다 — 검색 쿼리·초록이 영어라 종합·Gap 을 영어로 써야 초록과의 주장-근거 대조(`agent support`)가 verbatim 으로 가능하기 때문입니다.
+**출력 언어**: 주제는 한국어·영어 모두 받습니다. 파이프라인은 요약만 한국어, 나머지는 영어로 씁니다 (검색 쿼리·초록이 영어라 토큰·검사 측면에서 안전하고, 초록과의 주장-근거 대조 `agent support` 도 이 영어본에 대고 합니다).
+독자용 한국어 리포트는 `uv run agent translate runs/<실행 폴더>` 가 만듭니다 — brief 의 산문만 LLM 1회(≈ $0.12)로 옮기고, 논문 제목·저자·DOI·검색 쿼리·인용문은 영어 그대로 둡니다. 번역이 숫자·DOI 를 빠뜨리지 않았는지 코드가 검사하고, 걸린 항목은 영어로 남깁니다. 영어 원문은 `report.en.md`, `brief.json` 은 바뀌지 않습니다.
 
 ### 모델 바꾸기
 
@@ -68,6 +71,7 @@ uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C,A --dry-
 uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C --model claude-sonnet-5-5 --judge --wait   # --wait: OpenAlex 잔량 부족 시 일일 리셋(00:00 UTC)까지 대기
 uv run python scripts/summarize_runs.py --ablation --md [--model claude-sonnet-5-5]   # 주제 × 조건 매트릭스 + 조건별 평균 (judge 평균 포함, --model 로 한 모델만)
 uv run agent render runs/<실행 폴더> | --all   # brief.json·papers.json·cost.json 으로 report.md 다시 그리기 (LLM·키 불필요, 옛 파일은 report_v1.md 로 보관)
+uv run agent translate runs/<실행 폴더> | --all   # brief 산문을 한국어로 → report.md 한국어본, 영어 원문은 report.en.md (LLM 1회 ≈ $0.12, brief.json 불변)
 ```
 
 judge 는 `config/models.yaml` 의 `judge_model`(기본 Opus — 실행 모델과 다르게 두어 자기 채점 편향 완화)로 돌고, 항목마다 리포트 문장을 그대로 인용해야 하며,

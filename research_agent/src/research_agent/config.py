@@ -19,7 +19,8 @@ RUNS_DIR = ROOT / "runs"
 class LLMConfig(BaseModel):
     model: str
     judge_model: str
-    max_tokens: int = 8192             # 베이스라인 ReAct·최종 브리프용 상한
+    translate_model: str = "claude-sonnet-5-5"   # `agent translate` 용 (ADR-11). 번역 품질이 곧 독자가 읽는 본문
+    max_tokens: int = 8192            # 베이스라인 ReAct·최종 브리프용 상한
     node_max_tokens: int = 6000        # 그래프 노드 1회 호출 상한. 노드 출력은 2~3k 토큰이면 충분 — 더 크면 폭주 출력이 잘려 JSON 이 깨진다
     max_retries: int = 2
     request_timeout_sec: float = 180   # HTTP 요청 1건 상한. SDK 기본 600초라 멈춘 요청 하나가 10분 상한을 통째로 먹는다 (2026-10-04 관찰)

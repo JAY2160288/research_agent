@@ -154,6 +154,51 @@ def support(
 
 
 @app.command()
+def translate(
+    run_dirs: list[str] = typer.Argument(None, help="번역할 실행 폴더 (runs/<timestamp>_<mode>_<slug>). 생략하면 --all"),
+    all_runs: bool = typer.Option(False, "--all", help="runs/ 의 완주 실행 중 brief.ko.json 이 없는 것 전부"),
+    mode: str | None = typer.Option(None, "--mode", help="--all 일 때 baseline | graph 만"),
+    since: str = typer.Option("", "--since", help="--all 일 때 이 타임스탬프(폴더명 접두) 이후만"),
+    force: bool = typer.Option(False, "--force", help="이미 brief.ko.json 이 있어도 다시 번역"),
+    model: str | None = typer.Option(None, "--model", help="config llm.translate_model 을 이번만 덮어씀"),
+):
+    """brief.json 의 산문을 한국어로 옮겨 report.md 를 한국어본으로 다시 그린다 (ADR-11). 영어 원문은 report.en.md 로, brief.json 은 불변.
+    LLM 1회 호출(실행당 ≈ $0.05~0.1), 네트워크 검색 없음. 번역 검사(숫자·DOI 보존, 한글, 길이 비율)에 걸린 항목은 영어로 남고 brief.ko.json 의 fallback_en 에 기록."""
+    from pathlib import Path
+    from .config import RUNS_DIR
+    from .judge import judgeable_runs
+    from .translate import translate_run
+    s = load_settings()
+    if not s.anthropic_api_key:
+        typer.echo("ANTHROPIC_API_KEY 가 없습니다 (.env 확인)", err=True)
+        raise typer.Exit(1)
+    if run_dirs:
+        targets = [Path(d) for d in run_dirs]
+    elif all_runs:
+        targets = judgeable_runs(RUNS_DIR, mode=mode, since=since, force=force, marker="brief.ko.json")
+    else:
+        typer.echo("실행 폴더를 주거나 --all 을 붙이세요", err=True)
+        raise typer.Exit(1)
+    if not targets:
+        typer.echo("번역할 실행이 없습니다 (이미 brief.ko.json 이 있으면 --force)")
+        return
+    total = 0.0
+    for d in targets:
+        if (d / "brief.ko.json").exists() and not force and run_dirs:
+            typer.echo(f"skip (brief.ko.json 있음, --force 로 재번역): {d.name}")
+            continue
+        try:
+            r = translate_run(d, s, model=model)
+        except ValueError as e:
+            typer.echo(f"skip: {e}")
+            continue
+        total += r["cost_usd"]
+        typer.echo(f"{d.name[:60]}  {len(r['items'])}/{r['source_items']} 항목  {r['source_chars'] // 1000}k→{r['ko_chars'] // 1000}k자"
+                   f"  ${r['cost_usd']:.3f}  {r['llm_calls']}회" + (f"  ⚠ {r['notes'][0]}" if r["notes"] else ""))
+    typer.echo(f"\n{len(targets)}개 번역, 비용 합계 ${total:.3f} (원 실행 cost.json 에는 포함되지 않음)")
+
+
+@app.command()
 def render(
     run_dirs: list[str] = typer.Argument(None, help="다시 그릴 실행 폴더 (runs/<timestamp>_<mode>_<slug>). 생략하면 --all"),
     all_runs: bool = typer.Option(False, "--all", help="runs/ 의 완주 실행(brief.json 있는 것) 전부"),

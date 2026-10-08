@@ -112,7 +112,8 @@ def _link_ids(text: str, refs: _Refs, papers: dict[str, Paper]) -> str:
 
     def doi_sub(m: re.Match[str]) -> str:
         tok, tail = m.group(0), ""
-        while tok and tok.lower() not in papers and tok[-1] in _TRAIL:   # 문장부호가 붙어 온 경우 떼어 본다
+        # 문장부호나 한국어 조사("…-6)는")가 붙어 온 경우 떼어 본다 — DOI 는 ASCII 라 비 ASCII 는 전부 꼬리
+        while tok and tok.lower() not in papers and (tok[-1] in _TRAIL or not tok[-1].isascii()):
             tail, tok = tok[-1] + tail, tok[:-1]
         if tok.lower() in papers:
             return f"[{refs.n(tok.lower())}]{tail}"
@@ -150,7 +151,7 @@ def _split_title(desc: str, limit: int = 160, short: int = 110) -> tuple[str, st
        '주어구' 만 제목으로 쓰고 전문을 본문에 둔다. 예: "Direct measurement of X (word count, …) has never …" → "Direct measurement of X".
     3) 그것도 없으면 short 자 안쪽 단어 경계에서 자르고 … 를 붙인다."""
     desc = desc.strip()
-    parts = re.split(r"(?<=[.!?])\s+(?=[A-Z\[(])", desc, maxsplit=1)
+    parts = re.split(r"(?<=[.!?])\s+(?=[A-Z\[(가-힣])", desc, maxsplit=1)   # 다음 문장이 대문자·괄호·한글로 시작할 때만 (e.g. 방지)
     first, rest = parts[0], (parts[1] if len(parts) > 1 else "")
     if len(first) <= limit:
         return first, rest
@@ -181,9 +182,27 @@ def _auto_note(body: str) -> tuple[str, list[str]]:
 
 # ---------------------------------------------------------------- 렌더링
 
+def _assigned(b: ResearchBrief) -> list[Evidence]:
+    """어느 sub-RQ 에든 배정된 평가 문헌 (관련성 낮아 버려진 것 제외)."""
+    ids = {s.id for s in b.plan.sub_rqs}
+    return [e for e in b.evidence.items if any(sid in ids for sid in e.sub_rq_ids)]
+
+
+def top_read(b: ResearchBrief, papers: dict[str, Paper] | None = None, n: int = TOP_READ) -> list[Evidence]:
+    """"먼저 읽을 문헌": 배정된 문헌 중 rel ≥ 3 을 관련성 → 신뢰도 → 연도 순으로. 렌더러와 translate 가 같은 선정을 써야 해서 분리."""
+    papers = papers or {}
+
+    def year(e: Evidence) -> int:
+        p = papers.get(e.paper_id)
+        return (p.year or 0) if p else 0
+    return sorted((e for e in _assigned(b) if e.relevance >= 3), key=lambda e: (-e.relevance, -e.reliability, -year(e)))[:n]
+
+
 def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
-                    checks: dict[str, Any] | None = None, stats: dict[str, Any] | None = None) -> str:
+                    checks: dict[str, Any] | None = None, stats: dict[str, Any] | None = None,
+                    banner: str | None = None) -> str:
     """goals.md §5 의 7개 섹션 + 참고문헌. papers 가 있으면 제목·연도·링크를 붙인다.
+    banner: 제목 아래 한 줄 안내 (한국어본에서 "영어 원문은 report.en.md" 같은 것).
 
     읽는 순서(2026-10-08 상품성 개편): 요약 → 먼저 읽을 문헌 → 품질 카드 → §1~§7 → 참고문헌.
     독자가 원하는 답(무엇을 읽고, 무엇이 비어 있나)을 앞에, 채점·검증용 표는 접어서 뒤에 둔다.
@@ -218,13 +237,12 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
 
     # ---- 제목, 요약
     lines += [f"# Research Brief: {tf.original_topic}", "", f"> RQ — {tf.research_question}", ""]
+    if banner:
+        lines += [f"> {banner}", ""]
     lines += ["## 요약", "", L(b.executive_summary), ""]
 
     # ---- 먼저 읽을 문헌: 평가 점수(관련성 → 신뢰도 → 최신)로 결정적으로 고른다. 번호 [1]~[N] 이 여기서 매겨진다.
-    def _year(e: Evidence) -> int:
-        p = papers.get(e.paper_id)
-        return (p.year or 0) if p else 0
-    top = sorted((e for e in assigned if e.relevance >= 3), key=lambda e: (-e.relevance, -e.reliability, -_year(e)))[:TOP_READ]
+    top = top_read(b, papers)
     if top:
         lines += [f"## 먼저 읽을 문헌 ({len(top)}편)", "",
                   "Evaluator 의 관련성(rel)·신뢰도(reli) 점수 순. 전체 평가 표는 §3, 서지 정보는 참고문헌.", "",
@@ -388,6 +406,16 @@ def rerender_run(run_dir: Any, keep_old: bool = True) -> dict[str, Any]:
     if keep_old and old.exists() and not (d / "report_v1.md").exists():
         (d / "report_v1.md").write_text(old.read_text(encoding="utf-8"), encoding="utf-8")
     md = render_markdown(brief, papers, checks=checks, stats=stats)
+    ko_f = d / "brief.ko.json"
+    lang = "en"
+    if ko_f.exists():
+        # 한국어 번역(ADR-11)이 있으면 report.md 는 한국어본, 영어 원문은 report.en.md 로. 번역은 brief.json 을 바꾸지 않는다
+        from .translate import KO_BANNER, apply_translation
+        ko = json.loads(ko_f.read_text(encoding="utf-8"))
+        ko_brief = apply_translation(brief, ko.get("items", {}))
+        (d / "report.en.md").write_text(md, encoding="utf-8")
+        md = render_markdown(ko_brief, papers, checks=checks, stats=stats, banner=KO_BANNER)
+        lang = "ko"
     old.write_text(md, encoding="utf-8")
     tail = md[md.rfind("## 참고문헌"):]
-    return {"dir": str(d), "refs": len(re.findall(r"^\d+\. ", tail, re.M)), "bytes": len(md.encode("utf-8"))}
+    return {"dir": str(d), "refs": len(re.findall(r"^\d+\. ", tail, re.M)), "bytes": len(md.encode("utf-8")), "lang": lang}

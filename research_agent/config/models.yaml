@@ -8,6 +8,7 @@
 llm:
   model: claude-sonnet-5-5          # 제출 기본값 (2026-10-08 haiku → sonnet 교체, W4 4.4). `agent models` 로 계정 모델명 확인
   judge_model: claude-opus-5-5      # LLM-judge 전용
+  translate_model: claude-sonnet-5-5  # `agent translate` (brief 산문 → 한국어 report.md, ADR-11). 실행 모델과 같은 급 — 번역 품질이 곧 독자가 보는 본문
   max_tokens: 16384                 # 베이스라인(최종 브리프 JSON 이 8192 에서 잘렸음, 2026-10-04 T1). 16384 는 non-streaming 허용 범위
   node_max_tokens: 6000             # 그래프 노드 호출 상한. Replan 라운드 gap 에서 Haiku 가 7만 자를 쏟다 16384 에서 잘려 JSON 파손 → 3분×2회 낭비 → 10분 상한 초과 (2026-10-04 T1 반복 2회차)
   max_retries: 2                    # 스키마 검증 실패 시 재요청 횟수

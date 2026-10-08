@@ -100,11 +100,13 @@ def test_link_ids_unit():
     refs, ps = _Refs(), _papers()
     assert _link_ids("x 10.1/P0, y 10.1/p1.", refs, ps) == "x [1], y [2]."     # 대소문자 무시, 뒤 문장부호 보존
     assert _link_ids("no ids here", refs, ps) == "no ids here"
+    assert _link_ids("유일한 증거(10.1/p0)는 설문이다.", refs, ps) == "유일한 증거[1]는 설문이다."   # 한국어 조사가 붙은 DOI
     assert _link_ids("10.1/p0", refs, {}) == "10.1/p0"                          # papers 없으면 그대로
 
 
 def test_split_title_and_auto_note():
     assert _split_title("First. Second one.") == ("First.", "Second one.")
+    assert _split_title("생산성(단어 수)의 직접 측정은 비교된 적이 없다. 유일한 증거는 설문이다.") == ("생산성(단어 수)의 직접 측정은 비교된 적이 없다.", "유일한 증거는 설문이다.")
     assert _split_title("Ref 10.1007/x. Then more.") == ("Ref 10.1007/x.", "Then more.")   # DOI 의 점은 문장 끝이 아님
     long = "A" * 200 + ". B."
     t, rest = _split_title(long)

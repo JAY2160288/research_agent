@@ -432,3 +432,75 @@ class SupportResult(BaseModel):
 def _squash(text: str) -> str:
     """인용 대조용 정규화: 공백 압축 + 소문자. 따옴표·대시 같은 기호 차이는 그대로 둔다 (LLM 이 베껴 쓰게 강제)."""
     return " ".join(text.split()).lower()
+
+
+# ---------------------------------------------------------------------------
+# 한국어 번역 (translate.py, ADR-11) — 표현 계층. 영어 brief.json 이 진실 원천이고 이것은 그 산문 필드의 번역본
+# ---------------------------------------------------------------------------
+
+
+class KoText(BaseModel):
+    id: str = Field(description="입력에서 받은 id 그대로 (바꾸거나 빠뜨리지 않는다)")
+    ko: str = Field(description="한국어 번역. 숫자·DOI·논문 제목·고유명사·따옴표 인용은 원문 그대로 두고, 전문용어는 '과적합(overfitting)' 처럼 영어를 병기한다")
+
+
+def _nums(text: str) -> set[str]:
+    """숫자 토큰 집합 (천 단위 콤마 제거). 번역이 수치를 빠뜨리거나 바꾸지 않았는지 대조용."""
+    import re
+    return set(re.findall(r"\d+(?:\.\d+)?", text.replace(",", "")))
+
+
+class KoreanBrief(BaseModel):
+    """brief 의 독자용 산문 필드(id → 영어)를 받아 같은 id 로 한국어를 돌려준 결과.
+
+    결정적 검사(`item_issues`/`check`)는 번역이 **내용을 바꾸지 않았음** 을 코드가 확인하는 장치다 — 한글 포함, 원문 숫자 토큰 전부 보존,
+    길이 비율 0.35~1.6 (한국어는 보통 영어의 0.5~0.9배 글자 수 — 그 밖이면 누락·장황). 검사에 걸린 항목은 영어 원문을 그대로 쓴다 (translate.py)."""
+    items: list[KoText]
+
+    def item_issues(self, source: dict[str, str]) -> dict[str, list[str]]:
+        """항목별 문제. 문제 없는 id 는 키가 없다."""
+        out: dict[str, list[str]] = {}
+        for it in self.items:
+            en = source.get(it.id)
+            if en is None:
+                continue
+            iss: list[str] = []
+            ko = it.ko.strip()
+            if not any("가" <= ch <= "힣" for ch in ko):
+                iss.append("no Korean text")
+            lost = _nums(en) - _nums(ko)
+            if lost:
+                iss.append(f"numbers missing from translation: {sorted(lost)[:6]} — copy every number, DOI and id verbatim")
+            if len(en) >= 40:
+                ratio = len(ko) / len(en)
+                if ratio < 0.35:
+                    iss.append(f"too short (ratio {ratio:.2f}) — translate the whole text, do not summarize")
+                elif ratio > 1.6:
+                    iss.append(f"too long (ratio {ratio:.2f}) — translate, do not add explanations")
+            if iss:
+                out[it.id] = iss
+        return out
+
+    def check(self, source: dict[str, str]) -> list[str]:
+        got = [it.id for it in self.items]
+        missing = [k for k in source if k not in got]
+        extra = sorted(set(got) - set(source))
+        dup = sorted({k for k in got if got.count(k) > 1})
+        issues: list[str] = []
+        if missing:
+            issues.append(f"missing ids {missing[:8]}{'...' if len(missing) > 8 else ''}")
+        if extra:
+            issues.append(f"unknown ids {extra[:5]}")
+        if dup:
+            issues.append(f"duplicated ids {dup[:5]}")
+        issues += [f"{k}: {'; '.join(v)}" for k, v in self.item_issues(source).items()]
+        return issues
+
+    def accepted(self, source: dict[str, str]) -> dict[str, str]:
+        """검사를 통과한 항목만 id → 한국어. 중복 id 는 첫 것."""
+        bad = self.item_issues(source)
+        out: dict[str, str] = {}
+        for it in self.items:
+            if it.id in source and it.id not in bad and it.id not in out:
+                out[it.id] = it.ko.strip()
+        return out
