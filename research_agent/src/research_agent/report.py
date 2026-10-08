@@ -5,16 +5,22 @@
 - 인용은 DOI 문자열이 아니라 **번호 [n]** 으로, 끝에 참고문헌 목록. 번호는 문서에 처음 등장하는 순서.
 - 맨 위 "한눈에" 카드는 `post_checks` 의 결정적 지표를 그대로 보여준다 — 독자가 첫 줄에서 인용 검증률·커버리지를 확인.
 - Evidence Table 은 sub-RQ 별로 나누고 각 머리에 편수·평균 신뢰도·상위 문헌을 요약, 본표는 접는다(<details>).
+- 같은 날 상품성 개편: 요약·"먼저 읽을 문헌" 을 카드보다 앞에, 산문 속 DOI 도 [n] 으로 치환, §6 은 요약표, Gap 은 제목+본문,
+  Critic 자동 노트는 항목별 불릿, 미배정 문헌은 참고문헌 번호를 받지 않는다. 독자는 "뭘 읽고 뭐가 비었나" 를 먼저 본다.
 """
 
 from __future__ import annotations
 
+import ast
+import re
 from typing import Any
 
 from .schemas import Evidence, Paper, ResearchBrief
 
 FINDING_MAX = 160          # 표 안 finding 길이 상한 (전체는 brief.json)
 TOP_PER_SUBRQ = 3          # sub-RQ 머리에 보여줄 상위 문헌 수
+TOP_READ = 10              # "먼저 읽을 문헌" 편수
+RQ_MAX, METHOD_MAX, DATA_MAX = 140, 100, 80   # §6 요약표 셀 상한 (전문은 §5)
 AUTO_PREFIX = "[auto] "    # write 노드가 파이프라인 노트에 붙이는 접두어
 
 
@@ -91,6 +97,35 @@ class _Refs:
         return "[" + ", ".join(str(x) for x in nums) + "]" if nums else "[근거 없음]"
 
 
+_DOI_RE = re.compile(r"10\.\d+/\S+")      # 접두어 자릿수는 느슨하게 — 어차피 레지스트리에 있는 id 만 치환한다
+_ARXIV_RE = re.compile(r"arxiv(?::|\.org/abs/)\s?(\d{4}\.\d{4,5})(?:v\d+)?", re.I)
+_TRAIL = ".,;:)]'\""
+
+
+def _link_ids(text: str, refs: _Refs, papers: dict[str, Paper]) -> str:
+    """LLM 이 산문 안에 그대로 쓴 DOI·arXiv id 를 번호 인용 [n] 으로 바꾼다 (레지스트리에 있는 문헌만).
+
+    구조화 필드(evidence_ids)는 애초에 [n] 으로 그려지지만, coverage_note·gap.description·limitations 같은 자유 문장에는
+    LLM 이 '10.1007/...' 를 박아 넣는다. 인용 체계를 하나로 맞추려면 여기서 결정적으로 치환해야 한다."""
+    if not papers or not text:
+        return text
+
+    def doi_sub(m: re.Match[str]) -> str:
+        tok, tail = m.group(0), ""
+        while tok and tok.lower() not in papers and tok[-1] in _TRAIL:   # 문장부호가 붙어 온 경우 떼어 본다
+            tail, tok = tok[-1] + tail, tok[:-1]
+        if tok.lower() in papers:
+            return f"[{refs.n(tok.lower())}]{tail}"
+        return m.group(0)
+
+    def ax_sub(m: re.Match[str]) -> str:
+        pid = f"arxiv:{m.group(1)}"
+        return f"[{refs.n(pid)}]" if pid in papers else m.group(0)
+
+    out = _ARXIV_RE.sub(ax_sub, _DOI_RE.sub(doi_sub, text))
+    return re.sub(r"\(\[(\d+)\]\)", r"[\1]", out)      # "(10.1/x)" → "([3])" → "[3]"
+
+
 def _evidence_tag(ids: list[str], ev_by_id: dict[str, Evidence]) -> str:
     """claim 옆 근거 태그: (근거 3편 · 신뢰도 평균 3.3)."""
     found = [ev_by_id[i] for i in ids if i in ev_by_id]
@@ -107,13 +142,53 @@ def _paper_label(pid: str, papers: dict[str, Paper], limit: int = 70) -> str:
     return _cell(p.title, limit) + (f" ({p.year})" if p.year else "")
 
 
+def _split_title(desc: str, limit: int = 160, short: int = 110) -> tuple[str, str]:
+    """Gap 설명(긴 문단)을 '제목 + 본문' 으로 나눈다. 굵은 글씨 문단은 읽히지 않는다.
+
+    1) 첫 문장이 limit 이하면 그대로 제목, 나머지가 본문.
+    2) 첫 문장이 길면(LLM 이 한 문장에 근거까지 욱여넣는 경우가 흔하다) 첫 괄호·대시·콜론·세미콜론 앞에서 끊어
+       '주어구' 만 제목으로 쓰고 전문을 본문에 둔다. 예: "Direct measurement of X (word count, …) has never …" → "Direct measurement of X".
+    3) 그것도 없으면 short 자 안쪽 단어 경계에서 자르고 … 를 붙인다."""
+    desc = desc.strip()
+    parts = re.split(r"(?<=[.!?])\s+(?=[A-Z\[(])", desc, maxsplit=1)
+    first, rest = parts[0], (parts[1] if len(parts) > 1 else "")
+    if len(first) <= limit:
+        return first, rest
+    m = re.search(r"\s[(\u2014:;]|\u2014| — |: ", first)
+    if m and 25 <= m.start() <= short:
+        return first[: m.start()].rstrip(" ,"), desc
+    cut = first.rfind(" ", 0, short)
+    return first[: cut if cut > 25 else short].rstrip(" ,") + "…", desc
+
+
+def _auto_note(body: str) -> tuple[str, list[str]]:
+    """'critic: unresolved after 2 replan(s): ['a', 'b']' → ('Critic 미해결 — unresolved after …', ['a', 'b']).
+    graph 가 노트에 파이썬 리스트를 str() 로 붙이므로 여기서 다시 항목으로 푼다."""
+    if body.startswith("critic:"):
+        body = "Critic 미해결 — " + body[len("critic:"):].strip()
+    elif body.startswith("search:"):
+        body = "검색 부족 — " + body[len("search:"):].strip()
+    m = re.match(r"^(.*?):\s*(\[.*\])\s*$", body, re.S)
+    if m:
+        try:
+            lst = ast.literal_eval(m.group(2))
+        except (ValueError, SyntaxError):
+            lst = None
+        if isinstance(lst, list) and lst:
+            return m.group(1).strip(), [str(x) for x in lst]
+    return body, []
+
+
 # ---------------------------------------------------------------- 렌더링
 
 def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
                     checks: dict[str, Any] | None = None, stats: dict[str, Any] | None = None) -> str:
     """goals.md §5 의 7개 섹션 + 참고문헌. papers 가 있으면 제목·연도·링크를 붙인다.
 
-    checks: `post_checks` 결과 → 맨 위 "한눈에" 카드. 없으면 여기서 계산한다 (기본 기준값).
+    읽는 순서(2026-10-08 상품성 개편): 요약 → 먼저 읽을 문헌 → 품질 카드 → §1~§7 → 참고문헌.
+    독자가 원하는 답(무엇을 읽고, 무엇이 비어 있나)을 앞에, 채점·검증용 표는 접어서 뒤에 둔다.
+
+    checks: `post_checks` 결과 → 품질 카드. 없으면 여기서 계산한다 (기본 기준값).
     stats: {"candidates": 검색 후보 수, "critic_rounds": n, "replans": n, "cost_usd": x, "elapsed_min": x} — 있는 것만 표시.
     """
     papers = papers or {}
@@ -124,43 +199,10 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
     ev_by_id = {e.paper_id: e for e in b.evidence.items}
     tf, lines = b.topic_frame, []
 
-    # ---- 제목 + 한눈에 카드 (결정적 지표)
-    lines += [f"# Research Brief: {tf.original_topic}", ""]
-    cite_tot, cite_ok = checks.get("citations_total", 0), checks.get("citations_verified", 0)
-    rate = f"{cite_ok}/{cite_tot}" + (f" ({cite_ok / cite_tot:.0%})" if cite_tot else "")
-    auto_notes = [x for x in b.limitations if x.startswith(AUTO_PREFIX)]
-    card = [
-        ("검색 후보", str(stats["candidates"]) if "candidates" in stats else str(len(papers)) if papers else "-"),
-        ("평가 문헌", str(len(b.evidence.items))),
-        ("인용 문헌 (실존 검증)", rate),
-        ("sub-RQ 커버리지 (근거 ≥ 3편)", f"{checks.get('sub_rqs_covered', 0)}/{checks.get('sub_rqs', 0)}"),
-        ("출처 있는 claim", f"{checks.get('claims_with_source', 0)}/{checks.get('claims_total', 0)}"),
-        ("근거 ≥ 2편인 Gap", f"{checks.get('gaps_with_2_evidence', 0)}/{checks.get('gaps', 0)}"),
-    ]
-    if "critic_rounds" in stats:
-        card.append(("Critic 판정 / Replan", f"{stats['critic_rounds']}회 / {stats.get('replans', 0)}회"))
-    card.append(("품질 게이트 미해결", f"{len(auto_notes)}건" + (" → §7" if auto_notes else "")))
-    if "cost_usd" in stats and stats["cost_usd"] is not None:
-        t = f"${stats['cost_usd']:.2f}" + (f" · {stats['elapsed_min']:.1f}분" if stats.get("elapsed_min") else "")
-        card.append(("비용 · 시간", t))
-    lines += ["| " + " | ".join(k for k, _ in card) + " |", "|" + "---|" * len(card),
-              "| " + " | ".join(v for _, v in card) + " |", "",
-              "위 수치는 LLM 없이 코드가 계산한 결정적 지표다 (`cost.json` `checks`). 인용 번호 [n] 은 문서 끝 참고문헌을 가리킨다.", ""]
+    def L(text: str) -> str:            # 산문 속 DOI → [n]
+        return _link_ids(text, refs, papers)
 
-    # ---- 요약, §1, §2
-    lines += ["## 요약", b.executive_summary, ""]
-    lines += ["## 1. 주제 재정의", f"- RQ: {tf.research_question}", f"- 독립변수: {', '.join(tf.variables.independent)}",
-              f"- 종속변수: {', '.join(tf.variables.dependent)}", f"- 대상: {tf.variables.population}",
-              f"- 핵심 개념: {', '.join(tf.concepts)}", ""]
-    lines += ["## 2. 조사 계획", f"전략: {b.plan.search_strategy}", ""]
-    for s in b.plan.sub_rqs:
-        lines.append(f"- **{s.id}** {s.question}  \n  쿼리 ({len(s.queries)}개): {'; '.join(s.queries)}")
-    lines.append("")
-
-    # ---- §3 Evidence map + sub-RQ 별 표
-    lines += ["## 3. Evidence Table", "", "### 3.1 Evidence map — sub-RQ × 신뢰도", "",
-              "| sub-RQ | 편수 (rel ≥ 3) | 신뢰도 4~5 | 신뢰도 3 | 신뢰도 ≤ 2 | 평균 신뢰도 | 커버 |",
-              "|---|---|---|---|---|---|---|"]
+    # ---- sub-RQ 별 그룹 (미배정 문헌은 따로)
     groups: dict[str, list[Evidence]] = {s.id: [] for s in b.plan.sub_rqs}
     other: list[Evidence] = []
     for e in b.evidence.items:
@@ -171,6 +213,65 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
                 hit = True
         if not hit:
             other.append(e)
+    other_ids = {id(e) for e in other}
+    assigned = [e for e in b.evidence.items if id(e) not in other_ids]
+
+    # ---- 제목, 요약
+    lines += [f"# Research Brief: {tf.original_topic}", "", f"> RQ — {tf.research_question}", ""]
+    lines += ["## 요약", "", L(b.executive_summary), ""]
+
+    # ---- 먼저 읽을 문헌: 평가 점수(관련성 → 신뢰도 → 최신)로 결정적으로 고른다. 번호 [1]~[N] 이 여기서 매겨진다.
+    def _year(e: Evidence) -> int:
+        p = papers.get(e.paper_id)
+        return (p.year or 0) if p else 0
+    top = sorted((e for e in assigned if e.relevance >= 3), key=lambda e: (-e.relevance, -e.reliability, -_year(e)))[:TOP_READ]
+    if top:
+        lines += [f"## 먼저 읽을 문헌 ({len(top)}편)", "",
+                  "Evaluator 의 관련성(rel)·신뢰도(reli) 점수 순. 전체 평가 표는 §3, 서지 정보는 참고문헌.", "",
+                  "| # | 문헌 | 핵심 결과 | sub-RQ | rel · reli |", "|---|---|---|---|---|"]
+        for e in top:
+            lines.append(f"| [{refs.n(e.paper_id)}] | {_paper_label(e.paper_id, papers, 80)} | {_cell(e.finding, FINDING_MAX)} | "
+                         f"{', '.join(e.sub_rq_ids)} | {e.relevance} · {e.reliability} |")
+        lines.append("")
+
+    # ---- 품질 카드 (결정적 지표)
+    cite_tot, cite_ok = checks.get("citations_total", 0), checks.get("citations_verified", 0)
+    rate = f"{cite_ok}/{cite_tot}" + (f" ({cite_ok / cite_tot:.0%})" if cite_tot else "")
+    auto_notes = [x for x in b.limitations if x.startswith(AUTO_PREFIX)]
+    card = [
+        ("검색 후보", str(stats["candidates"]) if "candidates" in stats else str(len(papers)) if papers else "-"),
+        ("평가 문헌", str(len(b.evidence.items))),
+        ("실존 검증 (DOI/arXiv)", rate),
+        ("sub-RQ 커버리지 (근거 ≥ 3편)", f"{checks.get('sub_rqs_covered', 0)}/{checks.get('sub_rqs', 0)}"),
+        ("출처 있는 claim", f"{checks.get('claims_with_source', 0)}/{checks.get('claims_total', 0)}"),
+        ("근거 ≥ 2편인 Gap", f"{checks.get('gaps_with_2_evidence', 0)}/{checks.get('gaps', 0)}"),
+    ]
+    if "critic_rounds" in stats:
+        card.append(("Critic 판정 / Replan", f"{stats['critic_rounds']}회 / {stats.get('replans', 0)}회"))
+    card.append(("품질 게이트 미해결", f"{len(auto_notes)}건" + (" → §7" if auto_notes else "")))
+    if "cost_usd" in stats and stats["cost_usd"] is not None:
+        t = f"${stats['cost_usd']:.2f}" + (f" · {stats['elapsed_min']:.1f}분" if stats.get("elapsed_min") else "")
+        card.append(("비용 · 시간", t))
+    lines += ["## 품질 한눈에", "",
+              "| " + " | ".join(k for k, _ in card) + " |", "|" + "---|" * len(card),
+              "| " + " | ".join(v for _, v in card) + " |", "",
+              "LLM 없이 코드가 계산한 결정적 지표다 (`cost.json` `checks`). 인용 번호 [n] 은 문서 끝 참고문헌을 가리킨다.", ""]
+
+    # ---- §1, §2
+    lines += ["## 1. 주제 재정의", "", f"- RQ: {tf.research_question}", f"- 독립변수: {', '.join(tf.variables.independent)}",
+              f"- 종속변수: {', '.join(tf.variables.dependent)}", f"- 대상: {tf.variables.population}",
+              f"- 핵심 개념: {', '.join(tf.concepts)}", ""]
+    lines += ["## 2. 조사 계획", "", f"전략: {b.plan.search_strategy}", ""]
+    lines += [f"- **{s.id}** {s.question}" for s in b.plan.sub_rqs]
+    n_q = sum(len(s.queries) for s in b.plan.sub_rqs)
+    lines += ["", f"<details><summary>검색 쿼리 전체 ({n_q}개 — Replan 으로 추가된 쿼리 포함)</summary>", ""]
+    lines += [f"- **{s.id}** ({len(s.queries)}개): {'; '.join(s.queries)}" for s in b.plan.sub_rqs]
+    lines += ["", "</details>", ""]
+
+    # ---- §3 Evidence map + sub-RQ 별 표
+    lines += ["## 3. Evidence Table", "", "### 3.1 Evidence map — sub-RQ × 신뢰도", "",
+              "| sub-RQ | 편수 (rel ≥ 3) | 신뢰도 4~5 | 신뢰도 3 | 신뢰도 ≤ 2 | 평균 신뢰도 | 커버 |",
+              "|---|---|---|---|---|---|---|"]
     for s in b.plan.sub_rqs:
         g = [e for e in groups[s.id] if e.relevance >= 3]
         hi, mid, lo = (sum(1 for e in g if e.reliability >= 4), sum(1 for e in g if e.reliability == 3),
@@ -180,10 +281,12 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
     lines += ["", "커버 기준은 Critic 결정적 검사와 같다 (relevance ≥ 3 인 문헌 3편 이상). 신뢰도는 Evaluator 가 설계·표본·출처로 매긴 0~5 점.", "",
               "### 3.2 sub-RQ 별 문헌", ""]
 
-    def table(items: list[Evidence]) -> list[str]:
-        out = ["| # | 문헌 | rel | reli | method | sample | finding |", "|---|---|---|---|---|---|---|"]
+    def table(items: list[Evidence], numbered: bool = True) -> list[str]:
+        head = "#" if numbered else "id"
+        out = [f"| {head} | 문헌 | rel | reli | method | sample | finding |", "|---|---|---|---|---|---|---|"]
         for e in items:
-            out.append(f"| [{refs.n(e.paper_id)}] | {_paper_label(e.paper_id, papers)} | {e.relevance} | {e.reliability} | "
+            key = f"[{refs.n(e.paper_id)}]" if numbered else _cell(e.paper_id)
+            out.append(f"| {key} | {_paper_label(e.paper_id, papers)} | {e.relevance} | {e.reliability} | "
                        f"{_cell(e.method, 80)} | {_cell(e.sample, 60)} | {_cell(e.finding, FINDING_MAX)} |")
         return out
 
@@ -193,63 +296,68 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
         if not items:
             lines += ["", "(평가된 문헌 없음)", ""]
             continue
+        strong = sum(1 for e in items if e.relevance >= 3)
         mean = sum(e.reliability for e in items) / len(items)
-        top = "; ".join(f"[{refs.n(e.paper_id)}] {_paper_label(e.paper_id, papers, 60)} (reli {e.reliability})"
-                        for e in items[:TOP_PER_SUBRQ])
-        lines += ["", f"{len(items)}편 · 신뢰도 평균 {mean:.1f} · 상위: {top}", "",
+        cnt = f"{len(items)}편" + (f" (rel ≥ 3: {strong}편)" if strong != len(items) else "")
+        top_s = "; ".join(f"[{refs.n(e.paper_id)}] {_paper_label(e.paper_id, papers, 60)} (reli {e.reliability})"
+                          for e in items[:TOP_PER_SUBRQ])
+        lines += ["", f"{cnt} · 신뢰도 평균 {mean:.1f} · 상위: {top_s}", "",
                   f"<details><summary>전체 표 ({len(items)}편)</summary>", ""] + table(items) + ["", "</details>", ""]
     if other:
         items = sorted(other, key=lambda x: (-x.relevance, -x.reliability))
         lines += [f"#### 평가했으나 어느 sub-RQ 에도 배정되지 않은 문헌 ({len(items)}편, 대부분 관련성 ≤ 1)", "",
-                  "Evaluator 가 읽고 관련성이 낮다고 판정한 문헌. 종합·Gap 에는 쓰이지 않았지만 평가 기록으로 남긴다.", "",
-                  f"<details><summary>전체 표 ({len(items)}편)</summary>", ""] + table(items) + ["", "</details>", ""]
+                  "Evaluator 가 읽고 관련성이 낮다고 판정한 문헌. 종합·Gap 에 쓰이지 않아 참고문헌 번호를 받지 않으며, 평가 기록으로만 남긴다.", "",
+                  f"<details><summary>전체 표 ({len(items)}편)</summary>", ""] + table(items, numbered=False) + ["", "</details>", ""]
 
     # ---- §4 종합
-    lines += ["## 4. 종합", "", "### 합의"]
-    lines += [f"- {c.statement} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
+    lines += ["## 4. 종합", "", "### 합의", ""]
+    lines += [f"- {L(c.statement)} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
               for c in b.synthesis.consensus] or ["- (없음)"]
-    lines += ["", "### 상충"]
+    lines += ["", "### 상충", ""]
     for c in b.synthesis.conflicts:
-        lines += [f"- **{c.claim}** (A {len(c.side_a.evidence_ids)}편 vs B {len(c.side_b.evidence_ids)}편)",
-                  f"  - A: {c.side_a.statement} {refs.cite(c.side_a.evidence_ids)}",
-                  f"  - B: {c.side_b.statement} {refs.cite(c.side_b.evidence_ids)}",
-                  f"  - 원인 가설: {c.hypothesis_for_conflict}"]
+        lines += [f"- **{L(c.claim)}** (A {len(c.side_a.evidence_ids)}편 vs B {len(c.side_b.evidence_ids)}편)",
+                  f"  - A: {L(c.side_a.statement)} {refs.cite(c.side_a.evidence_ids)}",
+                  f"  - B: {L(c.side_b.statement)} {refs.cite(c.side_b.evidence_ids)}",
+                  f"  - 원인 가설: {L(c.hypothesis_for_conflict)}"]
     if not b.synthesis.conflicts:
         lines.append("- (없음)")
-    lines += ["", "### 조건부"]
-    lines += [f"- {c.statement} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
+    lines += ["", "### 조건부", ""]
+    lines += [f"- {L(c.statement)} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
               for c in b.synthesis.conditional] or ["- (없음)"]
-    lines += ["", f"**커버리지 메모**: {b.synthesis.coverage_note}", ""]
+    lines += ["", "### 커버리지 메모", "", L(b.synthesis.coverage_note), ""]
 
-    # ---- §5 Gap, §6 제안 표
+    # ---- §5 Gap: 제목 한 문장 + 본문 + 제안
     lines += ["## 5. Research Gap", ""]
     for i, g in enumerate(b.gaps.gaps, 1):
-        lines += [f"**G{i}. {g.description}** {refs.cite(g.evidence_ids)} {_evidence_tag(g.evidence_ids, ev_by_id)}",
-                  f"- 제안 RQ: {g.proposed_rq}", f"- 방법: {g.method}", f"- 데이터: {g.data}", ""]
-    lines += ["## 6. 향후 연구 방향", "", "§5 의 제안을 한 표로 모았다. 각 행의 근거는 해당 Gap 의 인용을 따른다.", "",
+        title, rest = _split_title(g.description)
+        lines += [f"### G{i}. {L(title)}", "",
+                  f"{refs.cite(g.evidence_ids)} {_evidence_tag(g.evidence_ids, ev_by_id)}", ""]
+        if rest:
+            lines += [L(rest), ""]
+        lines += [f"- 제안 RQ: {L(g.proposed_rq)}", f"- 방법: {L(g.method)}", f"- 데이터: {L(g.data)}", ""]
+
+    # ---- §6 제안 요약표 (전문은 §5)
+    lines += ["## 6. 향후 연구 방향", "", "§5 의 제안을 한 표로 요약했다 (전문은 각 Gap). 근거는 해당 Gap 의 인용을 따른다.", "",
               "| # | 제안 RQ | 연구 설계 | 데이터 | 근거 Gap |", "|---|---|---|---|---|"]
-    lines += [f"| {i} | {_cell(g.proposed_rq)} | {_cell(g.method)} | {_cell(g.data)} | G{i} {refs.cite(g.evidence_ids)} |"
-              for i, g in enumerate(b.gaps.gaps, 1)]
+    lines += [f"| {i} | {_cell(L(g.proposed_rq), RQ_MAX)} | {_cell(L(g.method), METHOD_MAX)} | {_cell(L(g.data), DATA_MAX)} | "
+              f"G{i} {refs.cite(g.evidence_ids)} |" for i, g in enumerate(b.gaps.gaps, 1)]
     if not b.gaps.gaps:
         lines.append("| - | (없음) | | | |")
 
     # ---- §7 한계: LLM 서술 → 파이프라인 자동 기재
     lines += ["", "## 7. 한계와 신뢰도", ""]
     human = [x for x in b.limitations if not x.startswith(AUTO_PREFIX)]
-    lines += [f"- {x}" for x in human] or ["- (없음)"]
+    lines += [f"- {L(x)}" for x in human] or ["- (없음)"]
     if auto_notes:
         lines += ["", "**품질 게이트가 자동으로 기록한 미해결 항목** (사람이 쓴 것이 아니라 파이프라인 검사 결과다):", ""]
         for x in auto_notes:
-            body = x[len(AUTO_PREFIX):]
-            if body.startswith("critic:"):
-                body = "Critic 미해결 — " + body[len("critic:"):].strip()
-            elif body.startswith("search:"):
-                body = "검색 부족 — " + body[len("search:"):].strip()
-            lines.append(f"- {body}")
+            head, items = _auto_note(x[len(AUTO_PREFIX):])
+            lines.append(f"- {L(head)}")
+            lines += [f"  - {L(it)}" for it in items]
 
-    # ---- 참고문헌: 본문·표에 등장한 모든 문헌, 번호순
+    # ---- 참고문헌: 본문·표에 번호로 등장한 문헌, 번호순
     lines += ["", f"## 참고문헌 ({len(refs.order)}편)", "",
-              "모든 문헌은 검색 도구(OpenAlex·arXiv·Crossref)가 반환한 메타데이터 그대로이며 DOI/arXiv id 로 실존이 확인됐다.", ""]
+              "본문·표에 번호로 인용된 문헌. 모두 검색 도구(OpenAlex·arXiv·Crossref)가 반환한 메타데이터 그대로이며 DOI/arXiv id 로 실존이 확인됐다.", ""]
     lines += [f"{refs.num[pid]}. {_ref_line(pid, papers.get(pid))}" for pid in refs.order]
     return "\n".join(lines) + "\n"
 
@@ -281,6 +389,5 @@ def rerender_run(run_dir: Any, keep_old: bool = True) -> dict[str, Any]:
         (d / "report_v1.md").write_text(old.read_text(encoding="utf-8"), encoding="utf-8")
     md = render_markdown(brief, papers, checks=checks, stats=stats)
     old.write_text(md, encoding="utf-8")
-    import re
     tail = md[md.rfind("## 참고문헌"):]
     return {"dir": str(d), "refs": len(re.findall(r"^\d+\. ", tail, re.M)), "bytes": len(md.encode("utf-8"))}

@@ -52,7 +52,7 @@ plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선�
 | critic (Critic) | RunState → `Critique` | 결정적 통과 시 1회 | 인용 검증 100%·claim 출처·sub-RQ evidence ≥ 3·Gap 근거 ≥ 2·상충 가설 (plan.md §3.3) |
 | replan (Planner) | Critique → 새 쿼리 | 1회/라운드 | 지목된 sub-RQ 마다 쿼리 ≥ 1, 없으면 결정적 fallback 쿼리 |
 | write (Writer) | RunState → `ResearchBrief` | 1회 | 스키마 통과, 7개 섹션 |
-| (렌더링, `report.py`) | ResearchBrief + papers + checks → `report.md` | **0회** | 결정적 지표 카드, 번호 인용 + 참고문헌, Evidence map, sub-RQ 별 표. `agent render` 로 언제든 재생성 |
+| (렌더링, `report.py`) | ResearchBrief + papers + checks → `report.md` | **0회** | 요약 → 먼저 읽을 문헌 Top 10 → 결정적 지표 카드 → 번호 인용 `[n]`(산문 속 DOI 도 치환) + 참고문헌, Evidence map, sub-RQ 별 접힌 표, Gap 제목+본문, §6 요약표. `agent render` 로 언제든 재생성 |
 
 모든 노드는 `nodes/__init__.py` 의 `checked_call` 공통 루프를 쓴다: **구조화 호출 → `check()` → 실패 시 이슈를 되먹여 재호출(최대 2회) → 그래도 실패면 `notes` 에 적고 계속 진행**. 어떤 노드도 실행을 죽이지 않는다 (O1). 미해결 노트는 write 가 리포트 §7 한계에 `[auto]` 로 편입한다.
 
@@ -98,6 +98,8 @@ plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선�
 **지침과의 대응.** 지침의 Agent 역할 6단계(이해 → 계획 → 탐색 → 평가 → 비교·종합 → Gap·향후 방향)는 노드 6개(understand·plan·search·evaluate·synthesize·gap)와 리포트 §1~§6 에 1:1 로 대응하고, "정해진 답이 아니라 좋은 연구 결과를 만드는 Agent" 라는 중요사항은 이 §2 의 원칙 그 자체다 — 결론은 실행마다 달라도 되고, 근거의 검증 가능성과 한계의 정직한 기재(§7)가 고정된다. 예시 입력(T1)은 테스트 주제 5개 중 하나로만 쓰고 프롬프트를 거기에 맞추지 않았다 (goals.md non-goal). **출력 언어**는 요약만 한국어, 본문은 영어다: 쿼리·초록이 영어이므로 종합·Gap 을 영어로 써야 `agent support` 의 초록 verbatim 대조(ADR-10)가 성립하고, 한국어 번역 단계를 넣으면 LLM 호출 1회가 늘고 번역 과정의 의미 변형이 지지율 측정을 오염시킨다. §6 향후 연구 방향은 §5 각 Gap 의 제안 RQ·방법·데이터를 번호 목록으로 다시 모은 것이라 내용이 §5 와 겹친다 — goals.md §5 의 7섹션 형식을 그대로 따른 결과이며, 읽는 이가 제안만 빠르게 훑는 용도다.
 
 **리포트의 가시성은 렌더러가 책임진다 (2026-10-08 개편).** 다른 리서치 에이전트(Deep Research 류의 번호 인용 + 참고문헌, Elicit 의 표 중심 제시, Consensus/Scite 의 주장별 지지 편수, 체계적 문헌고찰의 PRISMA 깔때기·evidence map)에서 공통 장치를 빌려 `report.py` 에 넣었다: 맨 위 카드(검색 524 → 평가 98 → 인용 98/98 검증, 커버리지, Replan 횟수, 미해결 한계 수 — 전부 `post_checks` 수치), 인용 `[n]` + 참고문헌(저자·연도·제목·DOI 링크), §3.1 Evidence map(sub-RQ × 신뢰도 구간 편수, 커버 ✅/⚠️), §3.2 sub-RQ 별 머리 요약 + 접힌 표, claim 옆 `(근거 n편 · 신뢰도 평균 x)`, 상충의 `A n편 vs B m편`, §6 제안 표, §7 에서 LLM 서술과 파이프라인 자동 기재를 분리. **LLM 호출 0** 이라 `brief.json`·`papers.json`·`cost.json` 만으로 `agent render --all` 이 기존 실행 전부를 같은 형식으로 다시 그린다 — 지표(`checks`)는 `brief.json` 에서 계산되므로 ablation 결과는 그대로이고, judge 점수 20회는 개편 전 형식(`report_v1.md` 로 보관)을 보고 매긴 것이다.
+
+**같은 날 2차 개편 — "독자가 돈 주고 쓸 리포트인가".** 1차 개편은 장치는 다 갖췄지만 채점용 카드가 맨 앞이고 독자가 원하는 답은 표 더미 뒤에 있었다. 그래서 (1) 읽는 순서를 **요약 → 먼저 읽을 문헌 Top 10 → 품질 카드 → §1~§7** 로 바꿨다. Top 10 은 Evaluator 의 관련성→신뢰도→연도 순으로 코드가 고르며 번호 [1]~[10] 이 여기서 매겨져 참고문헌이 자연히 중요도순이 된다. (2) LLM 이 산문(커버리지 메모·Gap 설명·한계·Critic 노트)에 박아 넣은 DOI·arXiv id 를 레지스트리와 대조해 `[n]` 으로 치환한다 — 구조화 필드만 번호였던 반쪽 인용 체계를 하나로 맞춘 것. (3) Gap 은 굵은 문단 대신 `### G n. 짧은 제목` + 본문, §6 은 §5 를 복붙하던 표를 요약표로, Critic 자동 노트의 리스트 repr 은 항목별 불릿으로. (4) 관련성 ≤ 1 로 버려진 문헌은 참고문헌 번호를 받지 않는다 (T1 D: 95 → 69편). 전부 표현 계층이라 지표·ablation 결과는 그대로다.
 
 **보장하지 않는 것도 분명히 한다.** 구조가 지키는 것은 "하한" 이다: sub-RQ 에 문헌 자체가 없으면 Replan 2회로도 채우지 못하며, 그 경우 "채움" 이 아니라 **"솔직한 기재"** 를 보장한다 (W3 T1 12:07 실행 5/6, T3 D rq3, T6 D rq3·rq4 — 모두 §7 에 자동 기재). judge 가 보는 "종합의 깊이" 는 구조가 아니라 모델이 결정하며 (§3.4 항목 3), 이는 §6 한계에 적는다.
 
