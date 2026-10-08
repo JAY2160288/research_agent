@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
     §3.1 디렉터리 트리는 초안 기준이라 실제와 조금 다를 수 있다 (`logging.py` → 실제는 `runlog.py`,
     LLM-judge 는 `eval/judge.py` 가 아니라 `src/research_agent/judge.py`). 파일 위치는 코드를 기준으로 판단한다.
 - 코드는 전부 `research_agent/` 아래. 문서는 한국어, 코드 주석도 한국어.
-- 진행 상태: W1~W3 + W4 Day 4 완료 (2026-10-07, ablation 주제 5개 × 조건 4개 = 20회 완주, sonnet; `docs/design.md` 초안 §3·§4). 다음은 W4 Day 5 (plan.md §5 W4 일별 계획) — 10/08 클린룸 재현(임시 폴더 `git clone` → 새 `.env` → README 3단계, sonnet 1회 + `--model claude-haiku-4-5` 1회), 누출 검사 `git grep -n "sk-ant\|/Users/"`, zip 용량, config `model` 을 sonnet 으로 교체. design.md §1·2·5·6 은 마무리(5.1)에서. 매트릭스가 바뀌면 `summarize_runs.py --ablation --md --model claude-sonnet-5-5` 출력을 design.md §3 에 다시 붙인다. OpenAlex 는 00:00 UTC(09:00 KST) 리셋, 러너가 헤더로 잔량을 확인하고 추정치보다 적으면 멈춘다(`--wait` 는 리셋까지 잠드니 잔량이 20시간 뒤에나 돌아올 땐 쓰지 말고 `--topics` 를 줄일 것).
+- 진행 상태: W1~W3 + W4 Day 5 완료 (2026-10-08: ablation 20회 완주, 클린룸 sonnet·haiku 각 1회 완주, 누출 검사·zip 210KB, 제출 기본값 = graph 모드 + sonnet; `docs/design.md` §3·§4·§4.1). 다음은 W4 Day 6 (10/09, 선택: sonnet D 반복 T1 — 크레딧 잔량 ≈ $3.7 라 2회로 줄이거나 생략) → 마무리 5.1·5.2 (design.md §1·2·5·6, README). 제출 전 재점검 명령: `git grep -n "sk-ant\|/Users/"`, `git archive --format=zip HEAD -o /tmp/x.zip`. 매트릭스가 바뀌면 `summarize_runs.py --ablation --md --model claude-sonnet-5-5` 출력을 design.md §3 에 다시 붙인다. OpenAlex 는 00:00 UTC(09:00 KST) 리셋, 러너가 헤더로 잔량을 확인하고 추정치보다 적으면 멈춘다(`--wait` 는 리셋까지 잠드니 잔량이 20시간 뒤에나 돌아올 땐 쓰지 말고 `--topics` 를 줄일 것).
 
 ## 명령어 (`research_agent/` 에서 실행)
 

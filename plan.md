@@ -259,7 +259,7 @@ Replan 상한 2회(`graph.max_replans`). 상한 도달 시 미달 항목을 리�
 | 2 | 10/05 (월) | ablation 1차: `run_ablation.py --topics T1,T2 --conditions D,B,C --model claude-sonnet-5-5 --judge --wait`. 6회 전부 완주, 결정적 불변 지표 6/6 통과, OpenAlex 실제 57회 (추정 96회보다 적음 — B/C 는 캐시 적중 0회, C 는 Replan 0회). 비용 $2.74 + judge $0.81 | 57 | ✅ 완료 (§8 2026-10-05) |
 | 3 | 10/06 (화) | ablation 2차: T3, T4 × D,B,C + (당겨서) A × T1~T4. 실측 OpenAlex: D 26·30회, B/C 캐시 적중으로 0회, A 주제당 1~6회 → 하루 합계 ≈ 85회. T5 A 는 잔량 9회 < 추정 10회라 러너 예산 가드가 설계대로 중단. 하네스 결함 2건 수정 (§8 2026-10-06) | 85 | ✅ 완료 — 4주제 D/B/C + A 4주제 |
 | 4 | 10/07 (수) | ablation 3차: T6 × D,B,C,A — 4회 전부 완주, `docs/design.md` 초안 (§3 매트릭스 20회 + 조건별 평균, §4 불변 지표 PASS 표). 비용 실행 $1.63 + judge $0.47 | 58 (추정) | ✅ **4.1·4.2 DoD** (§8 2026-10-07) |
-| 5 | 10/08 (목) | **4.3 클린룸**: 임시 폴더에 `git clone` → 새 `.env` → README 3단계만으로 1회 완주(sonnet), `--model claude-haiku-4-5` 로 1회. **4.4**: `git grep -n "sk-ant\|/Users/"` 누출 검사, `git archive` zip 용량, config `model` → sonnet-5-5, README 최종 | ≈ 72 | 체크리스트 통과 |
+| 5 | 10/08 (목) | **4.3 클린룸**: 임시 폴더 `git clone` → 새 `.env` → README 3단계만으로 sonnet 1회 완주($0.811·7.3분·Replan 2), `--model claude-haiku-4-5` 1회 완주($0.297·7.7분). 둘 다 결정적 지표 100%. **4.4**: 누출 0건, `git archive` 210KB, config `model` → sonnet-5-5, CLI 기본 mode → graph, README 최종 | 69 실측 | ✅ 체크리스트 통과 (§8 2026-10-08) |
 | 4+ | 10/07 (수) | (당겨서) **ADR-10 사후 지표 2종**: `agent support` 구현 + A·D 10건 검증, `gold_recall.py` + `eval/gold.yaml` 정답 서베이 7편, design.md §3.5 외부 벤치마크 대응 | 13 (정답 참고문헌 캐시) | ✅ (§8 2026-10-07) |
 | 6 | 10/09 (금) | (선택) D 조건 sonnet 반복 3회 (T1) → `compare_repeats.py` 로 L3 불변 지표 재확인. 4.5 검토 | ≈ 108 → 하루 전부 | 반복 편차 표 (sonnet) |
 | – | 10/10~ | 마무리 5.1·5.2 (design.md, README) | 0 | 제출 |
@@ -339,6 +339,7 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 
 | 날짜 | 변경 | 이유 |
 |---|---|---|
+| 2026-10-08 | **W4 Day 5 완료: 4.3 클린룸 + 4.4 제출 점검.** (1) 제출 기본값 교체: `config/models.yaml` `model` haiku → `claude-sonnet-5-5`, **CLI `--mode` 기본값 baseline → graph** (README 3단계를 그대로 치면 최종 구조가 돌아야 함; ablation 러너는 `run_graph`/`run_baseline` 을 직접 부르므로 영향 없음, 단위 테스트 71/71). README 에 요구 환경·실행당 비용·시간 명시, 모델 표를 제출 기준으로 정리. (2) 클린룸: 스크래치 폴더에 `git clone`(커밋 55872bf) → `uv sync` → `.env.example` 복사 + 키 입력 → README 3단계 명령 그대로. **sonnet: 완주 $0.811 · 26회 · 7.3분 · Critic 3회(fail·fail·pass) · Replan 2 · 인용 98/98 · claim 13/13 · sub-RQ 6/6 · Gap 5/5, OpenAlex 34회(캐시 없음, 전부 live). haiku(`--model claude-haiku-4-5`): 완주 $0.297 · 26회 · 7.7분 · Replan 2 · 인용 95/95 · claim 12/12 · sub-RQ 6/6 · Gap 5/5, OpenAlex 35회** — 같은 주제인데 캐시 미적중인 이유는 plan 노드가 낸 쿼리 문자열이 실행마다 달라서(캐시 키 = 쿼리). haiku 는 LLM Critic 최종 판정 미통과(W3 와 같이 Haiku 가 "실험 연구 없음" 류를 끝까지 major 로 냄) 였으나 §7 한계에 4건 자동 기재되고 결정적 지표는 전부 통과 — "모델이 바뀌어도 구조가 하한을 보장" (O7) 의 직접 증거. 두 실행 폴더는 `runs/20261008T02*` 에 `cleanroom.json` 마커와 함께 보관. (3) 4.4: `git grep -n "sk-ant\|/Users/"` 실제 키·절대경로 0건(문서 속 grep 명령 문자열과 `.env.example` 자리표시자뿐), 추적 파일에 `.env`·`.cache`·runs 없음, `git archive` zip 210KB. 오늘 OpenAlex 69회 (추정 72), 비용 $1.11, 크레딧 누적 ≈ $16.3 / $20 | 4.3·4.4 DoD. 권한 규칙 때문에 `cp .env.example .env` 는 Python 으로 같은 동작을 수행했음(README 명령 자체는 바뀌지 않음). 남은 크레딧 ≈ $3.7 → Day 6(선택) sonnet D 반복 3회(≈ $2.4)는 가능하나 여유가 적으니 2회로 줄이거나 생략 판단 |
 | 2026-10-02 | 초안. ADR-1~5, W1~W4 작업 분해, 테스트 주제 5개 | goals.md 확정 후 W1 설계 |
 | 2026-10-02 | 제출 용량 1GB 확인 → 열린 질문에서 제거 | 사용자 확인 |
 | 2026-10-02 | 학술 API 키 미포함 정책 확정, 교수님 확인 사항 0건 | 키 없는 공개 API만으로 충분. 키 업로드는 약관·유출·재현성 리스크 |
