@@ -5,10 +5,14 @@
 - 인용은 DOI 문자열이 아니라 **번호 [n]** 으로, 끝에 참고문헌 목록. 번호는 문서에 처음 등장하는 순서.
 - 맨 위 "한눈에" 카드는 `post_checks` 의 결정적 지표를 그대로 보여준다 — 독자가 첫 줄에서 인용 검증률·커버리지를 확인.
 - Evidence Table 은 sub-RQ 별로 나누고 각 머리에 편수·평균 신뢰도·상위 문헌을 요약, 본표는 접는다(<details>).
+- 긴 문장 항목은 한 덩어리로 붙이지 않는다 (2026-10-08 가독성 수정): 목록 항목 사이 빈 줄, Gap 은 제목(###)·설명·
+  제안 RQ/설계/데이터 세 줄로 층을 나누고, §6 표 셀은 길이를 잘라 전문은 §5 에서 읽게 한다.
 """
 
 from __future__ import annotations
 
+import ast
+import re
 from typing import Any
 
 from .schemas import Evidence, Paper, ResearchBrief
@@ -16,6 +20,8 @@ from .schemas import Evidence, Paper, ResearchBrief
 FINDING_MAX = 160          # 표 안 finding 길이 상한 (전체는 brief.json)
 TOP_PER_SUBRQ = 3          # sub-RQ 머리에 보여줄 상위 문헌 수
 AUTO_PREFIX = "[auto] "    # write 노드가 파이프라인 노트에 붙이는 접두어
+GAP_TITLE_MAX = 110        # §5 Gap 제목(### 줄)에 쓰는 설명 첫 문장 길이 상한
+TABLE_RQ_MAX, TABLE_METHOD_MAX, TABLE_DATA_MAX = 160, 110, 90   # §6 요약 표 셀 길이 상한 (전문은 §5)
 
 
 def post_checks(brief: ResearchBrief, papers: dict[str, Paper], min_evidence_per_subrq: int = 3,
@@ -54,6 +60,35 @@ def _cell(s: str | None, limit: int | None = None) -> str:
     if limit and len(t) > limit:
         t = t[: limit - 1].rstrip() + "…"
     return t
+
+
+def _lead(s: str, limit: int) -> tuple[str, bool]:
+    """긴 설명의 머리글: 첫 문장을 limit 자로 자른다. (머리글, 잘렸는지) — 잘리지 않았으면 본문을 반복하지 않는다."""
+    text = (s or "").strip()
+    first = re.split(r"(?<=[.!?])\s+", text, maxsplit=1)[0]
+    lead = _cell(first, limit)
+    return lead, lead != text
+
+
+def _loose(items: list[str]) -> list[str]:
+    """목록 항목 사이에 빈 줄을 넣는다 — 한 항목이 두세 줄짜리 문장일 때 덩어리로 붙지 않게 (마크다운 loose list)."""
+    out: list[str] = []
+    for it in items:
+        out += [it, ""]
+    return out[:-1]
+
+
+def _split_note_list(body: str) -> tuple[str, list[str]]:
+    """노트 끝의 파이썬 리스트 표기("...: ['a', 'b']")를 항목으로 푼다. 리스트가 아니면 그대로."""
+    m = re.search(r"\[\s*['\"].*\]\s*$", body, re.S)
+    if m:
+        try:
+            items = ast.literal_eval(m.group(0))
+            if isinstance(items, list) and items and all(isinstance(x, str) for x in items):
+                return body[: m.start()].rstrip(), items
+        except (ValueError, SyntaxError):
+            pass
+    return body, []
 
 
 def _ref_line(pid: str, p: Paper | None) -> str:
@@ -153,9 +188,8 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
               f"- 종속변수: {', '.join(tf.variables.dependent)}", f"- 대상: {tf.variables.population}",
               f"- 핵심 개념: {', '.join(tf.concepts)}", ""]
     lines += ["## 2. 조사 계획", f"전략: {b.plan.search_strategy}", ""]
-    for s in b.plan.sub_rqs:
-        lines.append(f"- **{s.id}** {s.question}  \n  쿼리 ({len(s.queries)}개): {'; '.join(s.queries)}")
-    lines.append("")
+    lines += _loose([f"- **{s.id}** {s.question}\n  - 쿼리 ({len(s.queries)}개): {'; '.join(s.queries)}"
+                     for s in b.plan.sub_rqs]) + [""]
 
     # ---- §3 Evidence map + sub-RQ 별 표
     lines += ["## 3. Evidence Table", "", "### 3.1 Evidence map — sub-RQ × 신뢰도", "",
@@ -205,30 +239,35 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
                   f"<details><summary>전체 표 ({len(items)}편)</summary>", ""] + table(items) + ["", "</details>", ""]
 
     # ---- §4 종합
-    lines += ["## 4. 종합", "", "### 합의"]
-    lines += [f"- {c.statement} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
-              for c in b.synthesis.consensus] or ["- (없음)"]
-    lines += ["", "### 상충"]
-    for c in b.synthesis.conflicts:
-        lines += [f"- **{c.claim}** (A {len(c.side_a.evidence_ids)}편 vs B {len(c.side_b.evidence_ids)}편)",
-                  f"  - A: {c.side_a.statement} {refs.cite(c.side_a.evidence_ids)}",
-                  f"  - B: {c.side_b.statement} {refs.cite(c.side_b.evidence_ids)}",
-                  f"  - 원인 가설: {c.hypothesis_for_conflict}"]
-    if not b.synthesis.conflicts:
-        lines.append("- (없음)")
-    lines += ["", "### 조건부"]
-    lines += [f"- {c.statement} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
-              for c in b.synthesis.conditional] or ["- (없음)"]
+    lines += ["## 4. 종합", "", "### 합의", ""]
+    lines += _loose([f"- {c.statement} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
+                     for c in b.synthesis.consensus]) or ["- (없음)"]
+    lines += ["", "### 상충", ""]
+    lines += _loose(["\n".join([f"- **{c.claim}** (A {len(c.side_a.evidence_ids)}편 vs B {len(c.side_b.evidence_ids)}편)",
+                                f"  - A: {c.side_a.statement} {refs.cite(c.side_a.evidence_ids)}",
+                                f"  - B: {c.side_b.statement} {refs.cite(c.side_b.evidence_ids)}",
+                                f"  - 원인 가설: {c.hypothesis_for_conflict}"]) for c in b.synthesis.conflicts]) or ["- (없음)"]
+    lines += ["", "### 조건부", ""]
+    lines += _loose([f"- {c.statement} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
+                     for c in b.synthesis.conditional]) or ["- (없음)"]
     lines += ["", f"**커버리지 메모**: {b.synthesis.coverage_note}", ""]
 
     # ---- §5 Gap, §6 제안 표
     lines += ["## 5. Research Gap", ""]
     for i, g in enumerate(b.gaps.gaps, 1):
-        lines += [f"**G{i}. {g.description}** {refs.cite(g.evidence_ids)} {_evidence_tag(g.evidence_ids, ev_by_id)}",
-                  f"- 제안 RQ: {g.proposed_rq}", f"- 방법: {g.method}", f"- 데이터: {g.data}", ""]
-    lines += ["## 6. 향후 연구 방향", "", "§5 의 제안을 한 표로 모았다. 각 행의 근거는 해당 Gap 의 인용을 따른다.", "",
+        # 제목(첫 문장) → 설명 전문 + 인용·근거 태그 → 제안 세 줄. 설명이 한 문장이면 제목 아래에 반복하지 않는다.
+        title, truncated = _lead(g.description, GAP_TITLE_MAX)
+        support = f"{refs.cite(g.evidence_ids)} {_evidence_tag(g.evidence_ids, ev_by_id)}"
+        lines += [f"### G{i}. {title}", "",
+                  (f"{g.description} {support}" if truncated else f"근거 {support}"), ""]
+        lines += _loose([f"- **제안 RQ** — {g.proposed_rq}", f"- **연구 설계** — {g.method}", f"- **데이터** — {g.data}"]) + [""]
+    if not b.gaps.gaps:
+        lines += ["(없음)", ""]
+    lines += ["## 6. 향후 연구 방향", "",
+              "§5 의 제안을 한 표로 모았다 (셀은 앞부분만, 전문은 §5 각 Gap 항목). 각 행의 근거는 해당 Gap 의 인용을 따른다.", "",
               "| # | 제안 RQ | 연구 설계 | 데이터 | 근거 Gap |", "|---|---|---|---|---|"]
-    lines += [f"| {i} | {_cell(g.proposed_rq)} | {_cell(g.method)} | {_cell(g.data)} | G{i} {refs.cite(g.evidence_ids)} |"
+    lines += [f"| {i} | {_cell(g.proposed_rq, TABLE_RQ_MAX)} | {_cell(g.method, TABLE_METHOD_MAX)} | "
+              f"{_cell(g.data, TABLE_DATA_MAX)} | G{i} {refs.cite(g.evidence_ids)} |"
               for i, g in enumerate(b.gaps.gaps, 1)]
     if not b.gaps.gaps:
         lines.append("| - | (없음) | | | |")
@@ -236,16 +275,19 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
     # ---- §7 한계: LLM 서술 → 파이프라인 자동 기재
     lines += ["", "## 7. 한계와 신뢰도", ""]
     human = [x for x in b.limitations if not x.startswith(AUTO_PREFIX)]
-    lines += [f"- {x}" for x in human] or ["- (없음)"]
+    lines += _loose([f"- {x}" for x in human]) or ["- (없음)"]
     if auto_notes:
         lines += ["", "**품질 게이트가 자동으로 기록한 미해결 항목** (사람이 쓴 것이 아니라 파이프라인 검사 결과다):", ""]
+        items: list[str] = []
         for x in auto_notes:
             body = x[len(AUTO_PREFIX):]
             if body.startswith("critic:"):
                 body = "Critic 미해결 — " + body[len("critic:"):].strip()
             elif body.startswith("search:"):
                 body = "검색 부족 — " + body[len("search:"):].strip()
-            lines.append(f"- {body}")
+            head, subs = _split_note_list(body)   # "...: ['a', 'b']" 는 하위 항목으로
+            items.append("\n".join([f"- {head}"] + [f"  - {s}" for s in subs]))
+        lines += _loose(items)
 
     # ---- 참고문헌: 본문·표에 등장한 모든 문헌, 번호순
     lines += ["", f"## 참고문헌 ({len(refs.order)}편)", "",

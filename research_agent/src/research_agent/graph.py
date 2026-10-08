@@ -111,12 +111,12 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
                 break
             unresolved = cr.deterministic_issues + [i.problem for i in cr.llm_issues if i.severity == "major"]
             if state.replan_count >= g.max_replans:
-                state.notes.append(f"critic: unresolved after {state.replan_count} replan(s): {unresolved}")
+                state.notes.append(f"critic: unresolved after {state.replan_count} replan(s): " + " | ".join(unresolved))
                 log.event("replan_limit", replans=state.replan_count, unresolved=unresolved)
                 break
             if not _budget_allows_replan(settings, log):  # 완주가 우선 — 남은 예산으로 write 까지 못 가면 루프를 멈춘다
                 state.notes.append(f"critic: unresolved, replan skipped for budget ({log.elapsed_min:.1f}/{settings.limits.max_minutes:.0f} min, "
-                                   f"${log.cost_usd:.2f}/{settings.limits.max_cost_usd:.2f}): {unresolved}")
+                                   f"${log.cost_usd:.2f}/{settings.limits.max_cost_usd:.2f}): " + " | ".join(unresolved))
                 log.event("replan_skipped_budget", elapsed_min=round(log.elapsed_min, 2), cost_usd=round(log.cost_usd, 4))
                 break
             step("replan", replan.run)
