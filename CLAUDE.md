@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
     §3.1 디렉터리 트리는 초안 기준이라 실제와 조금 다를 수 있다 (`logging.py` → 실제는 `runlog.py`,
     LLM-judge 는 `eval/judge.py` 가 아니라 `src/research_agent/judge.py`). 파일 위치는 코드를 기준으로 판단한다.
 - 코드는 전부 `research_agent/` 아래. 문서는 한국어, 코드 주석도 한국어.
-- 진행 상태: W1~W3 + W4 Day 5 완료 (2026-10-08: ablation 20회 완주, 클린룸 sonnet·haiku 각 1회 완주, 누출 검사·zip 210KB, 제출 기본값 = graph 모드 + sonnet; `docs/design.md` 전 섹션 완성 = 마무리 5.1 완료). 남은 것: 5.2 제출 직전 재점검만 (선택: Day 6 sonnet D 반복 T1 — 크레딧 잔량 ≈ $3.7 라 2회 이하 또는 생략; 하면 design.md §5 표에 행 추가). 제출 전 재점검 명령: `git grep -n "sk-ant\|/Users/"`, `git archive --format=zip HEAD -o /tmp/x.zip`. 매트릭스가 바뀌면 `summarize_runs.py --ablation --md --model claude-sonnet-5-5` 출력을 design.md §3 에 다시 붙인다. OpenAlex 는 00:00 UTC(09:00 KST) 리셋, 러너가 헤더로 잔량을 확인하고 추정치보다 적으면 멈춘다(`--wait` 는 리셋까지 잠드니 잔량이 20시간 뒤에나 돌아올 땐 쓰지 말고 `--topics` 를 줄일 것).
+- 진행 상태: W1~W3 + W4 Day 5 완료 (2026-10-08: ablation 20회 완주, 클린룸 sonnet·haiku 각 1회 완주, 누출 검사·zip 210KB, 제출 기본값 = graph 모드 + sonnet; `docs/design.md` 전 섹션 완성 = 마무리 5.1 완료). 같은 날 ADR-12 품질 개선 묶음(evaluate 병렬·진행 표시·자동 한국어 번역·resume·export) + README 재구성 + `docs/quality.md`, haiku 검증 실행 1회(design.md §5 7번째 행). **Anthropic 크레딧 소진됨 (06:09 실행의 번역 단계에서 400 credit balance too low)** — 충전 전에는 LLM 호출이 있는 명령(run·judge·support·translate)이 전부 실패한다. 남은 것: 5.2 제출 직전 재점검, 크레딧 충전 후 `agent translate runs/20261008T060945Z_*` (선택). 제출 전 재점검 명령: `git grep -n "sk-ant\|/Users/"`, `git archive --format=zip HEAD -o /tmp/x.zip`. 매트릭스가 바뀌면 `summarize_runs.py --ablation --md --model claude-sonnet-5-5` 출력을 design.md §3 에 다시 붙인다. OpenAlex 는 00:00 UTC(09:00 KST) 리셋, 러너가 헤더로 잔량을 확인하고 추정치보다 적으면 멈춘다(`--wait` 는 리셋까지 잠드니 잔량이 20시간 뒤에나 돌아올 땐 쓰지 말고 `--topics` 를 줄일 것).
 
 ## 명령어 (`research_agent/` 에서 실행)
 
