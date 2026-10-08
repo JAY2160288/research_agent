@@ -30,8 +30,9 @@ uv run pytest tests/test_llm.py::test_retry_then_ok   # 테스트 하나
 uv run python scripts/smoke_tools.py     # OpenAlex·arXiv·Crossref 실제 호출 확인
 uv run python scripts/smoke_llm.py       # Anthropic 구조화 출력 실제 호출 확인 (비용 발생)
 
-uv run agent run --topic "<주제>"                # 베이스라인 ReAct 실행 (기본 mode=baseline)
-uv run agent run --topic "<주제>" --mode graph   # 최종 구조: 역할 분리 그래프 + Critic/Replan 루프
+uv run agent run --topic "<주제>"                # 최종 구조 실행 (기본 mode=graph, 2026-10-08 부터; 기본 모델 sonnet-5-5)
+uv run agent run --topic "<주제>" --mode baseline   # 베이스라인 ReAct (ablation 조건 A)
+uv run agent run --topic "<주제>" --model claude-haiku-4-5   # 개발·디버깅용 저비용 실행
 uv run agent run --topic "<주제>" --mode graph --until plan   # 그 노드까지만 실행 (개발용, 중간 산출물은 *.json)
 uv run agent run --topic "<주제>" --mode graph --critic deterministic --max-replans 0   # 품질 게이트 축소 (ablation B/C)
 uv run agent run --topic "<주제>" --no-cache     # 도구 캐시 끄고 live 검색
@@ -77,7 +78,7 @@ uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C,A [--mod
 | 모듈 | 역할 | 주의 |
 |---|---|---|
 | `llm.py` | **프로젝트의 유일한 LLM 호출 지점** (ADR-2). `call()` 은 SDK `messages.parse(output_format=PydanticModel)` 로 구조화 출력, 검증 실패 시 오류를 되먹여 `max_retries` 회 재시도. `call_with_tools()` 는 ReAct 한 턴 | 다른 곳에서 `anthropic` 클라이언트를 직접 만들지 않는다. 모든 호출은 `RunLogger` 에 토큰·비용 기록, 상한 초과 시 `CostLimitExceeded`/`TimeLimitExceeded` |
-| `config.py` | `config/models.yaml` + `.env` → `Settings`. `load_prompt(name)` 으로 `prompts/<name>.md` 로딩. `.env` 는 `ANTHROPIC_API_KEY` 와 선택 `CONTACT_EMAIL`(OpenAlex polite pool 용, 키 아님) | **프롬프트 문자열을 코드에 두지 않는다.** 모델명·단가·상한은 yaml 에서만 바꾼다. SDK 가 `temperature` 를 받지 않아 config 에 없음. 개발 중 기본 모델은 `claude-haiku-4-5`(비용 절감), 품질 측정·제출은 `claude-sonnet-5-5`, judge 는 `claude-opus-5-5`. **제출 전 `model` 을 sonnet 으로 바꾸는 것이 W4 체크리스트(4.4)** |
+| `config.py` | `config/models.yaml` + `.env` → `Settings`. `load_prompt(name)` 으로 `prompts/<name>.md` 로딩. `.env` 는 `ANTHROPIC_API_KEY` 와 선택 `CONTACT_EMAIL`(OpenAlex polite pool 용, 키 아님) | **프롬프트 문자열을 코드에 두지 않는다.** 모델명·단가·상한은 yaml 에서만 바꾼다. SDK 가 `temperature` 를 받지 않아 config 에 없음. config 기본 모델은 제출용 `claude-sonnet-5-5` (2026-10-08 W4 4.4 에서 haiku → sonnet 교체 완료), 개발·디버깅은 `--model claude-haiku-4-5` 로 덮어쓰기, judge 는 `claude-opus-5-5` |
 | `tools/` | OpenAlex(기본, 전 분야), arXiv(CS 보강), Crossref(DOI 실존 검증 + **OpenAlex 실패 시 폴백 검색**, ADR-8). `tools/__init__.py` 의 `Tools` 가 캐시·로깅·중복 제거(`papers` 레지스트리)를 붙이고, `TOOL_DEFS` 가 LLM 에 노출할 tool 정의(베이스라인용, Crossref 검색은 미노출) | **키 필요 API 추가 금지** (ADR-3). `Paper` 는 도구 출력 그대로이며 LLM 이 만들지 않는다. DOI 없는 OpenAlex 문헌은 검증 불가라 버린다. `Paper.id` 는 소문자 DOI 또는 `arxiv:<id>` 로 정규화. **OpenAlex 는 IP 당 하루 약 100회 검색**(1000 크레딧/검색당 10, 소진 시 429 + retry-after 12h) — 그래프 1회가 약 30회를 쓰므로 반복 실행·ablation 은 하루 3회 안팎에서 막힌다. 실험 설계 시 이 예산을 먼저 계산할 것 |
 | `tools/cache.py` | diskcache, 키 = 도구명 + 정규화 인자. ablation 공정성용(같은 검색 스냅샷 위에서 구조만 비교) | live 재현은 `--no-cache` |
 | `runlog.py` | `runs/` 에 JSONL 이벤트·비용·산출물 기록. 외부 서비스 없음. `RunLogger(into=<기존 폴더>, prefix="judge_")` 는 끝난 실행 폴더에 덧붙여 쓰는 모드(judge 용) | Planning/Reflection/Replanning 이 실제로 일어났음을 보여주는 설계평가 증거이므로 단계 전이는 꼭 `event()` 로 남긴다 |

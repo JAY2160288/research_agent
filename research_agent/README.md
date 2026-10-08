@@ -12,10 +12,11 @@ uv sync
 # 2. 키 설정 — Anthropic 키 하나면 됩니다. 학술 API(OpenAlex·arXiv·Crossref)는 키가 필요 없습니다.
 cp .env.example .env     # ANTHROPIC_API_KEY 입력
 
-# 3. 실행
+# 3. 실행 (최종 구조 = graph 모드가 기본. 1회 ≈ $0.7 · 6~8분, claude-sonnet-5-5)
 uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산성과 연구 품질에 미치는 영향"
 ```
 
+요구 환경: Python 3.12 (`uv sync` 가 받아줍니다), 인터넷 (Anthropic API + OpenAlex·arXiv·Crossref 공개 API). 추가 키·설치 없음.
 결과는 `runs/<timestamp>_<mode>_<topic>/` 에 저장됩니다:
 
 | 파일 | 내용 |
@@ -33,8 +34,8 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 
 | 용도 | 모델 | 비고 |
 |---|---|---|
-| 개발·디버깅 (기본값) | `claude-haiku-4-5` | 동작·스키마 통과 확인용. 비용 최소 |
-| 품질 측정·제출 실행 | `claude-sonnet-5-5` | `--model claude-sonnet-5-5` 또는 config 교체 |
+| 제출·품질 측정 (기본값) | `claude-sonnet-5-5` | 본 문서의 실험 결과(ablation·클린룸)는 모두 이 모델 |
+| 개발·디버깅 | `claude-haiku-4-5` | `--model claude-haiku-4-5`. 동작·스키마 통과 확인용, 1회 ≈ $0.25 |
 | LLM-judge | `claude-opus-5-5` | 실행 모델과 다르게 두어 자기 채점 편향 완화 |
 
 평가자가 다른 Claude 모델로 재현할 때는 `model` 과 `pricing` 표에 그 모델명을 추가하면 됩니다.
@@ -44,8 +45,8 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 
 | 모드 | 설명 | 상태 |
 |---|---|---|
-| `--mode baseline` | 단일 ReAct 루프 (ablation 기준점) | 구현 |
-| `--mode graph` | 역할 분리 그래프 (understand → plan → [search → evaluate → synthesize → gap → critic] → write). Critic 미달 시 replan 이 부족한 sub-RQ 만 재검색해 루프 (최대 2회) | 구현 (최종 구조) |
+| `--mode graph` (기본) | 역할 분리 그래프 (understand → plan → [search → evaluate → synthesize → gap → critic] → write). Critic 미달 시 replan 이 부족한 sub-RQ 만 재검색해 루프 (최대 2회) | 최종 구조 |
+| `--mode baseline` | 단일 ReAct 루프 (ablation 조건 A, 비교 기준점) | 구현 |
 
 `--no-cache` 를 붙이면 도구 캐시 없이 live 로 검색합니다.
 graph 모드에서 `--until plan` 처럼 노드 이름을 주면 그 노드까지만 실행합니다 (개발·디버깅용).

@@ -12,7 +12,7 @@ app = typer.Typer(add_completion=False, help="AI Research Agent (DAS6035 hackath
 @app.command()
 def run(
     topic: str = typer.Option(..., "--topic", "-t", help="연구 주제 (한국어/영어)"),
-    mode: str = typer.Option("baseline", "--mode", "-m", help="baseline (단일 ReAct) | graph (역할 분리 노드)"),
+    mode: str = typer.Option("graph", "--mode", "-m", help="graph (최종 구조: 역할 분리 그래프 + Critic/Replan, 기본) | baseline (단일 ReAct, ablation 기준점)"),
     model: str | None = typer.Option(None, "--model", help="config/models.yaml 의 model 을 이번 실행만 덮어씀"),
     no_cache: bool = typer.Option(False, "--no-cache", help="도구 캐시 끄기 (live 재현)"),
     until: str | None = typer.Option(None, "--until", help="graph 모드: 이 노드까지만 실행 (예: plan)"),
