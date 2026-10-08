@@ -270,8 +270,8 @@ OpenAlex 가 429 로 Crossref 폴백 상태에 들어가면 그날 ablation 은 
 
 | # | 태스크 |
 |---|---|
-| 5.1 | `docs/design.md` = goals + plan + 실험 결과 + "달라지는 것/아닌 것" 표 + 한계 |
-| 5.2 | README 최종, 제출 |
+| 5.1 | `docs/design.md` = goals + plan + 실험 결과 + "달라지는 것/아닌 것" 표 + 한계 — ✅ 2026-10-08 (당겨서 완료, §8) |
+| 5.2 | README 최종, 제출 — README 는 10/08 정리 완료, 제출 직전 누출 검사·zip 재확인만 남음 |
 
 ---
 
@@ -339,6 +339,7 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 
 | 날짜 | 변경 | 이유 |
 |---|---|---|
+| 2026-10-08 | **마무리 5.1 당겨서 완료: `docs/design.md` 전 섹션 작성.** §1 아키텍처(흐름도, 노드별 입출력·LLM 호출 수·결정적 검증 표, ADR 요약, O4 로그 증거 표), §2 "달라지는 것/아닌 것" 표 + 보장 장치 열 + "보장하지 않는 것", §3.4 judge J1~J7 항목별 조건 평균 표(A→B 는 J3·J4·J6 = 스키마 효과, B→D 는 J5·J7 = LLM Critic 효과, J3 는 전 조건 최저 = 초록만 쓰는 ADR-4 한계), §5 T1 최종 구조 독립 실행 6회(haiku 4·sonnet 2, 날짜·네트워크 상태 혼합) 불변 지표 표 — 완주·인용 검증·claim 출처·Gap 근거·7섹션 6/6, sub-RQ 커버리지 5/6(Crossref 폴백 상태 1회, §7 자동 기재), Jaccard 0.13 / Gap 근거 겹침 0.03, §6 한계를 측정 방법·파이프라인·재현 환경 세 묶음으로 확장 | 남은 필수 작업이 글쓰기뿐이라 크레딧·OpenAlex 를 쓰지 않는 5.1 을 먼저 끝냄. Day 6 sonnet 반복은 선택으로 남김 — 하면 §5 표에 행만 추가 |
 | 2026-10-08 | **W4 Day 5 완료: 4.3 클린룸 + 4.4 제출 점검.** (1) 제출 기본값 교체: `config/models.yaml` `model` haiku → `claude-sonnet-5-5`, **CLI `--mode` 기본값 baseline → graph** (README 3단계를 그대로 치면 최종 구조가 돌아야 함; ablation 러너는 `run_graph`/`run_baseline` 을 직접 부르므로 영향 없음, 단위 테스트 71/71). README 에 요구 환경·실행당 비용·시간 명시, 모델 표를 제출 기준으로 정리. (2) 클린룸: 스크래치 폴더에 `git clone`(커밋 55872bf) → `uv sync` → `.env.example` 복사 + 키 입력 → README 3단계 명령 그대로. **sonnet: 완주 $0.811 · 26회 · 7.3분 · Critic 3회(fail·fail·pass) · Replan 2 · 인용 98/98 · claim 13/13 · sub-RQ 6/6 · Gap 5/5, OpenAlex 34회(캐시 없음, 전부 live). haiku(`--model claude-haiku-4-5`): 완주 $0.297 · 26회 · 7.7분 · Replan 2 · 인용 95/95 · claim 12/12 · sub-RQ 6/6 · Gap 5/5, OpenAlex 35회** — 같은 주제인데 캐시 미적중인 이유는 plan 노드가 낸 쿼리 문자열이 실행마다 달라서(캐시 키 = 쿼리). haiku 는 LLM Critic 최종 판정 미통과(W3 와 같이 Haiku 가 "실험 연구 없음" 류를 끝까지 major 로 냄) 였으나 §7 한계에 4건 자동 기재되고 결정적 지표는 전부 통과 — "모델이 바뀌어도 구조가 하한을 보장" (O7) 의 직접 증거. 두 실행 폴더는 `runs/20261008T02*` 에 `cleanroom.json` 마커와 함께 보관. (3) 4.4: `git grep -n "sk-ant\|/Users/"` 실제 키·절대경로 0건(문서 속 grep 명령 문자열과 `.env.example` 자리표시자뿐), 추적 파일에 `.env`·`.cache`·runs 없음, `git archive` zip 210KB. 오늘 OpenAlex 69회 (추정 72), 비용 $1.11, 크레딧 누적 ≈ $16.3 / $20 | 4.3·4.4 DoD. 권한 규칙 때문에 `cp .env.example .env` 는 Python 으로 같은 동작을 수행했음(README 명령 자체는 바뀌지 않음). 남은 크레딧 ≈ $3.7 → Day 6(선택) sonnet D 반복 3회(≈ $2.4)는 가능하나 여유가 적으니 2회로 줄이거나 생략 판단 |
 | 2026-10-02 | 초안. ADR-1~5, W1~W4 작업 분해, 테스트 주제 5개 | goals.md 확정 후 W1 설계 |
 | 2026-10-02 | 제출 용량 1GB 확인 → 열린 질문에서 제거 | 사용자 확인 |

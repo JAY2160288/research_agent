@@ -1,16 +1,100 @@
-# design.md — 설계 문서 (초안)
+# design.md — 설계 문서
 
-- 상태: **W4 Day 4 초안 (2026-10-07)** — §3 ablation 결과(§3.5 외부 벤치마크 대응·§3.6 사후 지표 2종 포함)·§4 불변 지표만 채움. 아키텍처·설계 의도(§1~2)·반복 실행 편차(§5)·한계(§6) 는 마무리(plan.md §5 5.1, 10/10~) 에서 채운다.
-- 상위 문서: `../../goals.md` (목표 O1~O7), `../../plan.md` (ADR, 작업 분해, 평가 설계). 이 문서는 두 문서의 결론 + 실험 결과를 한 곳에 모은 제출용 설명서다.
-- 표의 원천: `uv run python scripts/summarize_runs.py --ablation --md --model claude-sonnet-5-5` (각 실행 폴더의 `cost.json` `checks` + `judge.json`). 손으로 고치지 않는다 — 실행이 늘면 다시 생성해 붙여 넣는다.
+- 상태: **2026-10-08 (W4 Day 5, 마무리 5.1)** — 전 섹션 작성. 실행 결과가 더 늘면(Day 6 선택 반복) §5 표만 교체한다.
+- 상위 문서: `../../goals.md` (목표 O1~O7), `../../plan.md` (ADR-1~10, 작업 분해, 평가 설계, §8 변경 로그). 이 문서는 두 문서의 결론 + 실험 결과를 한 곳에 모은 제출용 설명서다.
+- 표의 원천: `uv run python scripts/summarize_runs.py --ablation --md --model claude-sonnet-5-5` (§3), `uv run python scripts/compare_repeats.py "생성형" --since 20261004T1200` (§5). 각 실행 폴더의 `cost.json` `checks` + `judge.json` 에서 계산되며 손으로 고치지 않는다.
 
-## 1. 아키텍처 (TODO 5.1)
+## 1. 아키텍처
 
-plan.md §3 요약 예정: understand → plan → [search → evaluate → synthesize → gap → critic] → write, Critic 미달 시 replan 후 루프 선두로. 프레임워크 없이 직접 구현 (ADR-1), LLM 호출은 `llm.py` 한 곳 (ADR-2), 키 없는 공개 학술 API 만 사용 (ADR-3).
+### 1.1 한 줄 요약
 
-## 2. 설계 의도 — "달라지는 것 / 아닌 것" (TODO 5.1)
+연구 주제 하나 → **understand → plan → [search → evaluate → synthesize → gap → critic] → write** → 7개 섹션 리포트. Critic 이 미달 판정을 내면 **replan** 이 부족한 sub-RQ 에만 새 쿼리를 만들어 루프 선두(search)로 돌아간다 (최대 2회). 지침의 필수 6단계(주제 이해 → 조사 계획 → 자료 탐색 → 자료 평가 → 비교·종합 → Gap·향후 연구)가 노드 하나씩에 대응하고, 루프가 Reflection·Replanning 이다.
 
-goals.md O7: 실행마다 문장·선택 문헌은 달라져도 **리포트 섹션 구조·필드 채움·인용 검증률 100%** 는 달라지지 않는다. 표는 §5 반복 실행 편차와 함께 작성.
+```
+[Topic]
+  │
+  ▼
+understand ──→ TopicFrame (변수 X·Y, 모집단, 맥락, 영어 동의어)
+  │
+  ▼
+plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선호)
+  │
+  ▼  ┌─────────────────────────────────────────────────────────┐
+     │ search    OpenAlex(주력) + arXiv(CS 보강) + Crossref(폴백)  │  LLM 없음
+     │   │       → Paper (도구 출력 그대로, DOI/arXiv id 필수)    │
+     │   ▼                                                       │
+     │ evaluate  sub-RQ 당 12편 선별 → 관련성·신뢰도·방법·표본·결과 │
+     │   │       → Evidence (verified 아니면 제외)               │
+     │   ▼                                                       │
+     │ synthesize  합의 / 상충(+원인 가설) / 조건부 → Synthesis    │
+     │   ▼                                                       │
+     │ gap       Gap(근거 ≥ 2) + 제안 RQ·방법·데이터 → GapList    │
+     │   ▼                                                       │
+     │ critic    결정적 5종 → (통과 시) LLM 비판 → Critique       │
+     └───┬──────────────────────────────────────────────┬────────┘
+         │ 통과 (또는 Replan 상한·예산 소진)              │ 미달
+         ▼                                              ▼
+       write ──→ ResearchBrief ──→ report.md        replan ──→ 걸린 sub-RQ 의 새 쿼리 1~3개
+       (구조는 상태에서 조립,                         (계획에 덧붙임, 새 후보만 증분 평가)
+        LLM 은 한국어 요약·한계만)                          └──→ search 로
+```
+
+### 1.2 역할과 책임
+
+| 노드 (역할) | 입력 → 출력 | LLM | 결정적 자체 검증 (`schemas.py` `check()`) |
+|---|---|---|---|
+| understand (Planner) | topic → `TopicFrame` | 1회 | 필드 비어있지 않음, 영어 동의어 ≥ 3 |
+| plan (Planner) | TopicFrame → `ResearchPlan` | 1회 | sub-RQ 3~6, 쿼리 중복률 < 50% |
+| search (Searcher) | ResearchPlan → `Paper[]` | **0회** | sub-RQ 당 ≥ 10편, DOI 또는 arXiv id 필수 — LLM 이 문헌을 만들 수 없는 구조 |
+| evaluate (Evaluator) | Paper[] → `Evidence[]` | sub-RQ 당 1~2회 (10편 배치) | verified=False 즉시 제외, relevance < 3 제외 |
+| synthesize (Synthesizer) | Evidence[] → `Synthesis` | 1회/라운드 | 모든 claim 에 evidence_id ≥ 1, 상충마다 원인 가설 |
+| gap (Synthesizer) | Synthesis+Evidence → `GapList` | 1회/라운드 | Gap 당 근거 ≥ 2, 제안에 방법·데이터 |
+| critic (Critic) | RunState → `Critique` | 결정적 통과 시 1회 | 인용 검증 100%·claim 출처·sub-RQ evidence ≥ 3·Gap 근거 ≥ 2·상충 가설 (plan.md §3.3) |
+| replan (Planner) | Critique → 새 쿼리 | 1회/라운드 | 지목된 sub-RQ 마다 쿼리 ≥ 1, 없으면 결정적 fallback 쿼리 |
+| write (Writer) | RunState → `ResearchBrief` | 1회 | 스키마 통과, 7개 섹션 |
+
+모든 노드는 `nodes/__init__.py` 의 `checked_call` 공통 루프를 쓴다: **구조화 호출 → `check()` → 실패 시 이슈를 되먹여 재호출(최대 2회) → 그래도 실패면 `notes` 에 적고 계속 진행**. 어떤 노드도 실행을 죽이지 않는다 (O1). 미해결 노트는 write 가 리포트 §7 한계에 `[auto]` 로 편입한다.
+
+### 1.3 설계 결정의 뼈대 (plan.md §4 ADR 요약)
+
+| ADR | 결정 | 왜 |
+|---|---|---|
+| 1 | 그래프 프레임워크 없이 직접 구현 (`graph.py` ≈ 150줄) | Planning·Reflection·Replanning 이 **내 코드에** 보여야 설계평가가 되고, 프레임워크 버전 변동이 재현 리스크 |
+| 2 | Claude 단일 공급자, `llm.py` 가 유일한 호출 지점, SDK `messages.parse` 로 Pydantic 구조화 출력 | 모든 호출의 토큰·비용·재시도가 한 곳에서 기록됨. 평가자는 모델명만 바꾸면 됨 |
+| 3 | 키 없는 공개 학술 API 만 (OpenAlex·arXiv·Crossref). `Paper` 는 도구 출력 그대로 | 평가자 환경에 키 1개(Anthropic)만 요구 (L1). LLM 이 문헌을 생성할 경로를 구조적으로 차단 (O2) |
+| 5·7 | 품질은 Critic 이 보장: 결정적 5종 → 통과 시에만 LLM 비판 → major 면 Replan (증분 재검색·재평가) | 결정적 실패가 뻔한 상태에 LLM 비용을 쓰지 않음. 판정과 재계획이 각각 이벤트로 남아 O4 증거 |
+| 6·8 | OpenAlex 주력 + arXiv circuit breaker + Crossref 폴백 | 외부 API 상태에 완주 여부가 흔들리면 안 됨. 차단·폴백 사실은 §7 에 자동 기재 |
+| 9 | ablation B/C 는 D 의 계획을 재사용 (`--plan-from`) | 조건 간 차이가 계획·검색 변동이 아니라 품질 게이트 차이만 반영 |
+| 10 | 사후 지표 2종 (주장-근거 지지율, 정답 서베이 회수율) 을 파이프라인 밖에 | "인용 실존 ≠ 주장 지지" 라는 벤치마크 문헌의 공통 지적을 분리 보고 |
+
+### 1.4 관찰 가능성 (goals.md O4)
+
+실행 폴더 `runs/<UTC>_<mode>_<topic>/` 의 `events.jsonl` 에 모든 단계 전이가 남는다. 설계평가 기준인 다섯 개념의 로그 증거:
+
+| 개념 | 이벤트 | 산출물 |
+|---|---|---|
+| Planning | `node_start/node_end` (understand·plan) | `topic_frame.json`, `plan.json` |
+| Tool Use | `tool_call` (openalex·arxiv·crossref, 캐시 적중 여부) | `papers.json` |
+| RAG | evaluate 의 배치 호출 — 초록을 프롬프트에 넣고 구조화 평가 | `evidence.json` |
+| Reflection | `critique` (round, passed, 결정적 이슈, LLM major/minor) | `critique_N.json` |
+| Replanning | `replan` (걸린 sub-RQ, 새 쿼리), 이후 `node_start` round=N+1 | `replan_N.json`, 리포트 §2 에 덧붙은 쿼리 |
+
+`cost.json` 에 `critic_rounds`·`replans`·`final_critic_passed`·`checks`(결정적 지표) 가 요약된다. `scripts/summarize_runs.py` 가 이를 표로 모은다.
+
+## 2. 설계 의도 — "달라지는 것 / 아닌 것"
+
+핵심 원칙 (goals.md O7): **품질을 모델의 똑똑함에 맡기지 않고 파이프라인 구조가 보장한다.** 평가자가 본인 키와 다른 모델로 돌려도 결론 문장은 달라지지만 리포트의 구조와 품질 하한은 같아야 한다. 아래 표의 오른쪽 열이 "무엇이 보장하는가" 다.
+
+| 달라져도 되는 것 (측정: §5 편차) | 달라지면 안 되는 것 (측정: §4·§5 불변 지표) | 보장 장치 |
+|---|---|---|
+| 문장 표현, 한국어 요약 | 리포트 7개 섹션 구조 | write 가 구조를 **상태에서 조립**하고 LLM 은 요약·한계 문장만 씀. `ResearchBrief` 스키마 검증 통과해야 저장 |
+| 선택된 개별 문헌 (실행 간 Jaccard 0.13) | 인용 검증률 100% | `Paper` 는 도구 출력 그대로, DOI 없으면 폐기, `unknown_ids` 검사. 베이스라인도 같은 도구를 씀 |
+| sub-RQ 의 구체적 문구·개수(5~6) | 모든 claim 에 출처 ≥ 1, Gap 당 근거 ≥ 2 | `Synthesis.check()`·`GapList.check()` 가 되먹여 재호출, Critic 결정적 검사가 2차 게이트 |
+| Gap 의 내용, 제안 RQ (실행 간 근거집합 겹침 0.03) | 제안마다 방법·데이터 필드 채움 | 스키마 `min_length` + `check()` |
+| Replan 횟수 (0~2), 비용 ($0.3~0.8), 시간 (3~8분) | 비용 ≤ $1 · 시간 ≤ 10분 · 완주 | `RunLogger` 상한 검사, `replan_budget_fraction`, `grace_write` |
+| LLM Critic 의 엄격함 (Haiku 는 끝까지 major, Sonnet 은 통과) | 미달 항목이 리포트에서 **사라지지 않음** | Critic 미해결 노트 → §7 한계 `[auto]` 자동 기재 |
+
+**보장하지 않는 것도 분명히 한다.** 구조가 지키는 것은 "하한" 이다: sub-RQ 에 문헌 자체가 없으면 Replan 2회로도 채우지 못하며, 그 경우 "채움" 이 아니라 **"솔직한 기재"** 를 보장한다 (W3 T1 12:07 실행 5/6, T3 D rq3, T6 D rq3·rq4 — 모두 §7 에 자동 기재). judge 가 보는 "종합의 깊이" 는 구조가 아니라 모델이 결정하며 (§3.4 항목 3), 이는 §6 한계에 적는다.
 
 ## 3. Ablation 결과 (plan.md §6.3)
 
@@ -69,7 +153,16 @@ goals.md O7: 실행마다 문장·선택 문헌은 달라져도 **리포트 섹�
 2. **sub-RQ 커버리지만 조건 간에 갈린다.** A 는 T4 4/5, B 는 T6 5/6 에서 구멍이 났고 C·D 는 10/10 주제 전부 만점. B → C 의 차이가 Critic 결정적 검사(커버리지 미달 sub-RQ 재검색) 하나로 생긴 것이므로, **Reflection/Replanning 이 실제로 결과를 바꾼 증거**는 이 열이다 (goals.md O4). T6 C 는 결정적 검사만으로 Replan 1회를 일으켜 rq5 를 2편 → 충분으로 끌어올렸다 (`events.jsonl` `critique`/`replan` 이벤트).
 3. **LLM 비판(D) 은 수치 지표보다 "수치가 못 잡는 미달" 을 잡는다.** T6 D 에서 LLM Critic 은 rq3·rq4 가 편수 기준은 통과하지만 "한국어 논문이 없고 터키어·유럽어 결과로 답하고 있다" 는 major 를 2라운드 연속 냈고, 재검색 뒤에도 안 풀리자 §7 한계에 `[auto]` 로 기록하고 통과시켰다. 이것이 D 의 judge 점수가 가장 높은(4.14, T6 4.29) 이유이자 비용 2.5배의 대가다.
 4. **비용·시간**: A $0.19·1.2분 → B/C $0.30~0.33·3분 → D $0.77·6.9분. 전부 goals.md O6 상한(≤ $1, ≤ 10분) 안. D 는 Replan 라운드마다 evaluate 증분 호출이 늘어 호출 수가 19~25회.
-5. **judge 는 보조 지표**: 같은 Claude 로 채점하므로 자기 채점 편향이 있다 (plan.md §6.2). 결정적 지표와 모순된 점수(`flags`)는 20회 중 0건. A 와 D 의 차이 0.54 는 J3(종합 깊이)·J4(Gap 근거)에서 주로 난다 — 항목별 표는 5.1 에서.
+5. **judge 는 보조 지표**: 같은 Claude 로 채점하므로 자기 채점 편향이 있다 (plan.md §6.2). 결정적 지표와 모순된 점수(`flags`)는 20회 중 0건. 항목별 평균 (5주제, `eval/rubric.md` §B):
+
+   | cond | J1 주제 이해 | J2 계획 | J3 근거 평가 | J4 종합 깊이 | J5 Gap 타당성 | J6 제안 구체성 | J7 한계 정직성 |
+   |---|---|---|---|---|---|---|---|
+   | A | 4.0 | 3.6 | 3.0 | 3.2 | 3.6 | 3.8 | 4.0 |
+   | B | 4.4 | 4.0 | 3.6 | 3.8 | 3.8 | 4.6 | 4.0 |
+   | C | 4.2 | 4.0 | 3.4 | 3.6 | 3.8 | 4.4 | 4.2 |
+   | D | 4.2 | 4.0 | 3.4 | 3.8 | 4.2 | 4.8 | 4.6 |
+
+   A → B 의 차이는 J3·J4·J6 (근거 평가·종합·제안) 에서 나는데, 이는 evaluate 노드가 문헌마다 method·sample·finding 을 먼저 적게 하고 gap 노드가 방법·데이터 필드를 강제하는 **스키마의 효과**다. B → D 의 차이는 J5·J7 (Gap 타당성·한계 정직성) 에서만 난다 — LLM Critic 이 "편수는 채웠지만 빗나간 문헌" 을 지적하고 그 미해결이 §7 에 남기 때문. J3 (근거 평가) 는 모든 조건에서 3.0~3.6 으로 가장 낮다 — 초록만 보고 method·sample 을 적어야 하는 ADR-4 의 한계 (§6).
 
 ### 3.5 외부 벤치마크의 평가 축과의 대응 (ADR-10)
 
@@ -137,17 +230,56 @@ goals.md O7: 실행마다 문장·선택 문헌은 달라져도 **리포트 섹�
 
 읽는 법: 모델을 바꿔도 리포트 구조(7개 섹션)·인용 검증·주장-출처·Gap 근거는 그대로이고, 달라지는 것은 LLM Critic 의 엄격함(Haiku 는 W3 와 같이 "실험 연구 없음" 류를 끝까지 major 로 판정)과 비용뿐이다. 미통과 항목이 리포트에서 사라지지 않고 한계로 남는 것까지가 구조가 보장하는 범위다 (O7).
 
-## 5. 반복 실행 편차 (TODO 5.1 / W4 Day 6 선택)
+## 5. 반복 실행 편차 (goals.md O7-L3)
 
-W3 에서 Haiku 로 같은 주제 3회 반복 (plan.md §8 2026-10-04): 구조 지표 불변, 인용 문헌 Jaccard 0.06. sonnet 반복은 10/09 (선택) 뒤 `scripts/compare_repeats.py` 표로 교체.
+같은 주제 T1 을 **최종 구조(D)로 독립 실행한 6회** — 모델·날짜·네트워크 상태가 다른 조건을 일부러 섞었다 (`uv run python scripts/compare_repeats.py "생성형" --since 20261004T1200`; 계획을 재사용한 B/C 2회는 독립 실행이 아니라 제외).
 
-## 6. 한계 (초안 — 5.1 에서 확장)
+| run (UTC) | 조건 | 모델 | 비고 | cost | min | calls | cite_ok | claim_src | subrq | gaps_ok | replans | LLM Critic 최종 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 10-04 12:07 | W3 반복 1 | haiku | OpenAlex 소진 → Crossref 폴백 | $0.236 | 6.0 | 24 | 100% | 13/13 | **5/6** | 6/6 | 2 | fail |
+| 10-04 12:13 | W3 반복 2 | haiku | Crossref 폴백 | $0.322 | 8.1 | 26 | 100% | 13/13 | 6/6 | 5/5 | 2 | fail |
+| 10-04 12:33 | W3 반복 3 | haiku | Crossref 폴백 | $0.320 | 7.5 | 23 | 100% | 10/10 | 6/6 | 7/7 | 1 | fail |
+| 10-05 00:00 | ablation D | sonnet | OpenAlex 정상, arXiv 전면 차단 | $0.825 | 7.5 | 25 | 100% | 13/13 | 6/6 | 5/5 | 2 | fail |
+| 10-08 02:26 | 클린룸 | sonnet | 새 clone, 캐시 없음 | $0.811 | 7.3 | 26 | 100% | 13/13 | 6/6 | 5/5 | 2 | pass |
+| 10-08 02:33 | 클린룸 | haiku | 새 clone | $0.297 | 7.7 | 26 | 100% | 12/12 | 6/6 | 5/5 | 2 | fail |
 
-- **judge 자기 채점 편향**: 실행(sonnet)과 다른 모델(opus)로 채점하고 근거 인용을 강제했지만 같은 제품군이다. 결정적 지표가 주, judge 는 보조.
-- **분야 분산 약화**: 2026-10-06 에 T5(경제·공공정책) 를 빼고 T6(NLP) 를 넣어 사회과학은 T1 이 겸하고 T2·T6 은 넓게 보면 둘 다 CS 다 (plan.md §6.1).
-- **검색 캐시 위 비교**: B/C/D 는 같은 검색 스냅샷을 쓰므로 "검색 변동" 은 통제됐지만 측정되지도 않았다. live 재현은 `--no-cache`.
-- **sub-RQ 커버리지는 편수 기준**: T6 D 가 보여주듯 편수는 채워도 언어·대상이 빗나간 문헌일 수 있다. LLM Critic 이 이를 잡지만 결정적 지표에는 반영되지 않는다.
-- **검색 레이어의 회수율이 낮다** (§3.6): 사람 서베이 참고문헌의 ≤ 6% 만 후보에 들어온다. 키워드 검색(OpenAlex 상위 15편 × 쿼리)만 쓰고 인용 그래프를 따라가지 않기 때문. 개선안: evaluate 상위 문헌의 `referenced_works`·`cited_by` 를 한 홉 확장하는 snowballing (OpenAlex 호출 ≈ 편당 1회 → 일일 한도 안에서 sub-RQ 당 3~5편). 파이프라인 변경이라 ablation 재실행이 필요해 이번 제출에선 넣지 않는다.
+**불변 지표 (달라지면 안 되는 것)**
+
+| 지표 | 6회 결과 | 판정 |
+|---|---|---|
+| 완주 | 6/6 | PASS |
+| 인용 검증률 100% | 6/6 (실행당 93~115편) | PASS |
+| 모든 claim 에 출처 | 6/6 (10~13 claim) | PASS |
+| Gap 당 근거 ≥ 2 | 6/6 (5~7 Gap) | PASS |
+| 리포트 7개 섹션 | 6/6 | PASS |
+| sub-RQ evidence ≥ 3 | 5/6 — 12:07 실행 5/6 | 조건부: 미달 sub-RQ 는 §7 한계에 자동 기재됨. Crossref 폴백 상태(초록 부족)에서만 발생 |
+
+**편차 (달라져도 되는 것)**: 비용 haiku $0.24~0.32 / sonnet $0.81~0.83, 시간 6.0~8.1분, Gap 수 5~7, Replan 1~2. 인용 문헌 집합의 쌍 평균 Jaccard **0.13**, Gap 근거집합 겹침 **0.03** — 계획 노드가 내는 sub-RQ 문구와 쿼리가 실행마다 달라 선택 문헌은 거의 겹치지 않는다. 그럼에도 리포트 구조·검증률·출처 연결은 전부 같다 — "달라지는 것 / 아닌 것" (§2) 표가 실제로 성립함을 보여주는 데이터다.
+
+**모델에 따라 달라지는 것 하나**: LLM Critic 최종 판정. Haiku 는 6회 중 4회 모두 "실험 연구·객관 지표 측정 연구가 없다" 류를 끝까지 major 로 냈고, Sonnet 은 2회 중 1회 통과. 둘 다 결정적 지표는 같으며 차이는 §7 한계에 적히는 `[auto]` 항목 수(0~4건)로만 드러난다. 평가자가 상위 모델로 돌리면 한계 항목이 줄어들 뿐 구조는 같다.
+
+## 6. 한계
+
+**측정·평가 방법의 한계**
+
+- **judge 자기 채점 편향**: 실행(sonnet)과 다른 모델(opus)로 채점하고 근거 인용을 강제했지만 같은 제품군이다. 결정적 지표가 주, judge 는 보조. judge 의 변별력도 낮다 — 조건 간 평균 차 0.5 이내, J3 는 20회 중 대부분 3점.
+- **분야 분산 약화**: 2026-10-06 에 T5(경제·공공정책) 를 빼고 T6(NLP) 를 넣어 사회과학은 T1 이 겸하고 T2·T6 은 넓게 보면 둘 다 CS 다 (plan.md §6.1). 경제·법학·인문 주제는 검증하지 못했다.
+- **검색 캐시 위 비교**: B/C/D 는 같은 검색 스냅샷을 쓰므로 "검색 변동" 은 통제됐지만 측정되지도 않았다. live 재현은 `--no-cache`. §5 의 독립 반복(캐시 미적중)이 이를 일부 보완한다.
+- **반복 횟수**: OpenAlex 일일 한도(검색 ≈ 100회/IP, 그래프 1회 ≈ 35회) 때문에 주제당 반복은 T1 6회뿐이고 나머지 주제는 조건당 1회다. 조건별 평균(§3.3)의 신뢰구간은 넓다.
 - **지지 검증도 초록 기준**: `agent support` 는 초록만 보고 판정하므로 본문에만 있는 결과는 partial/unsupported 로 나올 수 있고, 반대로 초록이 과장된 경우를 잡지 못한다. judge 와 같은 자기 채점 편향도 있다 (인용문 verbatim 대조로 일부 완화).
 - **정답 서베이 선택의 임의성**: 주제당 1~2편을 OpenAlex 검색 상위에서 골랐다 (`eval/gold.yaml`). 서베이의 범위가 주제보다 넓거나(T6 의 토크나이징 전반 서베이) 좁으면 회수율이 그만큼 왜곡된다. 조건 간 상대 비교로만 쓴다.
-- OpenAlex 일일 한도(검색 ≈ 100회/IP) 때문에 반복 횟수를 늘리지 못했다.
+
+**파이프라인의 한계 (다음 개선점 순)**
+
+- **검색 레이어의 회수율이 낮다** (§3.6): 사람 서베이 참고문헌의 ≤ 6% 만 후보에 들어온다. 키워드 검색(OpenAlex 상위 15편 × 쿼리)만 쓰고 인용 그래프를 따라가지 않기 때문. 개선안: evaluate 상위 문헌의 `referenced_works`·`cited_by` 를 한 홉 확장하는 snowballing (OpenAlex 호출 ≈ 편당 1회 → 일일 한도 안에서 sub-RQ 당 3~5편). 파이프라인 변경이라 ablation 재실행이 필요해 이번 제출에선 넣지 않는다.
+- **sub-RQ 커버리지는 편수 기준**: T6 D 가 보여주듯 편수는 채워도 언어·대상이 빗나간 문헌일 수 있다. LLM Critic 이 이를 잡지만 결정적 지표에는 반영되지 않는다. 한국어 입력 주제라도 검색은 영어 쿼리라 **한국어 문헌(KCI 등)은 거의 잡히지 않는다** — OpenAlex 의 한국어 색인이 얇고 키 없는 한국어 학술 API 가 없다.
+- **초록만 사용 (ADR-4)**: J3(근거 평가) 가 모든 조건에서 가장 낮은 이유. method·sample 을 초록에서 못 읽으면 공란 또는 추정이 된다. Crossref 폴백 상태에선 초록 자체가 적어 커버리지가 더 떨어진다 (§5 12:07 실행).
+- **"부재 주장" 이 종합에 섞인다** (§3.6): "문헌이 X 를 다루지 않는다" 류 문장이 §4 종합에 들어가 특정 문헌에 인용되면 unsupported 가 된다. synthesize 프롬프트에서 부재 주장을 Gap 으로 보내는 것이 개선점.
+- **Replan 은 쿼리 재작성까지만**: 문헌 자체가 없는 sub-RQ 는 2회 재검색으로도 못 채운다. 구조가 보장하는 것은 "채움" 이 아니라 "솔직한 기재" 다 (§2).
+- **주장-근거 지지 검증을 Critic 안에 넣지 않았다** (ADR-10): 사후 지표로만 측정했으므로 실행 중에 partial/unsupported 주장이 걸러지지는 않는다. 실행당 +$0.1~0.2 로 Critic 에 넣을 수 있으나 ablation 재실행이 필요해 보류.
+
+**재현 환경의 한계**
+
+- OpenAlex 하루 ≈ 100회 한도: 평가자가 같은 IP 에서 주제를 연속으로 3개 이상 돌리면 4번째부터 Crossref 폴백 상태(초록 부족)로 들어간다. 리포트 §7 에 자동 기재되지만 품질은 떨어진다. `.env` 의 `CONTACT_EMAIL` 로 polite pool 에 들어가면 안정적이다.
+- arXiv 는 상태가 불안정하다 (10/05 전면 차단). circuit breaker 로 완주는 지키지만 CS 주제의 프리프린트 보강이 빠질 수 있다.
+- 모델 deprecation: `config/models.yaml` 의 `model`·`pricing` 만 바꾸면 되지만, 단가표에 없는 모델은 Opus 단가로 보수적으로 집계되어 `max_cost_usd` 에 일찍 걸릴 수 있다.
