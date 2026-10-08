@@ -7,6 +7,7 @@
 - Evidence Table 은 sub-RQ 별로 나누고 각 머리에 편수·평균 신뢰도·상위 문헌을 요약, 본표는 접는다(<details>).
 - 같은 날 상품성 개편: 요약·"먼저 읽을 문헌" 을 카드보다 앞에, 산문 속 DOI 도 [n] 으로 치환, §6 은 요약표, Gap 은 제목+본문,
   Critic 자동 노트는 항목별 불릿, 미배정 문헌은 참고문헌 번호를 받지 않는다. 독자는 "뭘 읽고 뭐가 비었나" 를 먼저 본다.
+- 긴 문장 항목은 한 덩어리로 붙이지 않는다 (2026-10-08 가독성 수정): §2·§4·§7 목록 항목 사이 빈 줄 (`_loose`).
 """
 
 from __future__ import annotations
@@ -53,6 +54,14 @@ def post_checks(brief: ResearchBrief, papers: dict[str, Paper], min_evidence_per
 
 
 # ---------------------------------------------------------------- 보조
+
+def _loose(items: list[str]) -> list[str]:
+    """목록 항목 사이에 빈 줄을 넣는다 — 한 항목이 두세 줄짜리 문장일 때 덩어리로 붙지 않게 (마크다운 loose list)."""
+    out: list[str] = []
+    for it in items:
+        out += [it, ""]
+    return out[:-1]
+
 
 def _cell(s: str | None, limit: int | None = None) -> str:
     """마크다운 표 셀용: 파이프·개행 제거, 길이 상한."""
@@ -281,10 +290,10 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
               f"- 종속변수: {', '.join(tf.variables.dependent)}", f"- 대상: {tf.variables.population}",
               f"- 핵심 개념: {', '.join(tf.concepts)}", ""]
     lines += ["## 2. 조사 계획", "", f"전략: {b.plan.search_strategy}", ""]
-    lines += [f"- **{s.id}** {s.question}" for s in b.plan.sub_rqs]
+    lines += _loose([f"- **{s.id}** {s.question}" for s in b.plan.sub_rqs])
     n_q = sum(len(s.queries) for s in b.plan.sub_rqs)
     lines += ["", f"<details><summary>검색 쿼리 전체 ({n_q}개 — Replan 으로 추가된 쿼리 포함)</summary>", ""]
-    lines += [f"- **{s.id}** ({len(s.queries)}개): {'; '.join(s.queries)}" for s in b.plan.sub_rqs]
+    lines += _loose([f"- **{s.id}** ({len(s.queries)}개): {'; '.join(s.queries)}" for s in b.plan.sub_rqs])
     lines += ["", "</details>", ""]
 
     # ---- §3 Evidence map + sub-RQ 별 표
@@ -330,19 +339,16 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
 
     # ---- §4 종합
     lines += ["## 4. 종합", "", "### 합의", ""]
-    lines += [f"- {L(c.statement)} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
-              for c in b.synthesis.consensus] or ["- (없음)"]
+    lines += _loose([f"- {L(c.statement)} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
+                     for c in b.synthesis.consensus]) or ["- (없음)"]
     lines += ["", "### 상충", ""]
-    for c in b.synthesis.conflicts:
-        lines += [f"- **{L(c.claim)}** (A {len(c.side_a.evidence_ids)}편 vs B {len(c.side_b.evidence_ids)}편)",
-                  f"  - A: {L(c.side_a.statement)} {refs.cite(c.side_a.evidence_ids)}",
-                  f"  - B: {L(c.side_b.statement)} {refs.cite(c.side_b.evidence_ids)}",
-                  f"  - 원인 가설: {L(c.hypothesis_for_conflict)}"]
-    if not b.synthesis.conflicts:
-        lines.append("- (없음)")
+    lines += _loose(["\n".join([f"- **{L(c.claim)}** (A {len(c.side_a.evidence_ids)}편 vs B {len(c.side_b.evidence_ids)}편)",
+                                f"  - A: {L(c.side_a.statement)} {refs.cite(c.side_a.evidence_ids)}",
+                                f"  - B: {L(c.side_b.statement)} {refs.cite(c.side_b.evidence_ids)}",
+                                f"  - 원인 가설: {L(c.hypothesis_for_conflict)}"]) for c in b.synthesis.conflicts]) or ["- (없음)"]
     lines += ["", "### 조건부", ""]
-    lines += [f"- {L(c.statement)} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
-              for c in b.synthesis.conditional] or ["- (없음)"]
+    lines += _loose([f"- {L(c.statement)} {refs.cite(c.evidence_ids)} {_evidence_tag(c.evidence_ids, ev_by_id)}"
+                     for c in b.synthesis.conditional]) or ["- (없음)"]
     lines += ["", "### 커버리지 메모", "", L(b.synthesis.coverage_note), ""]
 
     # ---- §5 Gap: 제목 한 문장 + 본문 + 제안
@@ -366,13 +372,14 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
     # ---- §7 한계: LLM 서술 → 파이프라인 자동 기재
     lines += ["", "## 7. 한계와 신뢰도", ""]
     human = [x for x in b.limitations if not x.startswith(AUTO_PREFIX)]
-    lines += [f"- {L(x)}" for x in human] or ["- (없음)"]
+    lines += _loose([f"- {L(x)}" for x in human]) or ["- (없음)"]
     if auto_notes:
         lines += ["", "**품질 게이트가 자동으로 기록한 미해결 항목** (사람이 쓴 것이 아니라 파이프라인 검사 결과다):", ""]
+        notes: list[str] = []
         for x in auto_notes:
             head, items = _auto_note(x[len(AUTO_PREFIX):])
-            lines.append(f"- {L(head)}")
-            lines += [f"  - {L(it)}" for it in items]
+            notes.append("\n".join([f"- {L(head)}"] + [f"  - {L(it)}" for it in items]))
+        lines += _loose(notes)
 
     # ---- 참고문헌: 본문·표에 번호로 등장한 문헌, 번호순
     lines += ["", f"## 참고문헌 ({len(refs.order)}편)", "",
