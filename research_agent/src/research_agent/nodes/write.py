@@ -39,6 +39,9 @@ def run(state: RunState, ctx: NodeContext) -> None:
     )
     state.brief = brief
     ctx.log.save("brief", brief)
-    ctx.log.save("report.md", render_markdown(brief, state.papers))
-    ctx.log.event("node_check", node="write", attempt=1, issues=issues,
-                  checks=post_checks(brief, state.papers, ctx.settings.tools.min_evidence_per_subrq, ctx.settings.tools.min_relevance))
+    checks = post_checks(brief, state.papers, ctx.settings.tools.min_evidence_per_subrq, ctx.settings.tools.min_relevance)
+    # 렌더러에 결정적 지표·루프 횟수를 넘겨 리포트 머리의 "한눈에" 카드를 채운다 (LLM 없음)
+    ctx.log.save("report.md", render_markdown(brief, state.papers, checks=checks,
+                                              stats={"candidates": len(state.papers), "critic_rounds": len(state.critiques),
+                                                     "replans": state.replan_count}))
+    ctx.log.event("node_check", node="write", attempt=1, issues=issues, checks=checks)

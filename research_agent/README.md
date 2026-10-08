@@ -21,7 +21,7 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 
 | 파일 | 내용 |
 |---|---|
-| `report.md` | 최종 리포트 (7개 섹션) |
+| `report.md` | 최종 리포트 — 맨 위 "한눈에" 카드(결정적 지표), 요약, 7개 섹션, 번호 인용 [n] + 참고문헌 목록 |
 | `brief.json` | 같은 내용의 구조화 데이터 (스키마: `schemas/brief.json`) |
 | `events.jsonl` | 모든 LLM 호출·도구 호출·단계 전이 로그 |
 | `cost.json` | 토큰·비용·시간·결정적 품질 지표 |
@@ -67,6 +67,7 @@ uv run python scripts/gold_recall.py --md [--model claude-sonnet-5-5]   # 정답
 uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C,A --dry-run   # 계획·OpenAlex 예산만 출력
 uv run python scripts/run_ablation.py --topics T1,T2 --conditions D,B,C --model claude-sonnet-5-5 --judge --wait   # --wait: OpenAlex 잔량 부족 시 일일 리셋(00:00 UTC)까지 대기
 uv run python scripts/summarize_runs.py --ablation --md [--model claude-sonnet-5-5]   # 주제 × 조건 매트릭스 + 조건별 평균 (judge 평균 포함, --model 로 한 모델만)
+uv run agent render runs/<실행 폴더> | --all   # brief.json·papers.json·cost.json 으로 report.md 다시 그리기 (LLM·키 불필요, 옛 파일은 report_v1.md 로 보관)
 ```
 
 judge 는 `config/models.yaml` 의 `judge_model`(기본 Opus — 실행 모델과 다르게 두어 자기 채점 편향 완화)로 돌고, 항목마다 리포트 문장을 그대로 인용해야 하며,

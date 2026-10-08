@@ -89,7 +89,7 @@ def run_baseline(topic: str, settings: Settings, *, use_cache: bool = True) -> t
     checks = post_checks(brief, tools.papers, settings.tools.min_evidence_per_subrq, settings.tools.min_relevance) if brief else {"submitted": False}
     if brief:
         log.save("brief", brief)
-        log.save("report.md", render_markdown(brief, tools.papers))
+        log.save("report.md", render_markdown(brief, tools.papers, checks=checks, stats={"candidates": len(tools.papers)}))
     log.save("papers", {k: v.model_dump() for k, v in tools.papers.items()})
     log.finish(status, checks=checks, papers_seen=len(tools.papers), model=settings.llm.model)
     return brief, log

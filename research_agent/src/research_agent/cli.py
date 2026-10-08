@@ -154,6 +154,36 @@ def support(
 
 
 @app.command()
+def render(
+    run_dirs: list[str] = typer.Argument(None, help="다시 그릴 실행 폴더 (runs/<timestamp>_<mode>_<slug>). 생략하면 --all"),
+    all_runs: bool = typer.Option(False, "--all", help="runs/ 의 완주 실행(brief.json 있는 것) 전부"),
+    no_keep: bool = typer.Option(False, "--no-keep", help="기존 report.md 를 report_v1.md 로 보관하지 않음"),
+):
+    """끝난 실행의 brief.json·papers.json·cost.json 으로 report.md 를 다시 그린다. LLM·네트워크·API 키 불필요.
+    렌더러(report.py)를 고친 뒤 기존 실행 전부를 새 형식으로 맞출 때 쓴다 — 지표(cost.json checks)는 바뀌지 않는다."""
+    from pathlib import Path
+    from .config import RUNS_DIR
+    from .report import rerender_run
+    if run_dirs:
+        targets = [Path(d) for d in run_dirs]
+    elif all_runs:
+        targets = sorted(d for d in RUNS_DIR.iterdir() if d.is_dir() and (d / "brief.json").exists())
+    else:
+        typer.echo("실행 폴더를 주거나 --all 을 붙이세요", err=True)
+        raise typer.Exit(1)
+    n = 0
+    for d in targets:
+        try:
+            r = rerender_run(d, keep_old=not no_keep)
+        except ValueError as e:
+            typer.echo(f"skip: {e}")
+            continue
+        n += 1
+        typer.echo(f"{d.name[:60]}  참고문헌 {r['refs']}편  {r['bytes'] // 1024}KB")
+    typer.echo(f"\n{n}개 다시 그림")
+
+
+@app.command()
 def models():
     """계정에서 사용 가능한 Claude 모델명 출력 (config/models.yaml 설정용)."""
     import anthropic
