@@ -47,7 +47,8 @@ def _to_paper(w: dict, sub_rq_id: str | None) -> Paper | None:
 
 
 def search(query: str, *, per_page: int = 15, mailto: str | None = None, user_agent: str = "research-agent",
-           from_year: int | None = None, sub_rq_id: str | None = None, client: httpx.Client | None = None) -> list[Paper]:
+           from_year: int | None = None, sub_rq_id: str | None = None, client: httpx.Client | None = None,
+           api_key: str | None = None) -> list[Paper]:
     params = {
         "search": query,
         "per-page": per_page,
@@ -58,6 +59,8 @@ def search(query: str, *, per_page: int = 15, mailto: str | None = None, user_ag
     }
     if mailto:
         params["mailto"] = mailto
+    if api_key:                       # 선택 키(.env OPENALEX_API_KEY) — 일일 한도 해제. 없으면 polite pool 그대로
+        params["api_key"] = api_key
     c = client or httpx.Client(timeout=30, headers={"User-Agent": user_agent})
     r = c.get(BASE, params=params)
     r.raise_for_status()
@@ -69,9 +72,12 @@ def search(query: str, *, per_page: int = 15, mailto: str | None = None, user_ag
     return out
 
 
-def get_by_doi(doi: str, *, mailto: str | None = None, client: httpx.Client | None = None) -> Paper | None:
+def get_by_doi(doi: str, *, mailto: str | None = None, client: httpx.Client | None = None,
+               api_key: str | None = None) -> Paper | None:
     c = client or httpx.Client(timeout=30)
     params = {"mailto": mailto} if mailto else {}
+    if api_key:
+        params["api_key"] = api_key
     r = c.get(f"{BASE}/https://doi.org/{doi}", params=params)
     if r.status_code == 404:
         return None

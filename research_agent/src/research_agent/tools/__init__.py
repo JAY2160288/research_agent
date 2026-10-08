@@ -53,13 +53,29 @@ TOOL_DEFS: list[dict[str, Any]] = [
 ]
 
 
+def normalize_id(raw: str) -> str:
+    """사용자가 준 문헌 id 를 Paper.id 규칙으로: 소문자 DOI(접두 URL 제거) 또는 arxiv:<id>."""
+    s = raw.strip().lower()
+    for pre in ("https://doi.org/", "http://doi.org/", "doi:", "https://dx.doi.org/"):
+        if s.startswith(pre):
+            s = s[len(pre):]
+    if s.startswith("https://arxiv.org/abs/"):
+        s = "arxiv:" + s[len("https://arxiv.org/abs/"):]
+    return s
+
+
 class Tools:
-    def __init__(self, settings: Settings, log: RunLogger | None = None, use_cache: bool = True):
+    def __init__(self, settings: Settings, log: RunLogger | None = None, use_cache: bool = True,
+                 exclude: list[str] | None = None, include: list[str] | None = None):
         self.s = settings
         self.log = log
         self.cache = ToolCache(settings.tools.cache_dir, enabled=use_cache)
         self.papers: dict[str, Paper] = {}  # 이번 실행에서 본 모든 문헌 (id → Paper)
         self._lock = threading.Lock()       # search 노드가 쿼리를 병렬로 돌리므로 레지스트리 갱신은 직렬화
+        # 사용자 개입 (2026-10-08): 제외 문헌은 레지스트리에 들어오지 않아 인용될 수 없고, 고정 문헌은 search 가 DOI 로 가져와
+        # 모든 sub-RQ 후보에 넣는다 (evaluate 가 관련성을 매기되 후보 상한과 무관하게 평가됨)
+        self.excluded: set[str] = {normalize_id(x) for x in (exclude or []) if x.strip()}
+        self.include_ids: list[str] = [normalize_id(x) for x in (include or []) if x.strip()]
 
     # ---- 개별 도구 ----------------------------------------------------
     def search_openalex(self, query: str, from_year: int | None = None, sub_rq_id: str | None = None) -> list[Paper]:
@@ -67,9 +83,30 @@ class Tools:
         raw, cached = self.cache.get_or_call("openalex", args, lambda: [
             p.model_dump() for p in openalex.search(query, per_page=self.s.tools.openalex_per_query,
                                                     mailto=self.s.contact_email, user_agent=self.s.tools.user_agent,
-                                                    from_year=from_year)])
+                                                    from_year=from_year, api_key=self.s.tools.openalex_api_key)])
         papers = [Paper(**d) for d in raw]
         return self._register(papers, sub_rq_id, "search_openalex", args, cached)
+
+    def include_paper(self, pid: str, sub_rq_ids: list[str]) -> Paper | None:
+        """`--include` 문헌 하나를 OpenAlex(DOI) 에서 가져와 pinned 로 등록. arXiv id 는 OpenAlex 가 DOI 로 색인하므로 DOI 만 받는다."""
+        if pid.startswith("arxiv:"):
+            if self.log:
+                self.log.event("include_skipped", id=pid, reason="give the DOI (OpenAlex indexes arXiv papers by DOI)")
+            return None
+        args = {"doi": pid}
+        raw, cached = self.cache.get_or_call("openalex_doi", args, lambda: (
+            lambda p: p.model_dump() if p else None)(openalex.get_by_doi(pid, mailto=self.s.contact_email,
+                                                                           api_key=self.s.tools.openalex_api_key)))
+        if not raw:
+            if self.log:
+                self.log.event("include_skipped", id=pid, reason="not found in OpenAlex")
+            return None
+        p = Paper(**raw)
+        p.pinned = True
+        p.sub_rq_ids = list(sub_rq_ids)
+        out = self._register([p], None, "include_paper", args, cached)
+        out[0].pinned = True
+        return out[0]
 
     def search_crossref(self, query: str, from_year: int | None = None, sub_rq_id: str | None = None) -> list[Paper]:
         """OpenAlex 폴백 (plan.md ADR-8). tool use 에는 노출하지 않는다 — search 노드가 OpenAlex 실패 시에만 부른다."""
@@ -127,6 +164,7 @@ class Tools:
     # ---- 내부 ----------------------------------------------------------
     def _register(self, papers: list[Paper], sub_rq_id: str | None, name: str, args: dict, cached: bool) -> list[Paper]:
         with self._lock:
+            papers = [p for p in papers if p.id not in self.excluded]   # --exclude: 레지스트리 밖 = 인용 불가
             for p in papers:
                 if sub_rq_id and sub_rq_id not in p.sub_rq_ids:
                     p.sub_rq_ids.append(sub_rq_id)
@@ -135,6 +173,7 @@ class Tools:
                     ex.sub_rq_ids = sorted(set(ex.sub_rq_ids) | set(p.sub_rq_ids))
                     if not ex.abstract and p.abstract:
                         ex.abstract = p.abstract
+                    ex.pinned = ex.pinned or p.pinned
                 else:
                     self.papers[p.id] = p
             out = [self.papers[p.id] for p in papers]

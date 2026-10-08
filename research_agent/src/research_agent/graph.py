@@ -8,10 +8,13 @@
 - 재검색 라운드는 Replan 이 고른 sub-RQ 의 새 쿼리만 검색하고, 새 후보만 평가해 기존 Evidence 에 합친다 (비용 절약).
 - 상한 도달 시 미달 항목을 state.notes → 리포트 §7 한계에 적고 write 로 넘어간다. 실패로 죽지 않는다 (goals.md O1).
 - `graph.critic` = none(ablation B) | deterministic(C) | full(D). `graph.max_replans` = 0 이면 루프 없음.
+- 체크포인트·재개 (2026-10-08): 노드가 끝날 때마다 `state.json` 을 저장하고, `resume_from=<실행 폴더>` 면 events.jsonl 의
+  마지막 `node_end` 다음 노드부터 같은 폴더에 이어서 돈다 (검색·평가를 다시 하지 않는다). 비용은 이어받고 시간은 새로 센다.
 """
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from .config import Settings
@@ -24,6 +27,33 @@ from .tools import Tools
 
 # `--until` 로 지정할 수 있는 노드 이름 (실행 순서)
 NODES: list[str] = ["understand", "plan", "search", "evaluate", "synthesize", "gap", "critic", "replan", "write"]
+LOOP: list[str] = ["search", "evaluate", "synthesize", "gap", "critic", "replan"]
+
+
+def _resume_point(run_dir: Path) -> tuple[int, set[str], dict[str, float]]:
+    """events.jsonl 에서 (마지막 라운드 번호, 그 라운드에서 끝난 노드들, 이전 구간의 비용 합계) 를 읽는다."""
+    ev = run_dir / "events.jsonl"
+    rnd, done, spent = 0, set(), {"cost_usd": 0.0, "llm_calls": 0, "input_tokens": 0, "output_tokens": 0}
+    if not ev.exists():
+        return rnd, done, spent
+    for line in ev.read_text(encoding="utf-8").splitlines():
+        try:
+            r = json.loads(line)
+        except ValueError:
+            continue
+        k = r.get("kind")
+        if k == "node_end":
+            if r.get("round", 0) != rnd:
+                rnd, done = r.get("round", 0), set()
+            done.add(r["node"])
+        elif k == "node_reused":
+            done.add(r["node"])
+        elif k == "llm_call":
+            spent["cost_usd"] += r.get("cost_usd") or 0.0
+            spent["llm_calls"] += 1
+            spent["input_tokens"] += (r.get("input_tokens") or 0) + (r.get("cache_read") or 0) + (r.get("cache_write") or 0)
+            spent["output_tokens"] += r.get("output_tokens") or 0
+    return rnd, done, spent
 
 
 class _Until(Exception):
@@ -73,20 +103,49 @@ def _reuse_plan(state: RunState, plan_from: Path, log: RunLogger) -> None:
 
 
 def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
-              until: str | None = None, plan_from: Path | None = None) -> tuple[RunState, RunLogger]:
+              until: str | None = None, plan_from: Path | None = None,
+              resume_from: Path | None = None, exclude: list[str] | None = None, include: list[str] | None = None,
+              listeners: list | None = None) -> tuple[RunState, RunLogger]:
+    """listeners: RunLogger 이벤트 콜백 (CLI 진행 표시). exclude/include: 사용자 문헌 개입 (DOI 또는 arxiv:<id>)."""
     if until is not None and until not in NODES:
         raise ValueError(f"unknown node {until!r}; choose from {NODES}")
-    log = RunLogger(topic, "graph")
-    ctx = NodeContext(settings=settings, llm=LLM(settings, log), tools=Tools(settings, log, use_cache=use_cache), log=log)
-    state = RunState(topic=topic)
+    done: set[str] = set()
+    rnd = 0
+    if resume_from is None:
+        log = RunLogger(topic, "graph")
+        state = RunState(topic=topic)
+    else:   # ---- 재개: 같은 폴더에 이어 쓰고, 끝난 노드는 건너뛴다
+        state_f = resume_from / "state.json"
+        if not state_f.exists():
+            raise ValueError(f"--resume {resume_from}: state.json 이 없다 (노드 하나라도 끝난 실행이어야 함)")
+        state = RunState.model_validate_json(state_f.read_text(encoding="utf-8"))
+        if state.brief is not None:
+            raise ValueError(f"--resume {resume_from}: 이미 완주한 실행이다 (brief.json 있음)")
+        if topic.strip() and topic.strip() != state.topic.strip():
+            raise ValueError(f"--resume 의 주제가 다르다: {state.topic!r} != {topic!r}")
+        topic = state.topic
+        rnd, done, spent = _resume_point(resume_from)
+        log = RunLogger(topic, "graph", into=resume_from)
+        log.seed(**spent)   # type: ignore[arg-type]
+        log.event("resumed", round=rnd, done=sorted(done), prior=spent)
+    if listeners:
+        log.listeners.extend(listeners)
+    tools = Tools(settings, log, use_cache=use_cache, exclude=exclude, include=include)
+    if resume_from is not None:
+        tools.papers.update(state.papers)      # 레지스트리 복원 — search 가 같은 객체를 state.papers 로 다시 건다
+        state.papers = tools.papers
+    ctx = NodeContext(settings=settings, llm=LLM(settings, log), tools=tools, log=log)
     g = settings.graph
     status = "ok"
-    rnd = 0
 
     def step(name: str, fn, **kw) -> None:
+        if name in done:                        # 재개: 이 라운드에서 이미 끝난 노드
+            log.event("node_skipped", node=name, round=rnd, reason="resumed")
+            return
         log.event("node_start", node=name, round=rnd)
         fn(state, ctx, **kw)
         log.event("node_end", node=name, round=rnd)
+        log.save("state", state)                # 체크포인트 — 중단돼도 여기까지는 --resume 으로 이어진다
         if until == name:
             raise _Until
 
@@ -94,9 +153,10 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
         if plan_from is None:
             step("understand", understand.run)
             step("plan", plan.run)
-        else:
+        elif resume_from is None:
             _reuse_plan(state, plan_from, log)
-        extra: dict[str, list[str]] | None = None   # 첫 라운드는 계획의 모든 쿼리, 이후는 Replan 쿼리만
+        # 첫 라운드는 계획의 모든 쿼리, 이후는 Replan 쿼리만. 재개한 라운드가 Replan 뒤라면 그 쿼리로
+        extra: dict[str, list[str]] | None = None if rnd == 0 else state.replans[-1].as_extra_queries()
         while True:
             step("search", search.run, extra_queries=extra)
             targets = None if rnd == 0 else {it.sub_rq_id for it in state.replans[-1].items}
@@ -110,11 +170,11 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
             if cr.passed:
                 break
             unresolved = cr.deterministic_issues + [i.problem for i in cr.llm_issues if i.severity == "major"]
-            if state.replan_count >= g.max_replans:
+            if state.replan_count >= g.max_replans and "replan" not in done:
                 state.notes.append(f"critic: unresolved after {state.replan_count} replan(s): {unresolved}")
                 log.event("replan_limit", replans=state.replan_count, unresolved=unresolved)
                 break
-            if not _budget_allows_replan(settings, log):  # 완주가 우선 — 남은 예산으로 write 까지 못 가면 루프를 멈춘다
+            if "replan" not in done and not _budget_allows_replan(settings, log):  # 완주가 우선 — 남은 예산으로 write 까지 못 가면 루프를 멈춘다
                 state.notes.append(f"critic: unresolved, replan skipped for budget ({log.elapsed_min:.1f}/{settings.limits.max_minutes:.0f} min, "
                                    f"${log.cost_usd:.2f}/{settings.limits.max_cost_usd:.2f}): {unresolved}")
                 log.event("replan_skipped_budget", elapsed_min=round(log.elapsed_min, 2), cost_usd=round(log.cost_usd, 4))
@@ -122,6 +182,7 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
             step("replan", replan.run)
             extra = state.replans[-1].as_extra_queries()
             rnd += 1
+            done = set()                        # 새 라운드 — 건너뛸 노드 없음
         step("write", write.run)
     except _Until:
         status = f"partial:{until}"
@@ -130,6 +191,9 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
         log.event("limit_exceeded", error=str(e))
         if grace_write(state, ctx):   # 종합·Gap 까지 끝난 상태면 브리프를 버리지 않는다
             status = "ok_after_limit"
+    except KeyboardInterrupt:          # Ctrl-C — 상태를 남겨 --resume 으로 이어갈 수 있게
+        status = "interrupted"
+        log.event("interrupted", round=rnd)
     except Exception as e:  # noqa: BLE001 — 예상 밖 오류에도 상태·비용을 남기고 정상 종료 (goals.md O1: 죽지 않는다)
         status = "error"
         log.event("error", error=f"{type(e).__name__}: {str(e)[:500]}")
@@ -143,5 +207,7 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
                critic_rounds=len(state.critiques), replans=state.replan_count,
                critic_mode=g.critic, max_replans=g.max_replans, model=settings.llm.model,
                plan_from=(plan_from.name if plan_from else None),
+               resumed_from=(resume_from.name if resume_from else None),
+               excluded=sorted(tools.excluded) or None, included=tools.include_ids or None,
                final_critic_passed=(state.critiques[-1].passed if state.critiques else None))
     return state, log

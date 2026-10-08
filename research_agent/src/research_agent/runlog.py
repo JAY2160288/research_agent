@@ -8,10 +8,11 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from pydantic import BaseModel
 
@@ -39,6 +40,8 @@ class RunLogger:
         self.dir.mkdir(parents=True, exist_ok=True)
         self._events = self.dir / f"{prefix}events.jsonl"
         self._t0 = time.monotonic()
+        self._lock = threading.Lock()   # evaluate 배치·search 쿼리가 병렬로 돌아 이벤트 기록·비용 합산을 직렬화한다
+        self.listeners: list[Callable[[dict[str, Any]], None]] = []   # 진행 표시용 — 이벤트마다 호출 (CLI 가 등록)
         self.cost_usd = 0.0
         self.input_tokens = 0
         self.output_tokens = 0
@@ -48,17 +51,32 @@ class RunLogger:
     # ---- 이벤트 -------------------------------------------------------
     def event(self, kind: str, **data: Any) -> None:
         rec = {"t": round(time.monotonic() - self._t0, 3), "kind": kind, **_jsonable(data)}
-        with self._events.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        with self._lock:
+            with self._events.open("a", encoding="utf-8") as f:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        for fn in self.listeners:
+            try:
+                fn(rec)
+            except Exception:  # noqa: BLE001 — 진행 표시가 실행을 죽이면 안 된다
+                pass
+
+    def seed(self, *, cost_usd: float = 0.0, llm_calls: int = 0, input_tokens: int = 0, output_tokens: int = 0) -> None:
+        """재개(`--resume`) 시 이전 구간의 비용·호출 수를 이어받는다. 시간은 새로 센다 (상한은 재개 구간 기준)."""
+        with self._lock:
+            self.cost_usd += cost_usd
+            self.llm_calls += llm_calls
+            self.input_tokens += input_tokens
+            self.output_tokens += output_tokens
 
     def llm(self, *, role: str, model: str, input_tokens: int, output_tokens: int,
             cost_usd: float, attempt: int, ok: bool, error: str | None = None,
             cache_read: int = 0, cache_write: int = 0) -> None:
         """input_tokens 는 캐시 미적중분. cache_read/cache_write 는 프롬프트 캐시 적중·생성 토큰 (비용 10% / 125%)."""
-        self.llm_calls += 1
-        self.input_tokens += input_tokens + cache_read + cache_write
-        self.output_tokens += output_tokens
-        self.cost_usd += cost_usd
+        with self._lock:
+            self.llm_calls += 1
+            self.input_tokens += input_tokens + cache_read + cache_write
+            self.output_tokens += output_tokens
+            self.cost_usd += cost_usd
         self.event("llm_call", role=role, model=model, input_tokens=input_tokens,
                    cache_read=cache_read, cache_write=cache_write,
                    output_tokens=output_tokens, cost_usd=round(cost_usd, 6),

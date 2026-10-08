@@ -77,6 +77,14 @@ def run(state: RunState, ctx: NodeContext, extra_queries: dict[str, list[str]] |
         if i < len(jobs_ax) - 1:
             time.sleep(cfg.arxiv_interval_sec)
 
+    if extra_queries is None and ctx.tools.include_ids:   # --include: 첫 라운드에 한 번, 모든 sub-RQ 의 후보로 (pinned)
+        all_rqs = [sq.id for sq in state.plan.sub_rqs]
+        got = [p.id for pid in ctx.tools.include_ids if (p := ctx.tools.include_paper(pid, all_rqs)) is not None]
+        ctx.log.event("include_papers", requested=ctx.tools.include_ids, registered=got)
+        missing = [pid for pid in ctx.tools.include_ids if pid not in got]
+        if missing:
+            state.notes.append(f"search: --include papers not found in OpenAlex, skipped: {missing}")
+
     state.papers = ctx.tools.papers  # 같은 객체 공유 — evaluate 가 verified 플래그를 그대로 본다
     counts = {sq.id: sum(1 for p in state.papers.values() if sq.id in p.sub_rq_ids) for sq in state.plan.sub_rqs}
     short = [f"{sid}: {n} < {cfg.search_min_per_subrq}" for sid, n in counts.items() if n < cfg.search_min_per_subrq]

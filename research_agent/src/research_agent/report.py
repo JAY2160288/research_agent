@@ -200,7 +200,7 @@ def top_read(b: ResearchBrief, papers: dict[str, Paper] | None = None, n: int = 
 
 def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
                     checks: dict[str, Any] | None = None, stats: dict[str, Any] | None = None,
-                    banner: str | None = None) -> str:
+                    banner: str | None = None, refs: "_Refs | None" = None) -> str:
     """goals.md §5 의 7개 섹션 + 참고문헌. papers 가 있으면 제목·연도·링크를 붙인다.
     banner: 제목 아래 한 줄 안내 (한국어본에서 "영어 원문은 report.en.md" 같은 것).
 
@@ -209,12 +209,13 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
 
     checks: `post_checks` 결과 → 품질 카드. 없으면 여기서 계산한다 (기본 기준값).
     stats: {"candidates": 검색 후보 수, "critic_rounds": n, "replans": n, "cost_usd": x, "elapsed_min": x} — 있는 것만 표시.
+    refs: 비어 있는 _Refs 를 주면 참고문헌 번호 순서를 돌려받는다 (export 가 BibTeX 번호를 리포트와 맞추는 데 쓴다).
     """
     papers = papers or {}
     stats = stats or {}
     if checks is None:
         checks = post_checks(b, papers)
-    refs = _Refs()
+    refs = refs if refs is not None else _Refs()
     ev_by_id = {e.paper_id: e for e in b.evidence.items}
     tf, lines = b.topic_frame, []
 

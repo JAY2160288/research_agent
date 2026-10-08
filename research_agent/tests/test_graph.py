@@ -40,7 +40,8 @@ def _paper(i: int, src="openalex", abstract="abs", cites=0, year=2024):
 
 def _settings(tmp_path, **tools):
     base = dict(cache_dir=str(tmp_path / "c"), search_workers=2, search_min_per_subrq=3,
-                evaluate_per_subrq=2, evaluate_batch=2, min_relevance=3, min_evidence_per_subrq=1)
+                evaluate_per_subrq=2, evaluate_batch=2, evaluate_workers=1,   # FakeParse 는 호출 순서대로 답하므로 순차
+                min_relevance=3, min_evidence_per_subrq=1)
     base.update(tools)
     return Settings(llm=LLMConfig(model="m", judge_model="j"), pricing={"default": Price(input=1, output=1)},
                     limits=Limits(), tools=ToolsConfig(**base))

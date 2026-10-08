@@ -45,6 +45,9 @@ uv run agent models                              # 계정에서 쓸 수 있는 C
 uv run agent schema                              # ResearchBrief JSON Schema → schemas/brief.json
 uv run agent translate runs/<실행 폴더> | --all [--force] [--model <id>]   # brief 산문 → 한국어 report.md (영어 원문은 report.en.md, brief.json 불변, ADR-11). LLM 1회 ≈ $0.12/실행
 uv run agent render runs/<실행 폴더> | --all      # report.md 재렌더링 (LLM 없음). 렌더러를 고치면 --all 로 기존 실행 전부 새 형식으로. 옛 파일은 report_v1.md 보관
+uv run agent export runs/<실행 폴더> --format bibtex|ris   # 참고문헌 내보내기 (LLM 없음, 번호 = report.md). references.bib / .ris (ADR-12)
+uv run agent run --resume runs/<중단된 실행 폴더>           # 체크포인트 재개 — 끝난 노드 건너뛰고 같은 폴더에 이어 씀 (ADR-12)
+uv run agent run --topic "<주제>" --exclude <doi,…> --include <doi,…> --lang en --quiet   # 문헌 개입 · 번역 끄기(한국어 주제는 기본 ko) · 진행 표시 끄기
 
 uv run python scripts/summarize_runs.py [--mode graph] [--md]   # runs/ 전체 cost.json → 결정적 지표 표 (--md 는 design.md 용)
 uv run python scripts/summarize_runs.py --ablation [--md] [--model claude-sonnet-5-5]   # 주제 × 조건(A~D) 매트릭스 + 조건별 평균 (ablation.json·judge.json 반영)

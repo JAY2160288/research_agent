@@ -104,6 +104,7 @@ class Paper(BaseModel):
     source: Literal["openalex", "arxiv", "crossref"]
     sub_rq_ids: list[str] = Field(default_factory=list, description="이 문헌을 찾아낸 sub-RQ")
     verified: bool = Field(default=False, description="Crossref/OpenAlex 로 실존 확인됨")
+    pinned: bool = Field(default=False, description="사용자가 --include 로 고정한 문헌. evaluate 후보 상한과 무관하게 평가한다")
 
     @model_validator(mode="after")
     def _norm(self):

@@ -20,8 +20,17 @@ class ToolCache:
         self._c = Cache(str(cache_dir)) if enabled else None
 
     @staticmethod
-    def key(tool: str, args: dict[str, Any]) -> str:
-        norm = json.dumps({k: args[k] for k in sorted(args)}, ensure_ascii=False, sort_keys=True)
+    def _norm_value(v: Any) -> Any:
+        """문자열 인자(검색 쿼리)는 소문자·공백 정리·양끝 따옴표 제거. plan 노드가 실행마다 쿼리를 조금씩 다르게 써서
+        같은 주제 재실행에도 캐시가 거의 안 맞았다 (2026-10-08 클린룸 관찰) — 대소문자·공백 차이만이라도 흡수한다.
+        단어 순서는 바꾸지 않는다 (검색 엔진의 순위가 달라질 수 있으므로)."""
+        if isinstance(v, str):
+            return " ".join(v.strip().strip('"\'').split()).lower()
+        return v
+
+    @classmethod
+    def key(cls, tool: str, args: dict[str, Any]) -> str:
+        norm = json.dumps({k: cls._norm_value(args[k]) for k in sorted(args)}, ensure_ascii=False, sort_keys=True)
         return f"{tool}:{hashlib.sha1(norm.encode()).hexdigest()}"
 
     def get_or_call(self, tool: str, args: dict[str, Any], fn: Callable[[], Any]) -> tuple[Any, bool]:

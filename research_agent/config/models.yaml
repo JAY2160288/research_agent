@@ -42,6 +42,7 @@ tools:
   arxiv_max_failures: 2             # 연속 실패 시 arXiv 차단. OpenAlex 가 모든 sub-RQ 의 주력이라 결과 구조는 유지됨
   evaluate_per_subrq: 12
   evaluate_batch: 10
+  evaluate_workers: 4               # evaluate 배치 LLM 호출 병렬 수 (2026-10-08). 배치는 독립이라 결과 동일, 시간만 단축. 1 이면 순차
   min_relevance: 3
   min_evidence_per_subrq: 3
 

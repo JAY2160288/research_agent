@@ -46,7 +46,7 @@ plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선�
 | understand (Planner) | topic → `TopicFrame` | 1회 | 필드 비어있지 않음, 영어 동의어 ≥ 3 |
 | plan (Planner) | TopicFrame → `ResearchPlan` | 1회 | sub-RQ 3~6, 쿼리 중복률 < 50% |
 | search (Searcher) | ResearchPlan → `Paper[]` | **0회** | sub-RQ 당 ≥ 10편, DOI 또는 arXiv id 필수 — LLM 이 문헌을 만들 수 없는 구조 |
-| evaluate (Evaluator) | Paper[] → `Evidence[]` | sub-RQ 당 1~2회 (10편 배치) | verified=False 즉시 제외, relevance < 3 제외 |
+| evaluate (Evaluator) | Paper[] → `Evidence[]` | sub-RQ 당 1~2회 (10편 배치, 배치 4개 병렬 — ADR-12) | verified=False 즉시 제외, relevance < 3 제외 |
 | synthesize (Synthesizer) | Evidence[] → `Synthesis` | 1회/라운드 | 모든 claim 에 evidence_id ≥ 1, 상충마다 원인 가설 |
 | gap (Synthesizer) | Synthesis+Evidence → `GapList` | 1회/라운드 | Gap 당 근거 ≥ 2, 제안에 방법·데이터 |
 | critic (Critic) | RunState → `Critique` | 결정적 통과 시 1회 | 인용 검증 100%·claim 출처·sub-RQ evidence ≥ 3·Gap 근거 ≥ 2·상충 가설 (plan.md §3.3) |
@@ -285,6 +285,7 @@ plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선�
 - **"부재 주장" 이 종합에 섞인다** (§3.6): "문헌이 X 를 다루지 않는다" 류 문장이 §4 종합에 들어가 특정 문헌에 인용되면 unsupported 가 된다. synthesize 프롬프트에서 부재 주장을 Gap 으로 보내는 것이 개선점.
 - **Replan 은 쿼리 재작성까지만**: 문헌 자체가 없는 sub-RQ 는 2회 재검색으로도 못 채운다. 구조가 보장하는 것은 "채움" 이 아니라 "솔직한 기재" 다 (§2).
 - **주장-근거 지지 검증을 Critic 안에 넣지 않았다** (ADR-10): 사후 지표로만 측정했으므로 실행 중에 partial/unsupported 주장이 걸러지지는 않는다. 실행당 +$0.1~0.2 로 Critic 에 넣을 수 있으나 ablation 재실행이 필요해 보류.
+- 위 파이프라인 한계를 포함해 "제품 수준" 기준의 개선 항목 17개(우선순위·설계·확인 방법·제출 전/후 구분)는 [`quality.md`](quality.md) 에 있다. 제출 전에는 지표를 바꾸지 않는 7개만 넣었다 (ADR-12: evaluate 병렬화, 진행 표시, 한국어 주제 자동 번역, 체크포인트·`--resume`, `--exclude/--include`, BibTeX/RIS 내보내기, 캐시 키 정규화).
 
 **재현 환경의 한계**
 

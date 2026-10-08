@@ -52,6 +52,8 @@ class ToolsConfig(BaseModel):
     arxiv_max_failures: int = 2        # 연속 실패 시 이 실행에서 arXiv 차단 (circuit breaker)
     evaluate_per_subrq: int = 12       # evaluate 에 넘길 sub-RQ 당 후보 상한 (초록 있음·피인용·최신 순)
     evaluate_batch: int = 10           # evaluate LLM 1회 호출당 문헌 수
+    evaluate_workers: int = 4          # evaluate 배치 LLM 호출 병렬 수 (배치는 서로 독립 — 결과는 배치 순서로 합친다). 1 이면 순차
+    openalex_api_key: str | None = None  # 선택. .env 의 OPENALEX_API_KEY — 있으면 일일 호출 한도가 사라진다 (없으면 polite pool)
     min_relevance: int = 3             # synthesize·coverage 계산에 쓰는 relevance 하한
     min_evidence_per_subrq: int = 3    # Critic: sub-RQ 당 evidence ≥ 이 값
 
@@ -79,11 +81,14 @@ class Settings(BaseModel):
 def load_settings(config_path: Path = CONFIG_PATH, env_path: Path | None = None) -> Settings:
     load_dotenv(env_path or ROOT / ".env")
     raw = yaml.safe_load(config_path.read_text(encoding="utf-8"))
-    return Settings(
+    s = Settings(
         **raw,
         anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"),
         contact_email=os.getenv("CONTACT_EMAIL"),
     )
+    if os.getenv("OPENALEX_API_KEY"):          # 선택 키 — yaml 이 아니라 .env 에서만 (키는 설정 파일에 두지 않는다)
+        s.tools.openalex_api_key = os.getenv("OPENALEX_API_KEY")
+    return s
 
 
 def load_prompt(name: str) -> str:

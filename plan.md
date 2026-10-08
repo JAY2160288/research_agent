@@ -217,6 +217,21 @@ Replan 상한 2회(`graph.max_replans`). 상한 도달 시 미달 항목을 리�
 - 대안·기각: 노드 프롬프트 한국어화 — 위 (1)~(3). 렌더러 안에서 번역 — "렌더러는 LLM 호출 0" 원칙이 깨지고 `agent render --all` 이 과금되므로 별도 명령으로 분리. 전체 표 번역 — 실행당 +$0.15 에 독자가 접힌 표를 펼칠 확률이 낮다.
 - 흔적: `brief.ko.json`·`translate_events.jsonl`·`report.en.md`(실행 폴더), 한국어본 맨 위 안내 배너, 단위 테스트 82 → 88.
 
+### ADR-12. 제출 전 품질 개선은 **파이프라인 출력·지표를 바꾸지 않는 것만** (2026-10-08)
+
+- 배경: "제품 수준" 기준으로 결함을 다시 재어 `docs/quality.md` 에 17개 개선 항목을 뽑았다 (회수율 ≤ 6%, J3 최저, 부재 주장, 프리프린트 중복, 깜깜이 대기, 중단 시 처음부터, evaluate 순차 등). 그중 검색 레이어·스키마·프롬프트를 바꾸는 것(스노볼링, 부재 주장 분리, 지지 검증 in-Critic 등)은 ablation 20회·judge 점수를 무효로 만들고 재실행할 크레딧·OpenAlex 예산이 없다.
+- 결정: 제출 전에는 **노드 입출력·스키마 의미·`post_checks` 지표·프롬프트를 건드리지 않는** 개선만 넣는다. 들어간 것 7개:
+  (1) evaluate 배치 LLM 호출 병렬화 (`tools.evaluate_workers`, 기본 4; 배치는 독립이라 결과는 순차와 같고 `ex.map` 이 순서를 지켜 합친다) — D 조건의 evaluate 2~3분을 줄인다. `RunLogger` 에 스레드 락.
+  (2) CLI 진행 표시 (`progress.py`, `RunLogger.listeners` 이벤트 구독, `--quiet`) — 파이프라인 코드 무변경.
+  (3) `--lang ko|en`: 한국어 주제면 끝난 뒤 `translate_run` 을 자동으로 잇는다 (ADR-11 의 사후 단계 그대로, brief.json·cost.json 불변, 번역 실패는 영어 리포트 유지). 평가자가 README 3단계만 쳐도 한국어본이 나온다.
+  (4) 체크포인트·`--resume`: 노드가 끝날 때마다 `state.json` 저장, 재개는 같은 폴더에 이어 쓰고 events.jsonl 의 마지막 `node_end` 다음부터 (끝난 노드는 `node_skipped`). 비용은 이어받고(`RunLogger.seed`) 시간은 새로. Ctrl-C 도 `interrupted` 로 상태를 남긴다.
+  (5) `--exclude <id,…>` / `--include <doi,…>`: 제외 문헌은 `Tools._register` 에서 걸러 레지스트리에 들어오지 않고(인용 불가), 고정 문헌은 search 첫 라운드에 `get_by_doi` 로 가져와 모든 sub-RQ 후보에 `Paper.pinned=True` 로 넣어 evaluate 상한과 무관하게 평가한다. `cost.json` 에 `excluded`·`included` 기록.
+  (6) `agent export --format bibtex|ris` (`export.py`) — 번호는 `render_markdown` 에 빈 `_Refs` 를 넘겨 리포트와 동일.
+  (7) 캐시 키 정규화(소문자·공백, 단어 순서는 유지). 코드에 선택 `OPENALEX_API_KEY` 경로도 있으나 README 에는 적지 않는다 — "키는 Anthropic 하나"(ADR-3) 가 평가자용 약속.
+- 지표 불변의 근거: `post_checks` 는 brief 로만 계산되고 brief 를 만드는 노드 로직·프롬프트는 그대로. 병렬화는 호출 순서만 바꾼다. 스키마 변경은 `Paper.pinned`(기본 False) 하나 — 기존 papers.json 호환. 단위 테스트 88 → 97 (`tests/test_product.py`), 테스트의 `_settings` 는 `evaluate_workers=1` 로 FakeParse 순서를 지킨다.
+- 보류 (제출 후, quality.md §4): A1 스노볼링, A3 병합·재순위, B1~B4, A4 OA 본문, A5 KCI, D2 모델 티어 — 모두 D 조건 재실행이 전제.
+- 비용: 코드 변경에 실행 0회. 실측(시간 단축·자동 번역)은 다음 live 실행에서 `cost.json` 으로 확인하고 design.md §5 에 행을 추가한다.
+
 ## 5. 작업 분해
 
 ### W1 (10/2–10/8) — 기반 + 베이스라인
@@ -349,6 +364,7 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 
 | 날짜 | 변경 | 이유 |
 |---|---|---|
+| 2026-10-08 | **ADR-12: 제출 전 품질 개선 묶음 (파이프라인 지표 불변).** `docs/quality.md` 신설 — "제품 수준" 기준으로 측정된 결함 10개(회수율 ≤ 6%, J3 최저·sample 공란, 부재 주장, 프리프린트 중복, 한국 문헌 0, 깜깜이 대기, OpenAlex 한도, 중단 시 처음부터, 내보내기 없음, evaluate 순차) → 개선 17개를 효과·비용·파이프라인 영향·제출 전 가능 여부로 우선순위화. 제출 전 묶음 7개 구현: evaluate 병렬화(`evaluate_workers: 4`, `RunLogger` 스레드 락), CLI 진행 표시(`progress.py`, `--quiet`), 한국어 주제 자동 번역(`--lang`), 체크포인트·`--resume`(노드마다 `state.json`, Ctrl-C 도 재개), `--exclude`/`--include`(`Paper.pinned`), `agent export --format bibtex\|ris`(`export.py`), 캐시 키 정규화. README 를 평가자용 한 페이지(한눈에 표·실행·결과 폴더·파이프라인 그림·디렉터리·ablation 요약)로 재구성. 단위 테스트 88 → 97 | 사용자 요청 "상품으로 팔 정도로 잘 만들어라" (품질 기준 — 제출물은 수업용, 주 사용자는 평가자). 파이프라인을 바꾸는 항목은 ablation·judge 무효화 + 크레딧 부족이라 제출 후로 (ADR-12). 모든 변경은 brief·post_checks 를 건드리지 않아 design.md §3~§5 결과가 그대로 유효 |
 | 2026-10-08 | **ADR-11: 리포트 본문 한국어화를 사후 번역 단계로.** `agent translate` (`translate.py`, `prompts/translate.md`, `KoreanBrief` 스키마 + 결정적 검사: 한글·숫자/DOI 보존·길이 비율, 실패 항목은 영어 유지), `rerender_run` 이 `brief.ko.json` 을 보면 report.md 한국어본 + report.en.md 영어 원문. 렌더러 보강: 한국어 조사가 붙은 DOI 치환, 한글 문장 분리로 Gap 제목. 실측 $0.12/실행, 59항목 전부 통과. sonnet D·A 10개 + 클린룸 2개 번역 (B/C·haiku 개발 실행은 영어 유지). 단위 테스트 82 → 88 | 사용자 질문 "한글 위주로 쓰되 제목·인용은 영어로 두면 유의미한가" → 유의미하지만 프롬프트가 아니라 사후 단계여야 ablation·judge 가 유효하고 비용·토큰 장애가 없다 (ADR-11 근거). 크레딧 잔량 때문에 12개만 — 나머지는 `agent translate --all` 로 언제든 추가 가능 |
 | 2026-10-08 | **리포트 렌더러 2차 개편 — 상품성 (`report.py`, 표현 계층만, LLM·스키마·지표 불변).** 같은 날 1차 개편 결과를 "내가 돈 주고 쓸 리포트인가" 로 다시 읽고 고침: (1) 읽는 순서를 요약 → **먼저 읽을 문헌 Top 10**(신설, Evaluator 의 관련성→신뢰도→연도 순 결정적 선정, 번호 [1]~[10] 이 여기서 매겨져 참고문헌이 중요도순이 됨) → 품질 카드 → §1~§7 로 — 채점용 카드가 아니라 독자가 원하는 답이 먼저. (2) LLM 이 산문(coverage_note·Gap 설명·한계·Critic 노트)에 그대로 박은 DOI·arXiv id 를 `_link_ids` 가 레지스트리와 대조해 `[n]` 으로 치환 — T1 D 실행에서 산문 속 DOI 20여 곳이 전부 번호로 바뀜, 모르는 id 는 그대로. (3) §5 Gap 을 굵은 문단에서 `### G n. 제목` + 본문으로 (`_split_title`: 첫 문장 ≤ 160자면 그대로, 길면 첫 괄호·대시·콜론 앞 주어구, 그것도 없으면 110자 단어 경계). (4) §6 은 §5 복붙(셀 300자)이던 것을 140/100/80자 요약표로. (5) §7 Critic 자동 노트의 파이썬 리스트 repr `['…', '…']` 을 `_auto_note` 가 항목별 하위 불릿으로. (6) 미배정(관련성 ≤ 1) 문헌은 참고문헌 번호를 받지 않음 — T1 D 참고문헌 95 → 69편, 표에는 id 로 남김. (7) sub-RQ 머리 편수를 Evidence map 과 맞춤 (`4편 (rel ≥ 3: 3편)`), §2 쿼리 33개는 접음, 카드 라벨 "인용 문헌" → "실존 검증" (분모가 평가 문헌 전부라 과장이었음). `runs/` 34개 재렌더링(`report_v1.md` 는 1차 개편 전 원본 그대로 보관). 단위 테스트 76 → 82 | 1차 개편은 다른 에이전트의 장치를 빌려 "있을 것은 다 있는" 상태였지만 읽는 사람 입장에선 표 더미 뒤에 답이 숨어 있었다. 안 한 것: Replan 으로 추가된 쿼리 표시(brief 에 replan 정보가 없어 스키마 변경 필요), claim 옆 태그의 편수 중복, 카드 9열 |
 | 2026-10-08 | **리포트 렌더러 개편 (`report.py`, 표현 계층만 — LLM 호출·스키마·지표 불변).** 다른 리서치 에이전트의 공통 제시 장치를 빌림: (1) 맨 위 "한눈에" 카드 = `post_checks` 결정적 지표(검색 후보 → 평가 → 인용 검증, 커버리지, claim 출처, Gap 근거, Critic/Replan 횟수, 미해결 한계 수, 비용·시간), (2) DOI 문자열 인용 → 번호 `[n]` + 참고문헌 목록(저자·연도·제목·venue·doi.org/arXiv 링크, 처음 등장 순 번호), (3) §3.1 Evidence map(sub-RQ × 신뢰도 4~5/3/≤2 편수·평균·커버 ✅/⚠️, Critic 과 같은 기준), §3.2 sub-RQ 별 머리 요약(편수·평균 신뢰도·상위 3편) + `<details>` 접힌 표, 미배정(관련성 ≤ 1) 문헌은 별도 그룹, (4) claim 옆 `(근거 n편 · 신뢰도 평균 x)`, 상충 `A n편 vs B m편`, (5) §6 을 `제안 RQ | 설계 | 데이터 | 근거 Gap` 표로, (6) §7 에서 `[auto]` 노트를 "품질 게이트가 자동으로 기록한 미해결 항목" 으로 분리·한글화. `agent render <dir>|--all` 추가 — 끝난 실행의 `brief.json`·`papers.json`·`cost.json` 으로 재렌더링, 옛 파일은 `report_v1.md` 로 1회 보관. 기존 완주 실행 34개 전부 재렌더링 (65~90KB → 105~142KB, judge 상한 150K 자 안). 단위 테스트 71 → 76 (`tests/test_report.py`) | 리포트가 "구조는 완벽한데 읽기 힘든" 상태였음: 98행 표가 벽처럼 서 있고 인용이 DOI 문자열이라 따라갈 수 없고 참고문헌 목록이 없었다. 렌더러만 고치면 ablation 20회가 무효가 되지 않는다. judge.json 은 개편 전 형식 기준 점수 — design.md §2 에 명시. 파이프라인이 필요한 개선(본문 한국어화, 지지/반대 자동 집계)은 기말로 |
