@@ -165,8 +165,8 @@ def test_export_numbering_matches_report(tmp_path):
 
 def test_progress_lines_from_events(tmp_path):
     lines = []
-    log = RunLogger("주제", "graph", runs_dir=tmp_path)
-    log.listeners.append(Progress(lines.append))
+    log = RunLogger("주제", "graph", runs_dir=tmp_path, listeners=[Progress(lines.append)])   # 생성자에 줘야 run_start 도 찍힌다
+    assert lines and lines[0].startswith("▶ 실행 시작")
     log.event("node_start", node="search", round=0)
     log.llm(role="evaluate", model="m", input_tokens=10, output_tokens=5, cost_usd=0.01, attempt=1, ok=True)
     log.event("node_check", node="search", attempt=1, issues=[], counts={"rq1": 12, "rq2": 9})

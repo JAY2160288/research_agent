@@ -111,8 +111,9 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
         raise ValueError(f"unknown node {until!r}; choose from {NODES}")
     done: set[str] = set()
     rnd = 0
+    lk = {"listeners": listeners} if listeners else {}   # 없으면 넘기지 않는다 (테스트가 RunLogger 를 (topic, mode) 람다로 바꿔 끼움)
     if resume_from is None:
-        log = RunLogger(topic, "graph")
+        log = RunLogger(topic, "graph", **lk)
         state = RunState(topic=topic)
     else:   # ---- 재개: 같은 폴더에 이어 쓰고, 끝난 노드는 건너뛴다
         state_f = resume_from / "state.json"
@@ -125,11 +126,9 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
             raise ValueError(f"--resume 의 주제가 다르다: {state.topic!r} != {topic!r}")
         topic = state.topic
         rnd, done, spent = _resume_point(resume_from)
-        log = RunLogger(topic, "graph", into=resume_from)
+        log = RunLogger(topic, "graph", into=resume_from, **lk)
         log.seed(**spent)   # type: ignore[arg-type]
         log.event("resumed", round=rnd, done=sorted(done), prior=spent)
-    if listeners:
-        log.listeners.extend(listeners)
     tools = Tools(settings, log, use_cache=use_cache, exclude=exclude, include=include)
     if resume_from is not None:
         tools.papers.update(state.papers)      # 레지스트리 복원 — search 가 같은 객체를 state.papers 로 다시 건다

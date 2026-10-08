@@ -26,11 +26,13 @@ def _slug(text: str, n: int = 40) -> str:
 
 class RunLogger:
     def __init__(self, topic: str, mode: str, runs_dir: Path = RUNS_DIR, *,
-                 into: Path | None = None, prefix: str = ""):
+                 into: Path | None = None, prefix: str = "",
+                 listeners: list[Callable[[dict[str, Any]], None]] | None = None):
         """새 실행 폴더 runs/<ts>_<mode>_<slug>/ 를 만든다.
 
         into/prefix: 이미 끝난 실행 폴더에 **덧붙여** 기록할 때 (LLM-judge 등 사후 작업). 새 폴더를 만들지 않고
         `<into>/<prefix>events.jsonl` 에 쓴다 — 채점 비용·호출이 원 실행의 events.jsonl·cost.json 과 섞이지 않는다.
+        listeners: 진행 표시 콜백. 생성자에서 받아야 첫 이벤트(run_start)도 전달된다.
         """
         if into is not None:
             self.dir = into
@@ -41,7 +43,7 @@ class RunLogger:
         self._events = self.dir / f"{prefix}events.jsonl"
         self._t0 = time.monotonic()
         self._lock = threading.Lock()   # evaluate 배치·search 쿼리가 병렬로 돌아 이벤트 기록·비용 합산을 직렬화한다
-        self.listeners: list[Callable[[dict[str, Any]], None]] = []   # 진행 표시용 — 이벤트마다 호출 (CLI 가 등록)
+        self.listeners: list[Callable[[dict[str, Any]], None]] = list(listeners or [])   # 진행 표시용 — 이벤트마다 호출
         self.cost_usd = 0.0
         self.input_tokens = 0
         self.output_tokens = 0
