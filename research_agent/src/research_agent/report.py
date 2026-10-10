@@ -3,7 +3,7 @@
 렌더링 원칙 (2026-10-08 개편, plan.md §8):
 - LLM 호출 0. `brief.json`·`papers.json`·`cost.json` 만으로 언제든 같은 report.md 를 다시 그릴 수 있다 (`agent render`).
 - 인용은 DOI 문자열이 아니라 **번호 [n]** 으로, 끝에 참고문헌 목록. 번호는 문서에 처음 등장하는 순서.
-- 맨 위 "한눈에" 카드는 `post_checks` 의 결정적 지표를 그대로 보여준다 — 독자가 첫 줄에서 인용 검증률·커버리지를 확인.
+- "품질 한눈에" 카드는 `post_checks` 의 결정적 지표를 그대로 보여준다. 2026-10-10 부터 본문 뒤(§7 다음, 참고문헌 앞) — 독자용이 아니라 검증용이라 (ADR-13).
 - Evidence Table 은 sub-RQ 별로 나누고 각 머리에 편수·평균 신뢰도·상위 문헌을 요약, 본표는 접는다(<details>).
 - 같은 날 상품성 개편: 요약·"먼저 읽을 문헌" 을 카드보다 앞에, 산문 속 DOI 도 [n] 으로 치환, §6 은 요약표, Gap 은 제목+본문,
   Critic 자동 노트는 항목별 불릿, 미배정 문헌은 참고문헌 번호를 받지 않는다. 독자는 "뭘 읽고 뭐가 비었나" 를 먼저 본다.
@@ -213,8 +213,8 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
     """goals.md §5 의 7개 섹션 + 참고문헌. papers 가 있으면 제목·연도·링크를 붙인다.
     banner: 제목 아래 한 줄 안내 (한국어본에서 "영어 원문은 report.en.md" 같은 것).
 
-    읽는 순서(2026-10-08 상품성 개편): 요약 → 먼저 읽을 문헌 → 품질 카드 → §1~§7 → 참고문헌.
-    독자가 원하는 답(무엇을 읽고, 무엇이 비어 있나)을 앞에, 채점·검증용 표는 접어서 뒤에 둔다.
+    읽는 순서(2026-10-08 개편, 2026-10-10 ADR-13): 요약 → 먼저 읽을 문헌 → §1~§7 → 품질 한눈에 → 참고문헌.
+    독자가 원하는 답(무엇을 읽고, 무엇이 비어 있나)을 앞에, 채점·검증용 카드는 본문 뒤에 둔다.
 
     checks: `post_checks` 결과 → 품질 카드. 없으면 여기서 계산한다 (기본 기준값).
     stats: {"candidates": 검색 후보 수, "critic_rounds": n, "replans": n, "cost_usd": x, "elapsed_min": x} — 있는 것만 표시.
@@ -262,28 +262,8 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
                          f"{', '.join(e.sub_rq_ids)} | {e.relevance} · {e.reliability} |")
         lines.append("")
 
-    # ---- 품질 카드 (결정적 지표)
-    cite_tot, cite_ok = checks.get("citations_total", 0), checks.get("citations_verified", 0)
-    rate = f"{cite_ok}/{cite_tot}" + (f" ({cite_ok / cite_tot:.0%})" if cite_tot else "")
     auto_notes = [x for x in b.limitations if x.startswith(AUTO_PREFIX)]
-    card = [
-        ("검색 후보", str(stats["candidates"]) if "candidates" in stats else str(len(papers)) if papers else "-"),
-        ("평가 문헌", str(len(b.evidence.items))),
-        ("실존 검증 (DOI/arXiv)", rate),
-        ("sub-RQ 커버리지 (근거 ≥ 3편)", f"{checks.get('sub_rqs_covered', 0)}/{checks.get('sub_rqs', 0)}"),
-        ("출처 있는 claim", f"{checks.get('claims_with_source', 0)}/{checks.get('claims_total', 0)}"),
-        ("근거 ≥ 2편인 Gap", f"{checks.get('gaps_with_2_evidence', 0)}/{checks.get('gaps', 0)}"),
-    ]
-    if "critic_rounds" in stats:
-        card.append(("Critic 판정 / Replan", f"{stats['critic_rounds']}회 / {stats.get('replans', 0)}회"))
-    card.append(("품질 게이트 미해결", f"{len(auto_notes)}건" + (" → §7" if auto_notes else "")))
-    if "cost_usd" in stats and stats["cost_usd"] is not None:
-        t = f"${stats['cost_usd']:.2f}" + (f" · {stats['elapsed_min']:.1f}분" if stats.get("elapsed_min") else "")
-        card.append(("비용 · 시간", t))
-    lines += ["## 품질 한눈에", "",
-              "| " + " | ".join(k for k, _ in card) + " |", "|" + "---|" * len(card),
-              "| " + " | ".join(v for _, v in card) + " |", "",
-              "LLM 없이 코드가 계산한 결정적 지표다 (`cost.json` `checks`). 인용 번호 [n] 은 문서 끝 참고문헌을 가리킨다.", ""]
+
 
     # ---- §1, §2
     lines += ["## 1. 주제 재정의", "", f"- RQ: {tf.research_question}", f"- 독립변수: {', '.join(tf.variables.independent)}",
@@ -380,6 +360,28 @@ def render_markdown(b: ResearchBrief, papers: dict[str, Paper] | None = None,
             head, items = _auto_note(x[len(AUTO_PREFIX):])
             notes.append("\n".join([f"- {L(head)}"] + [f"  - {L(it)}" for it in items]))
         lines += _loose(notes)
+
+    # ---- 품질 한눈에 (결정적 지표) — 독자용이 아니라 검증용이라 본문 뒤, 참고문헌 앞 (2026-10-10, ADR-13)
+    cite_tot, cite_ok = checks.get("citations_total", 0), checks.get("citations_verified", 0)
+    rate = f"{cite_ok}/{cite_tot}" + (f" ({cite_ok / cite_tot:.0%})" if cite_tot else "")
+    card = [
+        ("검색 후보", str(stats["candidates"]) if "candidates" in stats else str(len(papers)) if papers else "-"),
+        ("평가 문헌", str(len(b.evidence.items))),
+        ("실존 검증 (DOI/arXiv)", rate),
+        ("sub-RQ 커버리지 (근거 ≥ 3편)", f"{checks.get('sub_rqs_covered', 0)}/{checks.get('sub_rqs', 0)}"),
+        ("출처 있는 claim", f"{checks.get('claims_with_source', 0)}/{checks.get('claims_total', 0)}"),
+        ("근거 ≥ 2편인 Gap", f"{checks.get('gaps_with_2_evidence', 0)}/{checks.get('gaps', 0)}"),
+    ]
+    if "critic_rounds" in stats:
+        card.append(("Critic 판정 / Replan", f"{stats['critic_rounds']}회 / {stats.get('replans', 0)}회"))
+    card.append(("품질 게이트 미해결", f"{len(auto_notes)}건" + (" → §7" if auto_notes else "")))
+    if "cost_usd" in stats and stats["cost_usd"] is not None:
+        t = f"${stats['cost_usd']:.2f}" + (f" · {stats['elapsed_min']:.1f}분" if stats.get("elapsed_min") else "")
+        card.append(("비용 · 시간", t))
+    lines += ["## 품질 한눈에", "",
+              "| " + " | ".join(k for k, _ in card) + " |", "|" + "---|" * len(card),
+              "| " + " | ".join(v for _, v in card) + " |", "",
+              "LLM 없이 코드가 계산한 결정적 지표다 (`cost.json` `checks`). 인용 번호 [n] 은 바로 아래 참고문헌을 가리킨다.", ""]
 
     # ---- 참고문헌: 본문·표에 번호로 등장한 문헌, 번호순
     lines += ["", f"## 참고문헌 ({len(refs.order)}편)", "",

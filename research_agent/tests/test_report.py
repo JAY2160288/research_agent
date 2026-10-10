@@ -1,6 +1,6 @@
 """report.py 렌더러 (2026-10-08 개편 + 같은 날 상품성 개편) — LLM 없이 brief 에서 결정적으로 그려지는지.
 
-- 읽는 순서: 요약 → 먼저 읽을 문헌 → 품질 카드 → §1~§7 → 참고문헌
+- 읽는 순서: 요약 → 먼저 읽을 문헌 → §1~§7 → 품질 한눈에 → 참고문헌 (ADR-13)
 - 인용은 번호 [n] 이고 끝에 참고문헌 목록. LLM 이 산문에 박아 넣은 DOI·arXiv id 도 [n] 으로 치환된다
 - "먼저 읽을 문헌" 은 관련성 → 신뢰도 → 연도 순으로 결정적으로 뽑히고, 여기서 번호 [1]~ 가 매겨진다
 - 미배정(관련성 낮은) 문헌은 표에만 남고 참고문헌 번호를 받지 않는다
@@ -59,10 +59,10 @@ def _papers():
 
 def test_reading_order_and_top_papers():
     md = render_markdown(_brief(), _papers())
-    order = [md.index(h) for h in ("## 요약", "## 먼저 읽을 문헌", "## 품질 한눈에", "## 1. 주제 재정의", "## 7. 한계와 신뢰도", "## 참고문헌")]
-    assert order == sorted(order)                                   # 요약·읽을 문헌이 카드보다 앞
+    order = [md.index(h) for h in ("## 요약", "## 먼저 읽을 문헌", "## 1. 주제 재정의", "## 7. 한계와 신뢰도", "## 품질 한눈에", "## 참고문헌")]
+    assert order == sorted(order)                                   # 요약·읽을 문헌이 앞, 품질 카드는 본문 뒤 참고문헌 앞
     # Top: rel≥3 인 배정 문헌 4편을 관련성 → 신뢰도 → 연도 순으로. p0(4,4) → p2(4,3) → p9(4,3) → p1(4,2)
-    top = md.split("## 먼저 읽을 문헌 (4편)")[1].split("## 품질 한눈에")[0]
+    top = md.split("## 먼저 읽을 문헌 (4편)")[1].split("## 1. 주제 재정의")[0]
     assert "| [1] | P0 (2024) | f | rq1 | 4 · 4 |" in top
     assert "| [2] | P2 (2024) | f | rq1, rq2 | 4 · 3 |" in top
     assert "| [4] | P1 (2024) | has \\| pipe and newline | rq1 | 4 · 2 |" in top
@@ -123,7 +123,7 @@ def test_card_and_evidence_map():
     b, ps = _brief(), _papers()
     checks = post_checks(b, ps)
     md = render_markdown(b, ps, checks=checks, stats={"candidates": 42, "critic_rounds": 2, "replans": 1, "cost_usd": 0.5, "elapsed_min": 3.2})
-    card = md.split("## 품질 한눈에")[1].split("## 1. 주제 재정의")[0]
+    card = md.split("## 품질 한눈에")[1].split("## 참고문헌")[0]
     assert "| 42 | 5 | 5/5 (100%) | 1/3 | 3/3 | 1/1 | 2회 / 1회 | 1건 → §7 | $0.50 · 3.2분 |" in card
     # Evidence map: rq1 는 rel≥3 세 편(p0 reli4, p1 reli2, p2 reli3) → 커버, rq2 는 2편·rq3 는 0편 → 부족
     assert "| rq1 | 3 | 1 | 1 | 1 | 3.0 | ✅ |" in md

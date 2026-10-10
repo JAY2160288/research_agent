@@ -52,7 +52,7 @@ plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선�
 | critic (Critic) | RunState → `Critique` | 결정적 통과 시 1회 | 인용 검증 100%·claim 출처·sub-RQ evidence ≥ 3·Gap 근거 ≥ 2·상충 가설 (plan.md §3.3) |
 | replan (Planner) | Critique → 새 쿼리 | 1회/라운드 | 지목된 sub-RQ 마다 쿼리 ≥ 1, 없으면 결정적 fallback 쿼리 |
 | write (Writer) | RunState → `ResearchBrief` | 1회 | 스키마 통과, 7개 섹션 |
-| (렌더링, `report.py`) | ResearchBrief + papers + checks → `report.md` | **0회** | 요약 → 먼저 읽을 문헌 Top 10 → 결정적 지표 카드 → 번호 인용 `[n]`(산문 속 DOI 도 치환) + 참고문헌, Evidence map, sub-RQ 별 접힌 표, Gap 제목+본문, §6 요약표. `agent render` 로 언제든 재생성 |
+| (렌더링, `report.py`) | ResearchBrief + papers + checks → `report.md` | **0회** | 요약 → 먼저 읽을 문헌 Top 10 → §1~§7 → 결정적 지표 카드 → 번호 인용 `[n]`(산문 속 DOI 도 치환) + 참고문헌, Evidence map, sub-RQ 별 접힌 표, Gap 제목+본문, §6 요약표. `agent render` 로 언제든 재생성 |
 | (번역, `translate.py`, ADR-11) | brief.json 산문 필드 → `brief.ko.json` → `report.md`(한국어)·`report.en.md` | **1회** (사후, 실행당 ≈ $0.12) | 한글·숫자/DOI 보존·길이 비율 검사, 실패 항목은 영어 유지. 파이프라인·지표 불변 |
 
 모든 노드는 `nodes/__init__.py` 의 `checked_call` 공통 루프를 쓴다: **구조화 호출 → `check()` → 실패 시 이슈를 되먹여 재호출(최대 2회) → 그래도 실패면 `notes` 에 적고 계속 진행**. 어떤 노드도 실행을 죽이지 않는다 (O1). 미해결 노트는 write 가 리포트 §7 한계에 `[auto]` 로 편입한다.
@@ -251,6 +251,7 @@ plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선�
 | 10-08 02:26 | 클린룸 | sonnet | 새 clone, 캐시 없음 | $0.811 | 7.3 | 26 | 100% | 13/13 | 6/6 | 5/5 | 2 | pass |
 | 10-08 02:33 | 클린룸 | haiku | 새 clone | $0.297 | 7.7 | 26 | 100% | 12/12 | 6/6 | 5/5 | 2 | fail |
 | 10-08 06:09 | ADR-12 검증 | haiku | OpenAlex 소진 → 48쿼리 전부 Crossref 폴백, evaluate 배치 병렬 4 | $0.405 | 7.1 | 31 | 100% (116/116) | 12/12 | 6/6 | 6/6 | 2 | fail |
+| 10-10 14:34 | 웹(research-brief-web) 경유 1회 | sonnet | 워커가 `run_graph` 를 그대로 호출, Supabase 에 이벤트·산출물 업로드, 자동 한국어 번역 포함. OpenAlex 정상(후보 444편) | $0.780 | 5.3 | 24 | 100% (84/84) | 11/11 | 6/6 | 5/5 | 2 | fail |
 
 **불변 지표 (달라지면 안 되는 것)**
 
