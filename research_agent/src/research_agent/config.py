@@ -20,6 +20,7 @@ class LLMConfig(BaseModel):
     model: str
     judge_model: str
     translate_model: str = "claude-sonnet-5-5"   # `agent translate` 용 (ADR-11). 번역 품질이 곧 독자가 읽는 본문
+    critic_model: str | None = None    # Critic 의 LLM 비판만 다른 모델로 (이종 검토자 실험, 조건 E). None 이면 model 과 같음 — 제출 기본값
     max_tokens: int = 8192            # 베이스라인 ReAct·최종 브리프용 상한
     node_max_tokens: int = 6000        # 그래프 노드 1회 호출 상한. 노드 출력은 2~3k 토큰이면 충분 — 더 크면 폭주 출력이 잘려 JSON 이 깨진다
     max_retries: int = 2

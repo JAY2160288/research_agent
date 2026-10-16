@@ -38,6 +38,7 @@ def run_baseline(topic: str, settings: Settings, *, use_cache: bool = True) -> t
     messages: list[dict[str, Any]] = [{"role": "user", "content": f"Research topic: {topic}"}]
     brief: ResearchBrief | None = None
     status = "no_brief"
+    stop_reason = "no_brief"   # 관측용 (graph 와 같은 필드): submitted | forced_submit | limit_exceeded | no_brief
     max_steps = settings.limits.max_react_steps
 
     try:
@@ -79,10 +80,12 @@ def run_baseline(topic: str, settings: Settings, *, use_cache: bool = True) -> t
             messages.append({"role": "user", "content": results})
             if brief is not None:
                 status = "ok"
+                stop_reason = "forced_submit" if force_submit else "submitted"
                 break
     except (CostLimitExceeded, TimeLimitExceeded) as e:
         # 상한 초과는 실패가 아니라 측정 결과다 (goals.md O1: 죽지 않고 기록). 베이스라인 약점으로 남긴다.
         status = "limit_exceeded"
+        stop_reason = "limit_exceeded"
         log.event("limit_exceeded", error=str(e))
 
     # ---- 사후 결정적 검사 (재시도 없음) ----------------------------------
@@ -91,7 +94,7 @@ def run_baseline(topic: str, settings: Settings, *, use_cache: bool = True) -> t
         log.save("brief", brief)
         log.save("report.md", render_markdown(brief, tools.papers, checks=checks, stats={"candidates": len(tools.papers)}))
     log.save("papers", {k: v.model_dump() for k, v in tools.papers.items()})
-    log.finish(status, checks=checks, papers_seen=len(tools.papers), model=settings.llm.model)
+    log.finish(status, checks=checks, papers_seen=len(tools.papers), model=settings.llm.model, stop_reason=stop_reason)
     return brief, log
 
 

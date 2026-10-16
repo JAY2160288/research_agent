@@ -89,6 +89,7 @@ def llm_critique(state: RunState, ctx: NodeContext) -> LLMCritique:
     out, issues = checked_call(
         ctx, role="critic", schema=LLMCritique, user=_render_for_llm(state, ctx.settings.tools.min_relevance),
         check=lambda c: c.check(rq_ids),
+        model=ctx.settings.llm.critic_model,   # None 이면 실행 모델. 이종 검토자 실험(조건 E)만 다르게
     )
     if issues:  # 끝까지 틀린 sub_rq_id 는 버린다 — 비판 자체는 살림
         out.issues = [i for i in out.issues if i.sub_rq_id is None or i.sub_rq_id in rq_ids]

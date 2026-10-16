@@ -136,6 +136,9 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
     ctx = NodeContext(settings=settings, llm=LLM(settings, log), tools=tools, log=log)
     g = settings.graph
     status = "ok"
+    # 루프가 왜 끝났는지 한 단어 (cost.json `stop_reason`, 관측용 — 2026-10-16). 종료 조건이 다섯 겹이라
+    # 이벤트(critique.passed / replan_limit / replan_skipped_budget / limit_exceeded)를 뒤지지 않고도 알 수 있게 한다.
+    stop_reason: str | None = None
 
     def step(name: str, fn, **kw) -> None:
         if name in done:                        # 재개: 이 라운드에서 이미 끝난 노드
@@ -163,20 +166,25 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
             step("synthesize", synthesize.run)
             step("gap", gap.run)
             if g.critic == "none":
+                stop_reason = "no_critic"
                 break
             step("critic", critic.run)
             cr = state.critiques[-1]
             if cr.passed:
+                # 재검색 뒤에도 같은 major 지적이 남아 한계로 기록하고 통과시킨 경우(critic_persisting)는 '진전 없음' 종료
+                stop_reason = "critic_persisting" if any(i.severity == "major" for i in cr.llm_issues) else "critic_passed"
                 break
             unresolved = cr.deterministic_issues + [i.problem for i in cr.llm_issues if i.severity == "major"]
             if state.replan_count >= g.max_replans and "replan" not in done:
                 state.notes.append(f"critic: unresolved after {state.replan_count} replan(s): {unresolved}")
                 log.event("replan_limit", replans=state.replan_count, unresolved=unresolved)
+                stop_reason = "replan_limit"
                 break
             if "replan" not in done and not _budget_allows_replan(settings, log):  # 완주가 우선 — 남은 예산으로 write 까지 못 가면 루프를 멈춘다
                 state.notes.append(f"critic: unresolved, replan skipped for budget ({log.elapsed_min:.1f}/{settings.limits.max_minutes:.0f} min, "
                                    f"${log.cost_usd:.2f}/{settings.limits.max_cost_usd:.2f}): {unresolved}")
                 log.event("replan_skipped_budget", elapsed_min=round(log.elapsed_min, 2), cost_usd=round(log.cost_usd, 4))
+                stop_reason = "replan_budget"
                 break
             step("replan", replan.run)
             extra = state.replans[-1].as_extra_queries()
@@ -185,16 +193,20 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
         step("write", write.run)
     except _Until:
         status = f"partial:{until}"
+        stop_reason = f"until:{until}"
     except (CostLimitExceeded, TimeLimitExceeded) as e:
         status = "limit_exceeded"
+        stop_reason = "limit_exceeded"
         log.event("limit_exceeded", error=str(e))
         if grace_write(state, ctx):   # 종합·Gap 까지 끝난 상태면 브리프를 버리지 않는다
             status = "ok_after_limit"
     except KeyboardInterrupt:          # Ctrl-C — 상태를 남겨 --resume 으로 이어갈 수 있게
         status = "interrupted"
+        stop_reason = "interrupted"
         log.event("interrupted", round=rnd)
     except Exception as e:  # noqa: BLE001 — 예상 밖 오류에도 상태·비용을 남기고 정상 종료 (goals.md O1: 죽지 않는다)
         status = "error"
+        stop_reason = "error"
         log.event("error", error=f"{type(e).__name__}: {str(e)[:500]}")
         import traceback
         log.save("traceback.txt", traceback.format_exc())
@@ -205,6 +217,7 @@ def run_graph(topic: str, settings: Settings, *, use_cache: bool = True,
     log.finish(status, checks=checks, notes=state.notes, papers_seen=len(ctx.tools.papers),
                critic_rounds=len(state.critiques), replans=state.replan_count,
                critic_mode=g.critic, max_replans=g.max_replans, model=settings.llm.model,
+               critic_model=settings.llm.critic_model, stop_reason=stop_reason,
                plan_from=(plan_from.name if plan_from else None),
                resumed_from=(resume_from.name if resume_from else None),
                excluded=sorted(tools.excluded) or None, included=tools.include_ids or None,

@@ -226,7 +226,7 @@ def test_graph_replan_limit_records_unresolved(tmp_path, monkeypatch):
     assert any(n.startswith("replan: LLM output incomplete") for n in state.notes)
     assert any("[auto] critic: unresolved" in l for l in state.brief.limitations)
     cost = json.loads((log.dir / "cost.json").read_text(encoding="utf-8"))
-    assert cost["status"] == "ok" and cost["final_critic_passed"] is False
+    assert cost["status"] == "ok" and cost["final_critic_passed"] is False and cost["stop_reason"] == "replan_limit"
     kinds = [json.loads(l)["kind"] for l in (log.dir / "events.jsonl").read_text(encoding="utf-8").splitlines()]
     assert "replan_limit" in kinds
 
@@ -253,7 +253,7 @@ def test_graph_skips_replan_when_budget_is_low(tmp_path, monkeypatch):
     assert state.brief is not None and state.replan_count == 0 and len(state.critiques) == 1
     assert any("replan skipped for budget" in n for n in state.notes)
     cost = json.loads((log.dir / "cost.json").read_text(encoding="utf-8"))
-    assert cost["status"] == "ok" and cost["final_critic_passed"] is False
+    assert cost["status"] == "ok" and cost["final_critic_passed"] is False and cost["stop_reason"] == "replan_budget"
 
 
 def test_grace_write_after_limit(tmp_path):
@@ -300,3 +300,20 @@ def test_graph_critic_none_skips_gate(tmp_path, monkeypatch):
     assert state.brief is not None and state.critiques == [] and state.replan_count == 0
     cost = json.loads((log.dir / "cost.json").read_text(encoding="utf-8"))
     assert cost["critic_mode"] == "none" and cost["final_critic_passed"] is None
+
+
+def test_critic_uses_critic_model_when_set(tmp_path):
+    """조건 E: Critic 의 LLM 비판만 다른 모델로. 기본(None)이면 실행 모델 그대로 (제출 기본값 불변)."""
+    st = _full_state()
+    ctx, fake = _ctx(tmp_path, [CLEAN])
+    critic.run(st, ctx)
+    assert fake.messages.calls[-1]["model"] == ctx.settings.llm.model
+
+    st = _full_state()
+    ctx, fake = _ctx(tmp_path, [CLEAN])
+    ctx.settings.llm.critic_model = "claude-opus-5-5"
+    critic.run(st, ctx)
+    assert fake.messages.calls[-1]["model"] == "claude-opus-5-5"
+    llm_events = [json.loads(l) for l in (ctx.log.dir / "events.jsonl").read_text(encoding="utf-8").splitlines()
+                  if json.loads(l).get("kind") == "llm_call"]
+    assert llm_events[-1]["model"] == "claude-opus-5-5"   # 같은 tmp 폴더에 첫 실행의 이벤트도 있으니 마지막만 본다

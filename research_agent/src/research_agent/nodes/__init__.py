@@ -65,6 +65,7 @@ def checked_call(
     check: Callable[[T], list[str]],
     max_fix: int = 1,
     prompt_name: str | None = None,
+    model: str | None = None,
 ) -> tuple[T, list[str]]:
     """구조화 호출 + 결정적 검증. 검증 이슈가 남으면 이슈 목록을 붙여 최대 max_fix 회 재호출.
 
@@ -79,7 +80,7 @@ def checked_call(
             f"{user}\n\nYour previous answer failed these deterministic checks:\n- " + "\n- ".join(issues) +
             "\nFix every item and return the complete object again."
         )
-        obj = ctx.llm.call(role=role, system=system, user=prompt, schema=schema,
+        obj = ctx.llm.call(role=role, system=system, user=prompt, schema=schema, model=model,
                            max_tokens=ctx.settings.llm.node_max_tokens)  # 노드 출력은 짧다 — 폭주 출력을 일찍 끊는다
         issues = check(obj) + residue_issues(obj)      # 노드별 검사 + 공통 잔해 검사
         ctx.log.event("node_check", node=role, attempt=attempt + 1, issues=issues)

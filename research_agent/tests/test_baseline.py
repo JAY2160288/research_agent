@@ -56,6 +56,7 @@ def test_baseline_flow(tmp_path, monkeypatch):
     ck = cost["checks"]
     assert ck["citations_total"] == 2 and ck["citations_verified"] == 1
     assert ck["unknown_ids"] == ["10.1000/ghost"]  # 환각 인용이 잡히는지
+    assert cost["stop_reason"] == "submitted"
     assert "## 5. Research Gap" in (log.dir / "report.md").read_text()
 
 
@@ -111,7 +112,7 @@ def test_limit_exceeded_finishes_gracefully(tmp_path, monkeypatch):
     brief, log = baseline.run_baseline("topic", s)  # 1턴 후 비용 상한 초과 → 예외 없이 종료
     import json
     cost = json.loads((log.dir / "cost.json").read_text())
-    assert brief is None and cost["status"] == "limit_exceeded"
+    assert brief is None and cost["status"] == "limit_exceeded" and cost["stop_reason"] == "limit_exceeded"
 
 
 def test_submit_unwraps_brief_wrapper():

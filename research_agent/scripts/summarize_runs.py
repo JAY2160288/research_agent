@@ -16,7 +16,7 @@ from pathlib import Path
 
 from research_agent.config import RUNS_DIR
 
-COLS = ["run", "mode", "status", "cost", "min", "calls", "cites", "cite_ok", "claims", "claim_src", "subrq", "gaps",
+COLS = ["run", "mode", "status", "stop", "cost", "min", "calls", "cites", "cite_ok", "claims", "claim_src", "subrq", "gaps",
         "critic", "replans"]
 
 
@@ -35,6 +35,7 @@ def load(mode: str | None) -> list[dict]:
             "run": f"{ts[4:8]}-{ts[9:13]} {slug[:28]}",
             "mode": m,
             "status": c.get("status"),
+            "stop": c.get("stop_reason") or "-",   # 왜 끝났나 (2026-10-16 이후 실행만 있음)
             "cost": f"${c.get('cost_usd', 0):.3f}",
             "min": f"{c.get('elapsed_sec', 0) / 60:.1f}",
             "calls": c.get("llm_calls"),
@@ -90,6 +91,8 @@ def load_ablation(all_runs: bool, model: str | None = None) -> list[dict]:
         meta_f = d / "ablation.json"
         meta = json.loads(meta_f.read_text(encoding="utf-8")) if meta_f.exists() else {}
         cond = meta.get("condition") or ("A" if m == "baseline" else CRITIC_TO_COND.get(c.get("critic_mode", "full"), "?"))
+        if cond == "D" and c.get("critic_model") and c["critic_model"] != c.get("model"):
+            cond = "E"   # 이종 검토자: Critic 만 다른 모델 (design.md §6, 2026-10-16)
         topic = meta.get("topic_id") or slugs.get(slug, "?")
         if topic == "?" or m not in ("baseline", "graph"):
             continue

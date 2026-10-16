@@ -26,6 +26,7 @@ def run(
     topic: str = typer.Option("", "--topic", "-t", help="연구 주제 (한국어/영어). --resume 때는 생략 가능"),
     mode: str = typer.Option("graph", "--mode", "-m", help="graph (최종 구조: 역할 분리 그래프 + Critic/Replan, 기본) | baseline (단일 ReAct, ablation 기준점)"),
     model: str | None = typer.Option(None, "--model", help="config/models.yaml 의 model 을 이번 실행만 덮어씀"),
+    critic_model: str | None = typer.Option(None, "--critic-model", help="graph 모드: Critic 의 LLM 비판만 이 모델로 (이종 검토자 실험, 조건 E). 기본은 --model 과 같음"),
     no_cache: bool = typer.Option(False, "--no-cache", help="도구 캐시 끄기 (live 재현)"),
     until: str | None = typer.Option(None, "--until", help="graph 모드: 이 노드까지만 실행 (예: plan)"),
     critic: str | None = typer.Option(None, "--critic", help="graph 모드 품질 게이트: none | deterministic | full (ablation B/C/D)"),
@@ -42,6 +43,8 @@ def run(
     s = load_settings()
     if model:
         s.llm.model = model
+    if critic_model:
+        s.llm.critic_model = critic_model
     if critic is not None or max_replans is not None:
         from .config import GraphConfig
         s.graph = GraphConfig(  # pydantic 이 잘못된 critic 값을 거른다

@@ -235,6 +235,7 @@ def test_graph_end_to_end_with_fakes(tmp_path, monkeypatch):
     cost = json.loads((log.dir / "cost.json").read_text(encoding="utf-8"))
     assert cost["status"] == "ok" and cost["checks"]["citation_verified_rate"] == 1.0 and cost["critic_rounds"] == 1
     assert cost["replans"] == 0 and cost["final_critic_passed"] is True
+    assert cost["stop_reason"] == "critic_passed" and cost["critic_model"] is None
     kinds = [json.loads(l)["kind"] for l in (log.dir / "events.jsonl").read_text(encoding="utf-8").splitlines()]
     assert kinds.count("node_start") == 8 and "critique" in kinds
     for f in ("brief.json", "report.md", "papers.json", "state.json", "critique_1.json"):
