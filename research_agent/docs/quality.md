@@ -42,7 +42,7 @@
 | 13 | A4 OA 본문 추출 | P2 | ★★★ | 상 | 있음 | ✗ | 보류 |
 | 14 | A5 한국 학술 DB (KCI) | P5 | ★★ | 중 (키·약관 — ADR-3 과 충돌) | 있음 | ✗ | 보류 |
 | 15 | B4 Critic 커버리지 검사의 질 | T6 류 대상 불일치 | ★★ | 중 | 있음 | ✗ | 보류 |
-| 16 | D2 노드별 모델 티어 | 비용 −30~50% | ★ | 하 | 있음 (품질 재측정) | ✗ | 보류 |
+| 16 | D2 노드별 모델 티어 (+ 이종 검토자) | 비용 −30~50% · 검토 맹점 분리 | ★ | 하 | 있음 (품질 재측정) | ✗ (critic_model 손잡이만 추가, 기본 null) | 보류 — E 1회 측정 (design.md §6) |
 | 17 | C6 재실행 diff | 반복 사용 | ★ | 하 | 없음 | ✓ | 보류 |
 
 ---
@@ -128,7 +128,8 @@
 **D1. evaluate 병렬화** — 완료 (`nodes/evaluate.py`, `tools.evaluate_workers: 4`)
 - 배치(10편) 호출이 순차였다. sub-RQ 6 × 1~2배치 = 8~12회 → 4 워커. `ex.map` 이 입력 순서를 지켜 합치는 순서가 순차와 같다. `RunLogger` 에 락. 실측 단축은 다음 live 실행의 `cost.json` 으로 확인.
 
-**D2. 노드별 모델 티어**
+**D2. 노드별 모델 티어 + 이종 검토자**
+- (2026-10-16) 먼저 검토자만 분리하는 손잡이를 넣었다: `llm.critic_model`(기본 null = 실행 모델) · CLI `--critic-model`. T1 1회(E: critic = opus, 계획은 D 재사용): 결정적 지표 동일, judge 4.00 → 3.86 (변별 범위 안), opus Critic 이 같은 major 지적을 한 라운드 먼저 냄, 라운드당 +$0.07. 지지율 strict 차이(22% → 79%)는 claim 길이 효과라 검토자 효과로 읽지 않는다. 결론을 내려면 주제 5개 × 반복이 필요 — OpenAlex 하루 3회 한도 때문에 제출 후.
 - `llm.model_per_node: {understand: haiku, plan: haiku, replan: haiku, evaluate: sonnet, synthesize: sonnet, gap: sonnet, critic: sonnet, write: haiku}`. 구조화 추출 노드는 haiku 로 충분 (W2 실측 1차 통과율 100%). 예상 −25~35%. 바꾸면 품질 재측정(judge) 필요 → 제출 후.
 
 **D3. 견고성 잔여**

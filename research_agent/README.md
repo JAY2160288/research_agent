@@ -125,7 +125,7 @@ research_agent/
 ├── eval/                     topics.yaml (테스트 주제 5개) · rubric.md (judge 루브릭) · gold.yaml (정답 서베이)
 ├── scripts/                  run_ablation · summarize_runs · compare_repeats · gold_recall · smoke_tools · smoke_llm
 ├── tests/                    단위 테스트 97개 (네트워크·API 키 불필요 — HTTP·LLM 모킹)
-├── docs/design.md            설계 문서 — 아키텍처, 설계 의도, ablation·반복·클린룸 결과, 한계
+├── docs/design.md            설계 문서 — 아키텍처(역할 카드·토폴로지 선택·실패 대응·비용 모델), 설계 의도, ablation·반복·클린룸 결과, 한계
 ├── docs/quality.md           "제품 수준" 기준의 개선 항목 17개 (측정된 결함 → 설계 → 확인, 제출 전/후 구분)
 └── runs/                     실행 결과 (제출 zip 에 포함)
 ```

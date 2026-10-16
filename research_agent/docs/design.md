@@ -1,7 +1,7 @@
 # design.md — 설계 문서
 
-- 상태: **2026-10-08 (W4 Day 5, 마무리 5.1)** — 전 섹션 작성. 실행 결과가 더 늘면(Day 6 선택 반복) §5 표만 교체한다.
-- 상위 문서: `../../goals.md` (목표 O1~O7), `../../plan.md` (ADR-1~10, 작업 분해, 평가 설계, §8 변경 로그). 이 문서는 두 문서의 결론 + 실험 결과를 한 곳에 모은 제출용 설명서다.
+- 상태: **2026-10-08 (W4 Day 5, 마무리 5.1)** — 전 섹션 작성. 2026-10-16: §1.2 역할 카드 · §1.3 토폴로지 선택 · §1.4 MAST 대응 · §1.5 비용·지연 모델 · §6 한계 1건 보강 (멀티에이전트 설계 용어로 재서술, plan.md ADR-14). 같은 날 `cost.json` 에 `stop_reason`·`critic_model` 추가, `scripts/node_costs.py`, 조건 E(Critic 만 opus) 1회 — 결과는 §6. 실행 결과가 더 늘면(Day 6 선택 반복) §5 표만 교체한다.
+- 상위 문서: `../../goals.md` (목표 O1~O7), `../../plan.md` (ADR-1~14, 작업 분해, 평가 설계, §8 변경 로그). 이 문서는 두 문서의 결론 + 실험 결과를 한 곳에 모은 제출용 설명서다.
 - 표의 원천: `uv run python scripts/summarize_runs.py --ablation --md --model claude-sonnet-5-5` (§3), `uv run python scripts/compare_repeats.py "생성형" --since 20261004T1200` (§5). 각 실행 폴더의 `cost.json` `checks` + `judge.json` 에서 계산되며 손으로 고치지 않는다.
 
 ## 1. 아키텍처
@@ -57,6 +57,24 @@ plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선�
 
 모든 노드는 `nodes/__init__.py` 의 `checked_call` 공통 루프를 쓴다: **구조화 호출 → `check()` → 실패 시 이슈를 되먹여 재호출(최대 2회) → 그래도 실패면 `notes` 에 적고 계속 진행**. 어떤 노드도 실행을 죽이지 않는다 (O1). 미해결 노트는 write 가 리포트 §7 한계에 `[auto]` 로 편입한다.
 
+#### 역할 카드 — 역할은 페르소나가 아니라 경계다
+
+위 표의 역할을 "책임 범위 · 도구 권한 · 읽는 맥락 · 완료 기준" 네 경계로 다시 적는다 (멀티에이전트 설계의 역할 카드 형식). 어떤 역할도 **프롬프트의 말투**로 구분되지 않는다 — 구분은 전부 *무엇을 읽고, 무엇을 돌려주고, 코드가 무엇을 검사하는가* 다. 핸드오프는 모두 Pydantic 스키마(structured handoff)이며 원시 초록·대화 이력·이전 라운드의 LLM 출력 원문은 다음 역할에 넘기지 않는다.
+
+| 역할 | 하는 일 / **하지 않는 일** | 허용 도구 | 읽는 맥락 (그 외는 격리) | 완료 기준 (코드가 검사) | 미달 시 |
+|---|---|---|---|---|---|
+| understand | 주제를 변수·모집단·맥락·동의어로 고정 / **검색하지 않고 문헌을 언급하지 않는다** | 없음 | 주제 문자열 하나 | `TopicFrame.check` — 필드 비어있지 않음, 영어 동의어 ≥ 3 | 이슈 되먹여 재호출 ≤ 2회 → `notes` |
+| plan | sub-RQ 와 검색 쿼리 설계 / **검색을 실행하지 않고 문헌 가치를 판단하지 않는다** | 없음 | `TopicFrame` + 원 주제 | `ResearchPlan.check` — sub-RQ 3~6, 쿼리 중복률 < 50% | 같음 |
+| search | 쿼리 실행, 레코드 정규화·중복 제거 / **LLM 을 부르지 않고 레코드를 고치거나 만들지 않으며 관련성을 판단하지 않는다** | OpenAlex·arXiv·Crossref — **프로젝트에서 도구를 소유한 유일한 역할** | 계획의 쿼리 (Replan 라운드엔 새 쿼리만) | sub-RQ 당 후보 ≥ 10, DOI 또는 arXiv id 필수 | `notes`(candidate shortfall); 폴백·차단 사실은 §7 에 자동 기재 |
+| evaluate | 배치 10편의 관련성·신뢰도·방법·표본·발견 기록 / **검색·종합·문헌 간 비교를 하지 않는다** | 없음 | RQ·sub-RQ 목록 + **자기 배치 10편**의 제목·연도·venue·인용수·초록(1,200자 상한). 다른 배치·다른 라운드의 평가는 보지 않음 | `EvidenceTable.check` — 배치 id 와 1:1, verified 아닌 id 제외, relevance < 3 제외 | 되먹임 ≤ 2회 → 남은 이슈는 `notes`, 배치 밖 id·미검증 id 는 버림 |
+| synthesize | 합의·상충(+가설)·조건부 claim 작성 / **새 문헌을 끌어오지 않고(cite ONLY these ids) 초록 원문을 읽지 않는다** | 없음 | `evidence_digest` — 문헌당 1줄(id·연도·관련성·신뢰도·방법·표본·발견) + Replan 라운드엔 직전 Critique 지적 | `Synthesis.check` — claim 마다 evidence_id ≥ 1 (digest 안의 id 만), 상충마다 가설 | 같음 |
+| gap | Gap·제안 RQ·방법·데이터 / **종합을 고치지 않고 문헌을 추가하지 않는다** | 없음 | digest + `Synthesis` + 직전 Critique | `GapList.check` — Gap 당 근거 ≥ 2, 제안에 방법·데이터 | 같음 |
+| critic | 판정과 지시 / **고치지 않는다** (수정은 synthesize·gap·replan 의 일), **검색하지 않는다** | 없음 | digest + `Synthesis` JSON + `GapList` JSON (초록 원문 X) | 결정적 5종 → 통과 시에만 LLM 비판, `LLMCritique.check`(sub_rq_id 가 계획에 있음). major 가 있으면 미통과 + 실행 가능한 `actions` | 이미 재검색한 sub-RQ 에 같은 `search` 지적이 남으면 **한계로 기록하고 통과** (`critic_persisting`) |
+| replan | 지목된 sub-RQ 의 새 쿼리 1~3개 / **지목되지 않은 sub-RQ 에 쿼리를 더하지 않고 종합을 바꾸지 않는다** | 없음 | sub-RQ·기존 쿼리·후보/관련 편수·Critic 지적·이전 Replan 쿼리 | `ReplanPlan.check` — 지목 sub-RQ 마다 ≥ 1, 계획에 없는 sub-RQ 거부, 기존 쿼리와 중복 거부 | 끝까지 비면 sub-RQ 질문에서 뽑은 **결정적 fallback 쿼리** — 라운드를 비워 보내지 않음 |
+| write | 한국어 요약·영어 한계 문장 / **구조 섹션을 쓰지 않고(코드가 상태에서 조립) 인용 번호를 매기지 않고 문헌을 추가하지 않는다** | 없음 | claim 문장·상충·조건부·coverage note·Gap 설명·최종 Critic 지적·편수 (문헌 메타데이터 X) | `BriefText.check` → `ResearchBrief` 스키마 통과 | `notes` → §7 `[auto]` |
+
+에스컬레이션의 종점은 사람이다. 어떤 역할도 미달을 "해결된 것처럼" 숨길 수 없고, 루프가 끝난 뒤 남은 미달은 §7 한계에 `[auto]` 로 기재되어 독자(연구자)가 판단한다. 사람의 개입 수단은 `--exclude`/`--include` 로 문헌을 교정해 다시 돌리는 것과 `--resume` 이다. **역할 간에 다른 것은 맥락·도구·검증 장치이고 모델은 같다** (sonnet 하나, judge 만 opus) — 이 점은 §6 한계에 적는다.
+
 ### 1.3 설계 결정의 뼈대 (plan.md §4 ADR 요약)
 
 | ADR | 결정 | 왜 |
@@ -68,6 +86,29 @@ plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선�
 | 6·8 | OpenAlex 주력 + arXiv circuit breaker + Crossref 폴백 | 외부 API 상태에 완주 여부가 흔들리면 안 됨. 차단·폴백 사실은 §7 에 자동 기재 |
 | 9 | ablation B/C 는 D 의 계획을 재사용 (`--plan-from`) | 조건 간 차이가 계획·검색 변동이 아니라 품질 게이트 차이만 반영 |
 | 10 | 사후 지표 2종 (주장-근거 지지율, 정답 서베이 회수율) 을 파이프라인 밖에 | "인용 실존 ≠ 주장 지지" 라는 벤치마크 문헌의 공통 지적을 분리 보고 |
+
+#### 왜 "고정 파이프라인 + Critic" 인가 — 토폴로지 선택 (plan.md ADR-14)
+
+멀티에이전트 토폴로지(Supervisor·Hierarchical·Swarm·Blackboard·Pipeline/Parallel·Debate) 가운데 이 과제에 맞는 것을 과제 특성으로 고른 결과다. 출발점은 "단일 에이전트로 충분한가" 이고, 그 답이 ablation 조건 A 다 (§3.6: 주장-근거 지지율 A 52% vs D 78%, claim 단위 76% vs 94%).
+
+| 과제 특성 | 이 과제에서는 | 시사 |
+|---|---|---|
+| 분해 가능성 | sub-RQ 3~6개는 서로 독립이라 **검색·평가는 sub-RQ·배치 단위로 병렬** (`search_workers`·`evaluate_workers` 4). 종합·Gap·Critic 은 전체 evidence 를 봐야 해서 분해되지 않음 | 노드 **안**에서만 fan-out, 노드 **간**은 순차 |
+| 순차 의존 | 높음 — 이해 → 계획 → 검색 → 평가 → 종합 → Gap 은 앞 단계 출력이 뒤 단계 입력. 과제 지침의 6단계 자체가 순서 | 고정 순서(Pipeline). LLM 이 다음 단계를 고를 이유가 없음 |
+| 도구 밀도 | 낮음 — 검색 도구 3개가 전부 search 노드 하나에 속하고, LLM 을 부르는 노드는 도구가 0개 | 도구 라우팅 불필요. **도구 집약 단계에 LLM 을 두지 않는다** (도구 많은 과제에서 조정 비용이 커진다는 보고에 대한 답) |
+| 검증 필요성 | 높음 — 인용 실존·출처·커버리지·Gap 근거는 **정답 확인이 가능**하므로 코드가 검사하고, 종합의 깊이는 작성자와 분리된 검토자(LLM Critic)가 본다 | 작성자/검토자 분리 + 중앙 검증 (오류 증폭 억제) |
+| 권한·모델 분리 | 없음 — 외부 쓰기 권한이 없는 읽기 전용 도구, 모델 하나 | Supervisor 식 권한 경계·사람 승인 단계 불필요 |
+
+기각한 토폴로지와 이유:
+
+- **Supervisor-Worker (LLM 라우터)**: 경로가 고정이라 LLM 이 "다음 워커" 를 고를 판단거리가 없다. 라운드마다 감독 호출이 붙어 비용·지연만 늘고 재현성(L1)이 나빠진다. 우리 감독자는 `graph.py` 의 while 루프, 즉 **코드**다.
+- **Hierarchical**: 팀이 하나다.
+- **Swarm / handoff**: 역할이 겹치지 않아 넘길 일이 없고, 소유권 핑퐁과 감사 어려움은 L1·O4(로그 증거)와 상충한다.
+- **Blackboard**: `RunState` 가 사실상 블랙보드지만 비동기 수집이 없고 키마다 **단일 작성자**가 정해져 있다 (plan 은 plan·replan, evidence 는 evaluate, synthesis 는 synthesize, critiques 는 critic). 쓰기 충돌 관리가 필요한 일반 블랙보드는 과하다.
+- **Debate / Ensemble**: "종합의 깊이" 처럼 정답 확인이 어려운 판단에는 맞지만, 제안자 수 × 라운드만큼 호출이 늘어 실행당 $1·10분 상한(goals.md O6) 안에 들지 않는다. 대신 검토자 1명(Critic) + Replan 상한 2 로 같은 효과의 일부를 얻는다. 제출 후 실험 후보 (§6).
+- **단일 에이전트**: 기준선 A 로 측정했고(§3), 구조 없이 재시도도 없어서 지지율·커버리지가 낮다. 다만 A 와 D 의 차이는 "에이전트 수" 가 아니라 **스키마(B)·결정적 검사(C)·LLM Critic(D)** 각각의 기여로 분리해 읽어야 한다 (§3.4) — 동질 모델로 역할 이름만 나눈 워크플로는 단일 에이전트와 다르지 않다는 지적이 있으므로, 이 프로젝트가 주장하는 것은 멀티에이전트의 이득이 아니라 **구조(계약·검증)의 이득**이다.
+
+오케스트레이션 방식은 **정적 뼈대 + 국소 동적**이다. 실행 경로·종료 조건·예산은 코드가 정하고, LLM 은 두 곳에서만 판단한다: Critic 이 "미달인가, 어느 sub-RQ 를 다시 찾아야 하는가" 를 **제안**하고(승인은 결정적 검사와 `check()` 가 함), Replan 이 새 쿼리를 쓴다. 종료는 겹으로 둔다 — ① Critic 통과, ② `max_replans` 2, ③ 경과 시간·비용이 상한의 60% 를 넘으면 Replan 생략(`replan_budget_fraction`), ④ $1·10분 상한(`CostLimitExceeded`/`TimeLimitExceeded`) + 종합·Gap 이 있으면 `grace_write`, ⑤ 재검색 뒤에도 같은 지적이 남으면 "진전 없음" 으로 보고 한계 기재 후 통과(`critic_persisting`). 성공 조건(①)과 안전 종료(②~⑤)를 함께 둔 것이다.
 
 ### 1.4 관찰 가능성 (goals.md O4)
 
@@ -81,7 +122,50 @@ plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선�
 | Reflection | `critique` (round, passed, 결정적 이슈, LLM major/minor) | `critique_N.json` |
 | Replanning | `replan` (걸린 sub-RQ, 새 쿼리), 이후 `node_start` round=N+1 | `replan_N.json`, 리포트 §2 에 덧붙은 쿼리 |
 
-`cost.json` 에 `critic_rounds`·`replans`·`final_critic_passed`·`checks`(결정적 지표) 가 요약된다. `scripts/summarize_runs.py` 가 이를 표로 모은다.
+`cost.json` 에 `critic_rounds`·`replans`·`final_critic_passed`·`checks`(결정적 지표) 와 **`stop_reason`**(루프가 왜 끝났나: critic_passed · critic_persisting · replan_limit · replan_budget · limit_exceeded …, 2026-10-16 이후 실행) 이 요약된다. `scripts/summarize_runs.py` 가 이를 표로 모은다.
+
+#### 실패 양상 대응 — 실제 사고를 MAST 분류로 읽기
+
+멀티에이전트 실패 분류 MAST(3범주 14양상: ① 시스템 설계·명세, ② 에이전트 간 불일치, ③ 과제 검증)로 이 프로젝트의 실제 사고(plan.md §8 2026-10-04~06)를 다시 읽으면, 전부 모델 지능이 아니라 명세·소통·검증의 문제였고 장치도 전부 코드다.
+
+| 실제 사고 (날짜) | MAST 범주 · 양상 | 장치 |
+|---|---|---|
+| Replan 라운드 gap 이 7만 자 JSON 을 쏟다 16384 토큰에서 잘림 → 3분×2 재시도 → 10분 초과, 완주 실패 (10-04 T1 반복 2회차) | ① 명세 — 작업 명세(출력 형식·길이) 불이행 | `node_max_tokens` 6000 분리, json_invalid 에 "더 짧게" 되먹임, 프롬프트에 길이 상한 |
+| evaluate HTTP 요청 1건이 7분 멈춤 → 10분 상한 통째로 소모 (10-04 반복 3회차) | ① 설계 — 호출 수준 종료 조건 부재 | `request_timeout_sec` 180, `sdk_max_retries` 2 |
+| Replan 이 `items: []` 로 두고 rationale 에만 쿼리를 글로 적음 (10-04, 2회 연속) | ② 불일치 — 계약 위반·정보 보류 (받는 쪽 search 는 `items` 만 읽음) | `ReplanPlan.check(required)` 되먹임 → 끝까지 비면 결정적 fallback 쿼리. **제안은 LLM, 승인은 코드** |
+| 스키마 `max_length` 를 LLM 이 어겨 SDK 안에서 ValidationError → 응답 손실, 실행 사망 (10-04) | ① 명세 — 계약을 잘못된 층에 둠 | `llm.call` 이 SDK 측 검증 실패도 되먹임, 상한은 코드에서 자름, 예상 밖 예외도 `status=error` + `state.json` |
+| rq2 "실험 연구 없음" 을 3라운드 연속 major 로 지적 → 10분 초과 (10-04 T1) | ① 설계 — 단계 반복·종료 조건 인식 실패 (진전 없음) | `critic_persisting`: 재검색한 sub-RQ 에 같은 search 지적이면 한계 기재 후 통과; `max_replans`; `replan_budget_fraction` |
+| 34회 호출 뒤 write 직전 10.1분 → 브리프 없이 종료 (10-04 T1) | ③ 검증 — 조기 종료 | `grace_write` (종합·Gap 이 있으면 write 1회 허용) |
+| 편수 기준 커버리지는 통과했지만 언어·대상이 빗나간 문헌 (T6 D rq3·rq4) | ③ 검증 — 불완전한 검증 | LLM Critic 이 적발·한계 기재. 결정적 지표에는 미반영 (§6) |
+| §7 `[auto]` 항목이 160자에서 잘려 문장 중간 (10-06 T3 D, judge J7) | ② 불일치 — 핸드오프에서 정보 손실 | 자르지 않음 (스키마가 "한 문장" 을 보장) |
+| 중간 라운드에서 풀린 Critic 미달이 §7 에 남음 | ③ 검증 — 잘못된 검증 | 미달 노트는 루프 종료 후 **최종 라운드 기준**으로만 |
+| OpenAlex 일일 크레딧 429, arXiv 전면 차단 (10-04·10-05) | (외부 의존) | Crossref 폴백(ADR-8), circuit breaker(ADR-6), 사실을 §7 에 자동 기재 |
+
+개입은 단계적이다 — **Retry**(`checked_call` 되먹임, SDK 재시도) → **Replan**(replan 노드) → **Fallback**(Crossref, `fallback_query`, `grace_write`) → **Stop**(종료 5겹, §1.3) → **사람**(§7 `[auto]` 를 읽는 독자, `--exclude/--include`·`--resume` 재실행). 감시는 전부 규칙 기반이라 LLM 비용이 없다: 호출 수·토큰·경과 시간은 `RunLogger` 가, 반복 지적은 `critic` 이 센다.
+
+### 1.5 비용·지연 모델
+
+비용 ≈ Σ 호출 × (입력 토큰 × 입력 단가 + 출력 토큰 × 출력 단가), 지연 ≈ 임계 경로 위 호출 지연의 합. 2026-10-10 14:34 실행(T1, sonnet, 웹 경유, Replan 2회, §5 마지막 행)의 `events.jsonl` 을 노드별로 합산하면 (`uv run python scripts/node_costs.py runs/20261010T143424Z_* --md` — node_start/node_end 의 `t` 차와 `llm_call` 의 role 별 합계):
+
+| 노드 | 실행 횟수 | 소요 (초) | LLM 호출 | 입력 토큰 | 출력 토큰 | 비용 |
+|---|---|---|---|---|---|---|
+| understand | 1 | 5 | 1 | 1,908 | 289 | $0.007 |
+| plan | 1 | 11 | 1 | 2,120 | 1,236 | $0.017 |
+| search | 3 | 51 | 0 | 0 | 0 | $0.000 |
+| evaluate | 3 | 54 | 11 | 66,123 | 19,187 | $0.324 |
+| synthesize | 3 | 71 | 3 | 24,342 | 10,140 | $0.150 |
+| gap | 3 | 59 | 3 | 30,051 | 7,164 | $0.132 |
+| critic | 3 | 48 | 2 | 25,888 | 6,090 | $0.113 |
+| replan | 2 | 8 | 2 | 6,552 | 486 | $0.018 |
+| write | 1 | 11 | 1 | 4,396 | 1,177 | $0.021 |
+| **합계** | | **318** | **24** | **161,380** | **45,769** | **$0.780** |
+
+읽는 법:
+
+- **지연은 임계 경로가 정한다.** 노드 소요의 합(317.5초)이 전체 경과(318.6초)와 같다 — 노드 간 병렬이 없으니 임계 경로가 곧 전체다. 병렬은 노드 안에만 있다: evaluate 11회 호출이 54초 (순차였다면 호출당 10~13초 × 11 ≈ 2분 이상). search 51초는 전부 네트워크(OpenAlex 30회 + arXiv 12회, 캐시 미적중).
+- **재검색 라운드가 절반 이상이다.** 1라운드(understand~critic) $0.337 · 119초, Replan 라운드 2회 $0.423 · 188초, write $0.021 · 11초. 라운드마다 synthesize·gap·critic 이 evidence digest 를 **다시 읽는다** — 비용의 큰 부분이 "다시 읽는 맥락" 이라는 일반론이 그대로 보인다. 프롬프트 캐시 적중은 0 (`cache_read` 0) 이다. digest 를 프롬프트 앞에 고정해 같은 라운드의 세 호출이 캐시를 나눠 쓰는 것이 제출 후 비용 개선 후보다 (출력 불변이라 ADR-12 범위, `RunLogger` 가 캐시 토큰을 이미 기록하므로 효과 측정은 바로 된다).
+- **토큰 수는 입력이 3.5배지만 비용은 출력이 59%** ($0.323 vs $0.458, sonnet 단가 입력 $2 · 출력 $10 /1M). 따라서 이 프로젝트에서 비용 손잡이는 (a) evaluate 의 편수 `evaluate_per_subrq` (입력 41%·출력 42% 를 차지) 와 (b) Replan 횟수다. 두 손잡이가 `config/models.yaml` 에 있다.
+- 에이전트를 하나 늘릴 때의 다섯 비용(호출, 서로의 맥락을 읽는 입력 토큰, 순차 지연, 핸드오프 정보 손실, 조정 실패 경로)에 대해 이 설계가 지불하는 것은 Critic·Replan 의 호출 4회 · $0.13 과 라운드 재실행이고, 돌려받는 것이 §3 의 B→D 차이다.
 
 ## 2. 설계 의도 — "달라지는 것 / 아닌 것"
 
@@ -288,6 +372,14 @@ plan ──→ ResearchPlan (sub-RQ 3~6개 × 검색 쿼리 2~4개, 소스 선�
 - **초록만 사용 (ADR-4)**: J3(근거 평가) 가 모든 조건에서 가장 낮은 이유. method·sample 을 초록에서 못 읽으면 공란 또는 추정이 된다. Crossref 폴백 상태에선 초록 자체가 적어 커버리지가 더 떨어진다 (§5 12:07 실행).
 - **"부재 주장" 이 종합에 섞인다** (§3.6): "문헌이 X 를 다루지 않는다" 류 문장이 §4 종합에 들어가 특정 문헌에 인용되면 unsupported 가 된다. synthesize 프롬프트에서 부재 주장을 Gap 으로 보내는 것이 개선점.
 - **Replan 은 쿼리 재작성까지만**: 문헌 자체가 없는 sub-RQ 는 2회 재검색으로도 못 채운다. 구조가 보장하는 것은 "채움" 이 아니라 "솔직한 기재" 다 (§2).
+- **Critic 이 작성자와 같은 모델**: synthesize·gap 을 쓴 sonnet 이 critic 도 맡는다. 같은 모델은 맹점을 공유하므로 독립 검토의 효과가 제한된다 — 역할 분리의 이득은 페르소나가 아니라 맥락 격리(digest·JSON 만 읽음)·검증 장치(결정적 5종)에서 나오고, **모델 다양성은 기본값에 없다** (judge 만 opus). 2026-10-16 에 `llm.critic_model`(기본 null = 실행 모델, CLI `--critic-model`) 을 추가하고 **조건 E(Critic 만 opus) 를 T1 에 1회** 돌렸다 — 10-10 D 실행의 계획을 `--plan-from` 으로 재사용, 실행 sonnet, judge·support 는 둘 다 opus:
+
+  | 조건 | run | cost | min | calls | replans | stop_reason | cite_ok | claim_src | subrq | gaps_ok | judge (J1~J7) | cite_sup (strict / lenient) | claim_sup |
+  |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+  | D (critic = sonnet) | 10-10 14:34 | $0.780 | 5.3 | 24 | 2 | replan_limit | 100% | 11/11 | 6/6 | 5/5 | **4.00** (4 4 3 4 4 5 4) | 22% / 100% | 36% |
+  | E (critic = opus) | 10-16 03:22 | $0.639 (+critic $0.18) | 4.5 | 16 | 1 | replan_budget | 100% | 10/10 | 6/6 | 5/5 | 3.86 (4 4 3 4 4 4 4) | **79%** / 100% | **100%** |
+
+  읽는 법 (n = 1 이라 방향만): (1) 결정적 지표는 둘 다 전부 통과 — 구조가 보장하는 하한은 검토자 모델과 무관하다 (§2 의 주장 그대로). (2) judge 는 0.14 차이로 변별 범위 안이고 J6 하나가 다르다. (3) 지지율 strict 는 79% vs 22% 로 크게 갈리지만 **원인은 검토자가 아니라 claim 의 알갱이**다 — D 10-10 의 claim 11개는 문헌 여러 편의 결과와 유보("all self-reported…")를 한 문장에 묶은 긴 복합문이라 쌍마다 "일부만 지지" = partial(31/40) 로 떨어지고, E 의 claim 10개는 짧아 23/29 가 supported 다. unsupported 는 둘 다 0 (lenient 100%). 즉 `agent support` 의 strict 지표는 **claim 길이에 민감**하다 — 측정 방법의 한계로 위 "지지 검증도 초록 기준" 항목과 함께 봐야 한다. (4) opus Critic 은 1라운드부터 "rq1 생산성은 자기보고뿐" 을 major 로 짚어 sonnet Critic(2라운드에서 같은 지적)보다 한 라운드 빨랐지만, 예산 60% 가드에 걸려 Replan 1회로 끝났다 (critic 호출이 비싸 가드가 일찍 온다). (5) 비교의 교란: E 는 D 의 **최종** 계획(Replan 2회로 덧붙은 쿼리 포함)에서 출발해 1라운드 결정적 검사를 바로 통과했으므로 라운드 수·검색 수는 비교 대상이 아니다. 결론: 이종 검토자는 비용 +$0.07/라운드에 지적이 한 라운드 빨라지는 정도이고, 지표 차이를 주장하려면 주제 5개 × 반복이 필요하다 — 제출 기본값은 그대로(critic_model null), `quality.md` D2 에 실험 설계로 남긴다.
 - **주장-근거 지지 검증을 Critic 안에 넣지 않았다** (ADR-10): 사후 지표로만 측정했으므로 실행 중에 partial/unsupported 주장이 걸러지지는 않는다. 실행당 +$0.1~0.2 로 Critic 에 넣을 수 있으나 ablation 재실행이 필요해 보류.
 - 위 파이프라인 한계를 포함해 "제품 수준" 기준의 개선 항목 17개(우선순위·설계·확인 방법·제출 전/후 구분)는 [`quality.md`](quality.md) 에 있다. 제출 전에는 지표를 바꾸지 않는 7개만 넣었다 (ADR-12: evaluate 병렬화, 진행 표시, 한국어 주제 자동 번역, 체크포인트·`--resume`, `--exclude/--include`, BibTeX/RIS 내보내기, 캐시 키 정규화).
 
