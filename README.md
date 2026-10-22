@@ -24,6 +24,14 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 
 GitHub: https://github.com/JAY2160288/research_agent · 웹 버전(초대 계정 전용, 같은 에이전트를 그대로 실행): https://research-brief-web.vercel.app
 
+## 제출물 안내 — 지침의 세 항목이 어디에 있는가
+
+| 지침 항목 | 위치 | 보는 법 |
+|---|---|---|
+| **설계 의도** | [`research_agent/docs/design.md`](research_agent/docs/design.md) §1 아키텍처(역할 카드·토폴로지 선택 이유·실패 대응·비용 모델) · §2 설계 의도("달라지는 것 / 아닌 것") · §6 한계. 배경은 [`goals.md`](goals.md)(평가 기준 → 목표 O1~O7), 결정 이력은 [`plan.md`](plan.md) §4 ADR-1~14 | design.md §1~§2 만 읽어도 "왜 이 구조인가"가 닿도록 썼습니다 |
+| **소스** | [`research_agent/src/research_agent/`](research_agent/src/research_agent/) — `graph.py`(노드 순서 + Critic/Replan 루프), `nodes/`(6단계 + critic·replan·write), `schemas.py`(모든 입출력 타입 + 결정적 검사), `llm.py`(유일한 LLM 호출 지점), `tools/`(OpenAlex·arXiv·Crossref). 프롬프트는 [`prompts/`](research_agent/prompts/), 설정은 [`config/models.yaml`](research_agent/config/models.yaml), 테스트 98개는 [`tests/`](research_agent/tests/) | 구조 설명과 디렉터리 표는 [`research_agent/README.md`](research_agent/README.md) §2 |
+| **수행 입출력 결과** | [`research_agent/runs/INDEX.md`](research_agent/runs/INDEX.md) — 모든 실행을 **입력 주제 → 출력 리포트 링크 → 비용·시간·결정적 지표** 순으로 색인. 실행 폴더마다 `report.md`(출력), `brief.json`(구조화 출력), `events.jsonl`(단계 전이·LLM/도구 호출 로그), `cost.json`, 노드별 중간 산출물 | GitHub 에는 대표 8개, 제출 zip 에는 55개 전체. 예시 주제의 클린룸 결과는 위 "빠른 시작" 링크 |
+
 ## 저장소 구조
 
 | 경로 | 내용 |
