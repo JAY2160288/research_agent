@@ -1,0 +1,57 @@
+{
+  "round": 1,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq2"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "search rq2: empirical studies of graduate or doctoral students' AI-assisted thesis, proposal or manuscript writing with expert-rated or rubric-scored argument quality, rigor or originality"
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq2",
+      "problem": "The rq2 evidence on quality is mostly EFL language proficiency (10.1007/s44217-025-00602-7, a Grammarly tool; 10.3389/fpsyg.2023.1260843, EFL students not necessarily graduate) or self-reported perceptions (10.46303/jcsr.2024.4, 10.54855/ijaile.25212), so argumentation, rigor and originality are effectively unanswered, yet the conflict is framed as improving vs harming 'graduate students' academic writing quality'.",
+      "action": "search rq2: empirical studies of graduate or doctoral students' AI-assisted thesis, proposal or manuscript writing with expert-rated or rubric-scored argument quality, rigor or originality"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq4",
+      "problem": "The consensus claim that iterative, collaborative interaction goes with better writing than passive use cites 10.1111/ejed.12824, which only describes metacognitive strategies and measures no writing outcome. 10.1007/s12528-025-09444-6 is also cited without a stated outcome difference.",
+      "action": "synthesize: drop 10.1111/ejed.12824 as support for the outcome claim, or reword the claim to say it describes strategies only, and limit the outcome claim to 10.1080/03075079.2024.2323593 with its n=10 caveat; state that the AI-literacy outcome link in 10.1007/s12528-025-09444-6 is not reported in the abstract"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The first conditional claim says benefits depend on critical evaluation of AI output and on high AI literacy, but 10.1007/s40593-024-00454-6 is a perception interview study with no measured quality outcome, so the moderator is not tied to a measured effect.",
+      "action": "synthesize: label the critical-evaluation moderator as perception-based and tied to measured outcomes only in the two small process-tracing studies"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq4",
+      "problem": "The discipline conditional pairs a general-student German survey (10.1057/s41599-023-02304-7, usage by field) with a US course study on AI literacy (10.1016/j.caeo.2024.100184); neither links discipline or exposure to research productivity or quality, so it is not a moderator of effects.",
+      "action": "synthesize: reword as a usage-prevalence difference by discipline, not a conditional effect, and note that moderator effects on outcomes are untested"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq5",
+      "problem": "The rq5 consensus on hallucinated citations, integrity and overreliance rests on perceptions and two narrative reviews (reliability 2), and no cited study measures skill erosion or citation fabrication in graduate research.",
+      "action": "search rq5: empirical audits of hallucinated or fabricated citations in LLM-assisted academic writing, and studies of skill erosion or overreliance in graduate or doctoral students"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": null,
+      "problem": "The coverage_note ends with a stray '}' character, and it concedes that rigor, originality, coding, data analysis and supervisor or policy effects have no evidence, so the brief gives no direct answer for part of rq2, rq3 and rq4.",
+      "action": "synthesize: remove the stray character and state in the rq3 and rq4 summaries that coding, data analysis, supervisor guidance and institutional policy are unanswered"
+    }
+  ]
+}

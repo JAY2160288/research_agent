@@ -1,0 +1,59 @@
+{
+  "gaps": [
+    {
+      "description": "No study reports precision, recall or false-positive rates for AI anomaly detection on labelled journal-entry or transaction data from real audits. The only journal-entry study tests predefined anomalies on one ledger, and the insurance-claims study has no validation. The cost-based evidence covers only traditional firm-level models, where false positives above 100:1 made all seven too costly for auditors.",
+      "evidence_ids": [
+        "10.3390/systems10050130",
+        "10.4192/1577-8517-v11_4",
+        "10.2308/tar-2020-0068"
+      ],
+      "proposed_rq": "How accurate are supervised and unsupervised anomaly detectors on journal entries with confirmed misstatements, and what is the audit-cost burden of their false positives?",
+      "method": "Benchmark isolation forest, autoencoders and supervised classifiers on labelled entries using time-split validation. Report precision, recall and false positives per 1,000 entries, and convert follow-up effort into hours using a cost model like the one in 10.2308/tar-2020-0068.",
+      "data": "Journal-entry populations with confirmed misstatements or AAER-linked cases, obtained through a partnership with one or more audit firms or from forensic-case archives. Synthetic injected-fraud data would serve only as a secondary check."
+    },
+    {
+      "description": "External-audit hours and effort have not been measured in relation to AI adoption. Fees are a price, report lag is a timing proxy, and the efficiency evidence otherwise comes from internal audit or perception surveys. Whether cost savings exist, and who captures them, is therefore unknown.",
+      "evidence_ids": [
+        "10.1007/s11142-022-09697-x",
+        "10.1108/maj-03-2023-3846",
+        "10.1111/1911-3846.12847"
+      ],
+      "proposed_rq": "Does staged adoption of AI anomaly detection reduce external-audit hours per engagement, and how much of the saving reaches clients as lower fees?",
+      "method": "Difference-in-differences with staggered adoption, comparing engagements before and after tool rollout against not-yet-adopting offices. The main outcomes are total and staff-level hours, fees and realization rates.",
+      "data": "Engagement-level time-and-billing records from one or more firms, covering about three years before and after rollout. Where access fails, use audit-hours disclosures in jurisdictions that publish them."
+    },
+    {
+      "description": "Audit quality is measured only by restatement likelihood and by perceived quality in a Nigerian survey. Fewer restatements could mean fewer errors or weaker detection. No study links auditor AI use to discretionary accruals, detected misstatements, AAERs or going-concern outcomes.",
+      "evidence_ids": [
+        "10.1007/s11142-022-09697-x",
+        "10.1108/maj-03-2023-3846",
+        "10.22624/aims/humanities/v11n1p4"
+      ],
+      "proposed_rq": "Is auditor AI investment associated with lower abnormal accruals and a higher rate of audit-adjusted misstatements and going-concern modifications, once restatements are controlled for?",
+      "method": "Panel regressions with client and auditor fixed effects, instrumenting AI investment with the firm's pre-period digital hiring. Outcomes are absolute discretionary accruals, audit adjustments, AAER incidence and going-concern opinion accuracy for distressed clients.",
+      "data": "AI-hiring measures built from resume data like those in 10.1007/s11142-022-09697-x, merged with Audit Analytics and Compustat for U.S. listed clients."
+    },
+    {
+      "description": "No study examines how auditors act on AI anomaly flags, or whether the effect varies with client complexity, auditor firm size or regulatory regime. The skepticism and sensemaking concerns come from conceptual work, interviews and a reviewer-perception experiment, all about audit data analytics in general. The reviewer finding concerns perceived procedure quality, not auditor judgment.",
+      "evidence_ids": [
+        "10.1111/1911-3846.12894",
+        "10.1111/1911-3846.12901",
+        "10.5117/mab.96.78525"
+      ],
+      "proposed_rq": "Do auditors investigate AI-generated flags less thoroughly when the flags are numerous or the tool is opaque, and does this differ by client complexity and auditor experience?",
+      "method": "Pre-registered 2×2×2 experiment manipulating flag volume, explanation availability and client complexity, with experienced auditors. The outcomes are the proportion of true anomalies investigated and the time spent on each flag.",
+      "data": "About 150 senior auditors recruited through firms or professional bodies. Add a Big 4 versus non-Big 4 comparison in the sample."
+    },
+    {
+      "description": "Risks of AI anomaly detection in external audit rest on descriptive ethics reviews and public Big Four tool descriptions. Explainability, data quality, auditor liability and the PCAOB/IAASB guidance have not been studied empirically. Without these, cost and quality gains cannot be set against implementation risk.",
+      "evidence_ids": [
+        "10.1108/aaaj-09-2020-4934",
+        "10.17261/pressacademia.2020.1337",
+        "10.1016/j.respol.2023.104828"
+      ],
+      "proposed_rq": "How do explainability limits, data-quality problems and liability and standard-setter expectations constrain the use of AI anomaly detection as audit evidence?",
+      "method": "Mixed methods: document analysis of PCAOB and IAASB guidance and inspection findings, plus a survey (n≈200) and 20 interviews with auditors, regulators and tool vendors. The comparison is across firm tiers and jurisdictions, and the outcome is the share of AI output accepted as sufficient evidence.",
+      "data": "Public regulatory documents and inspection reports, plus survey and interview participants from Big Four, mid-tier firms and regulators in at least two jurisdictions."
+    }
+  ]
+}

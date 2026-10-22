@@ -1,0 +1,1403 @@
+{
+  "topic_frame": {
+    "original_topic": "한국어 토크나이징 방법 개선",
+    "topic_en": "Improving Korean tokenization methods",
+    "domain": "computer science",
+    "concepts": [
+      "Korean tokenization",
+      "morphological analysis",
+      "subword tokenization",
+      "byte-pair encoding",
+      "agglutinative language",
+      "Korean natural language processing",
+      "vocabulary design"
+    ],
+    "variables": {
+      "independent": [
+        "improved Korean tokenization method (e.g., morpheme-aware or modified subword segmentation)"
+      ],
+      "dependent": [
+        "tokenization quality",
+        "downstream NLP task performance",
+        "vocabulary efficiency (token count, sequence length)"
+      ],
+      "population": "Korean-language text corpora and Korean NLP models",
+      "context": "Korean natural language processing, including language model pre-training and downstream tasks"
+    },
+    "synonyms_en": [
+      "Korean word segmentation",
+      "Korean morphological tokenization",
+      "subword segmentation for Korean",
+      "morpheme-based tokenizer",
+      "WordPiece and SentencePiece for Korean",
+      "Korean language model tokenizer"
+    ],
+    "research_question": "How can Korean tokenization methods be improved to yield better tokenization quality and downstream NLP performance than existing approaches?"
+  },
+  "plan": {
+    "sub_rqs": [
+      {
+        "id": "rq1",
+        "question": "How do morpheme-aware tokenization methods, including hybrid morphological analysis plus subword approaches, compare with purely statistical subword tokenizers on Korean downstream NLP task performance?",
+        "rationale": "This is the central question of the topic: whether linguistically informed segmentation improves task performance over standard subword methods.",
+        "queries": [
+          "morpheme-aware subword tokenization Korean",
+          "Korean morphological analysis BPE hybrid tokenizer",
+          "morpheme-based tokenizer Korean downstream tasks",
+          "Korean pre-trained language model morphological segmentation"
+        ],
+        "source_pref": "both"
+      },
+      {
+        "id": "rq2",
+        "question": "How do standard subword algorithms (BPE, WordPiece, SentencePiece unigram, byte-level) behave on Korean agglutinative morphology and Hangul script, and what modifications to them have been proposed?",
+        "rationale": "This establishes the baseline behavior and the limitations of existing subword methods, and identifies concrete modification strategies.",
+        "queries": [
+          "byte-pair encoding agglutinative language Korean",
+          "SentencePiece WordPiece Korean comparison",
+          "Hangul jamo-level subword tokenization",
+          "byte-level tokenization Korean Unicode"
+        ],
+        "source_pref": "both"
+      },
+      {
+        "id": "rq3",
+        "question": "How do vocabulary design choices (vocabulary size, composition, multilingual vs. monolingual vocabularies) affect Korean token efficiency, sequence length and model performance?",
+        "rationale": "The dependent variables include vocabulary efficiency, and vocabulary design determines the trade-off between compression and quality.",
+        "queries": [
+          "vocabulary size effect Korean language model",
+          "multilingual tokenizer Korean token fertility",
+          "tokenizer vocabulary expansion Korean LLM",
+          "token count sequence length Korean text efficiency",
+          "Korean BERT vocabulary size ablation downstream accuracy",
+          "monolingual versus multilingual vocabulary Korean pretrained model",
+          "Korean tokens per character tokenizer vocabulary comparison"
+        ],
+        "source_pref": "both"
+      },
+      {
+        "id": "rq4",
+        "question": "What intrinsic metrics and evaluation protocols are used to assess Korean tokenization quality, and how well do they correlate with downstream performance?",
+        "rationale": "Determining whether a method is improved requires valid measures of tokenization quality beyond end-task scores.",
+        "queries": [
+          "intrinsic evaluation tokenization quality morphological alignment",
+          "Korean tokenizer evaluation benchmark",
+          "tokenization metrics correlation downstream performance",
+          "Korean word segmentation spacing evaluation",
+          "Korean tokenizer morpheme boundary alignment downstream KLUE",
+          "tokenizer fertility compression Korean KoBEST evaluation",
+          "Korean subword tokenization ablation intrinsic extrinsic correlation"
+        ],
+        "source_pref": "both"
+      },
+      {
+        "id": "rq5",
+        "question": "How are tokenization improvements for Korean adapted in large language models, including tokenizer replacement or vocabulary extension in pre-trained models and the effects on cost and generation quality?",
+        "rationale": "Current Korean LLM practice involves adapting the tokenizer of existing models, which raises questions about transfer, inference cost and performance.",
+        "queries": [
+          "Korean large language model tokenizer adaptation",
+          "vocabulary extension cross-lingual transfer Korean",
+          "tokenizer-free or byte-level models Korean",
+          "language model tokenizer inference cost Korean",
+          "Korean vocabulary expansion continual pretraining LLaMA",
+          "embedding initialization new tokens Korean LLM adaptation",
+          "Korean-centric LLM tokenizer extension token efficiency"
+        ],
+        "source_pref": "both"
+      },
+      {
+        "id": "rq6",
+        "question": "What robustness issues and unintended effects do Korean tokenizers exhibit, such as handling of spacing errors, noisy user-generated text, out-of-vocabulary words, and rare morphological forms?",
+        "rationale": "Improvements may fail on noisy or non-standard text, so risks and conditions of use need to be understood.",
+        "queries": [
+          "Korean noisy text tokenization robustness",
+          "spacing errors Korean subword tokenizer",
+          "out-of-vocabulary Korean user-generated text",
+          "Korean social media morphological analysis"
+        ],
+        "source_pref": "both"
+      }
+    ],
+    "search_strategy": "Search 2016–present, with emphasis on 2019 onward, covering the transformer and LLM era, using OpenAlex and arXiv, and ACL Anthology-type venues surfaced through them. Prefer empirical studies with comparative baselines on Korean benchmarks (e.g., KLUE, NSMC, KorQuAD) and tokenization analyses; exclude papers that are only about Chinese or Japanese segmentation unless they offer transferable methods for agglutinative languages. I expect rq4 (intrinsic evaluation of Korean tokenization) and rq6 (robustness) to be the thinnest in the literature.}"
+  },
+  "evidence": {
+    "items": [
+      {
+        "paper_id": "10.1109/access.2019.2900672",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "Ensemble of Mask R-CNN models, evaluated on three public polyp datasets",
+        "sample": "CVC-ClinicDB, ETIS-Larib, CVC-ColonDB colonoscopy image datasets",
+        "finding": "An ensemble of Mask R-CNN models with ResNet50 and ResNet101 backbones is proposed for polyp segmentation in colonoscopy images. The abstract is cut off before the results are stated.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic: medical image segmentation, unrelated to Korean tokenization."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2112.10508",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "narrative survey of open-vocabulary modeling and tokenization",
+        "sample": "",
+        "finding": "The survey traces word, character, hybrid and subword (BPE-style) approaches to open-vocabulary modeling. It concludes there is no single best solution and that tokenization remains important for many applications.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq2",
+          "rq3"
+        ],
+        "limitations": "General survey with no Korean-specific analysis; the abstract does not describe a systematic review method."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2106.12672",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "Model proposal (GBST/Charformer) with experiments on English GLUE, multilingual and noisy text datasets",
+        "sample": "",
+        "finding": "Charformer learns subword tokenization end-to-end from bytes. It outperforms byte-level baselines, is generally on par with subword models, and is 28%-100% faster than vanilla byte-level and subword Transformers.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq6"
+        ],
+        "limitations": "Not Korean-specific; the abstract mentions only English GLUE, multilingual and noisy text data."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2105.09680",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "benchmark construction (8 Korean NLU tasks) with PLM baseline experiments",
+        "sample": "8 Korean NLU tasks built from scratch",
+        "finding": "KLUE offers a Korean NLU benchmark, along with KLUE-BERT and KLUE-RoBERTa models. KLUE-RoBERTa-large outperforms the other baselines, including multilingual PLMs.",
+        "sub_rq_ids": [
+          "rq4",
+          "rq1"
+        ],
+        "limitations": "A benchmark paper, not a tokenization study; the abstract does not say how tokenization affects results."
+      },
+      {
+        "paper_id": "10.1145/3578707",
+        "relevance": 4,
+        "reliability": 4,
+        "method": "empirical comparison of five tokenizers by pretraining RoBERTa-style models and fine-tuning on six downstream tasks, with statistical tests",
+        "sample": "Turkish split of OSCAR corpus; six downstream tasks",
+        "finding": "A morphological-level tokenizer performs competitively with de facto tokenizers on Turkish. Larger vocabularies help morphological- and word-level tokenizers more than de facto ones.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq3",
+          "rq2"
+        ],
+        "limitations": "Turkish rather than Korean; medium-sized models."
+      },
+      {
+        "paper_id": "10.46298/jdmdh.9152",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "empirical comparison of pretraining from scratch vs. adapting BERT-style models on downstream tasks",
+        "sample": "historical English text",
+        "finding": "Pretraining from scratch on historical English data gives a generally stronger background model than adapting a present-day language model.",
+        "sub_rq_ids": [],
+        "limitations": "Historical English domain adaptation; not about Korean or tokenization."
+      },
+      {
+        "paper_id": "10.1109/access.2023.3337354",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "empirical comparison of eleven tokenization approaches and several deep learning models for sentiment classification",
+        "sample": "three English and two Turkish datasets",
+        "finding": "Contextualized BERT/RoBERTa-based embeddings beat the other neural models. Raw or preprocessed words, stemming and WordPiece gave the most promising results, and the models were also ensembled.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq2"
+        ],
+        "limitations": "English and Turkish only, sentiment task only."
+      },
+      {
+        "paper_id": "10.1109/access.2019.2902270",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "NMT system development using UTagger Korean morphological analysis and word sense disambiguation, with a newly built parallel corpus",
+        "sample": "Korean-Vietnamese parallel corpus (size not stated in the abstract)",
+        "finding": "A Korean-Vietnamese NMT system uses UTagger for Korean morphological analysis and WSD and RDRsegmenter for Vietnamese. The abstract is truncated before the results, which it says indicated UTagger's effectiveness.",
+        "sub_rq_ids": [
+          "rq1"
+        ],
+        "limitations": "Abstract truncated, so the quantitative gains are unknown; low-resource language pair; NMT only."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2010.02534",
+        "relevance": 5,
+        "reliability": 4,
+        "method": "empirical comparison of tokenization strategies on Korean-English MT and NLU tasks",
+        "sample": "KorNLI, KorSTS, NSMC, PAWS-X, KorQuAD, Korean-English MT",
+        "finding": "Morphological segmentation followed by BPE works best for Korean-English MT and for the NLU tasks KorNLI, KorSTS, NSMC and PAWS-X. Plain BPE is best for KorQuAD.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq2",
+          "rq4"
+        ],
+        "limitations": "Abstract gives no sample sizes or effect sizes; task-dependent results; preprint."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2101.09469",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "technical report on byte-level BPE vocabulary for multilingual pretraining (NEZHA), with multilingual NLU evaluation",
+        "sample": "",
+        "finding": "NEZHA trained with byte-level subwords consistently outperforms Google multilingual BERT and vanilla NEZHA on several multilingual NLU tasks.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq3",
+          "rq5"
+        ],
+        "limitations": "Technical report; the abstract does not mention Korean; no details on the tasks."
+      },
+      {
+        "paper_id": "10.1162/tacl_a_00467",
+        "relevance": 1,
+        "reliability": 4,
+        "method": "cross-linguistic empirical comparison of three model classes for morphological segmentation",
+        "sample": "11 languages across 6 language families",
+        "finding": "Model generalization depends on the characteristics of the data set, so conclusions about model performance in low-resource morphological segmentation can be coincidental. The abstract does not mention Korean.",
+        "sub_rq_ids": [],
+        "limitations": "Not Korean-specific and not about tokenization for downstream tasks; abstract truncated."
+      },
+      {
+        "paper_id": "10.3390/electronics10070845",
+        "relevance": 5,
+        "reliability": 3,
+        "method": "empirical comparison of word, morpheme, subword, and submorpheme tokenizations for Korean sentence embedding on sentiment analysis",
+        "sample": "",
+        "finding": "Subword units are more robust to OOV problems than other token units. Replacing whitespace with a particular symbol was a disadvantage in sentiment analysis.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq2",
+          "rq6"
+        ],
+        "limitations": "Single task (sentiment analysis); abstract truncated and gives no sample size or numbers."
+      },
+      {
+        "paper_id": "10.1162/tacl_a_00448",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "model proposal with pre-training and multilingual benchmark evaluation",
+        "sample": "multilingual benchmark (TyDi QA)",
+        "finding": "Canine, a tokenization-free character-level encoder, outperforms a comparable mBERT by 5.7 F1 on TyDi QA with fewer parameters. It shows that fixed subword vocabularies are not needed for strong multilingual performance.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq5"
+        ],
+        "limitations": "Not Korean-specific; the abstract reports no Korean results. TyDi QA does not include Korean."
+      },
+      {
+        "paper_id": "10.1038/s41598-022-17806-8",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "domain-specific BERT pre-training with intrinsic and extrinsic evaluation",
+        "sample": "Korean medical corpus",
+        "finding": "A Korean medical BERT improved masked LM and NSP accuracy and improved Pearson correlation by 0.046 on medical semantic textual similarity. The abstract notes the difficulty posed by Korean agglutination, but tokenization is not its focus.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq5"
+        ],
+        "limitations": "Tokenization is not examined as a variable in the abstract; domain-specific; abstract truncated."
+      },
+      {
+        "paper_id": "10.1080/08839514.2023.2175112",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "comparative experiment of Mecab-Ko vs SentencePiece with five classifiers (NB, kNN, SVM, ANN, LSTM-RNN) and paired t-tests",
+        "sample": "Korean online customer reviews",
+        "finding": "SentencePiece outperformed Mecab-Ko for sentiment classification, especially with ANN and LSTM-RNN. SentencePiece can also assign meaning to short words and jargon not predefined.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq2",
+          "rq6"
+        ],
+        "limitations": "Single task and domain (product reviews); only two tokenizers compared; sample size not stated."
+      },
+      {
+        "paper_id": "10.3390/app132312901",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "narrative survey of language modeling approaches",
+        "sample": "",
+        "finding": "The survey covers language models from n-gram and HMM to BERT, GPT and LLaMA, with attention to agglutinative languages such as Arabic and Turkish. It does not address Korean tokenization.",
+        "sub_rq_ids": [],
+        "limitations": "Broad survey without Korean or tokenization focus; the abstract does not describe a review method."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2206.05224",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "benchmark dataset construction (LBOX OPEN)",
+        "sample": "147k Korean precedents (259M tokens); classification, legal judgement prediction and summarization tasks",
+        "finding": "The paper presents the first large-scale Korean legal AI benchmark with a corpus and several tasks. The abstract does not discuss tokenization.",
+        "sub_rq_ids": [],
+        "limitations": "Tokenization is not evaluated in the abstract; abstract truncated."
+      },
+      {
+        "paper_id": "10.1038/s41598-025-88960-y",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "ensemble of BERT-based models with meta-learners (Parallel Model Fusion) evaluated with cross-validation",
+        "sample": "English and Korean hate speech datasets",
+        "finding": "The ensemble reached accuracies of 85% for English and 89% for Korean and outperformed single models and previous studies. The abstract does not address tokenization.",
+        "sub_rq_ids": [],
+        "limitations": "No tokenization analysis; abstract truncated."
+      },
+      {
+        "paper_id": "10.1109/access.2022.3164098",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "domain-specific pre-training from scratch (KTL-BERT, DistilRoBERTa-based) for classification",
+        "sample": "Korean tax law questions",
+        "finding": "Domain-specific pre-training is proposed to address performance degradation from technical terms in tax law classification. The visible abstract does not discuss tokenization or give results.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq5"
+        ],
+        "limitations": "Abstract truncated; no tokenization analysis visible; single domain."
+      },
+      {
+        "paper_id": "10.1017/s014271640808020x",
+        "relevance": 0,
+        "reliability": 4,
+        "method": "longitudinal psycholinguistic study over 9 months to 1 year with controls for phonological processing and reasoning",
+        "sample": "over 660 preschool children (Cantonese, Mandarin, Korean speakers)",
+        "finding": "Morphological awareness predicted unique variance in later vocabulary knowledge across the three languages, and vocabulary knowledge predicted later morphological awareness. This is child language acquisition, not NLP tokenization.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic for NLP; studies human children rather than tokenizers."
+      },
+      {
+        "paper_id": "10.1017/s1366728912000120",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "questionnaire-based correlational study (n=181 parents)",
+        "sample": "181 bilingual parents and their children",
+        "finding": "Higher parental language mixing was associated with smaller comprehension vocabularies in 1.5-year-old bilingual infants and marginally smaller production vocabularies at 2 years.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic (child language acquisition, not NLP tokenization); self-report measure."
+      },
+      {
+        "paper_id": "10.1044/jshr.0302.166",
+        "relevance": 0,
+        "reliability": 1,
+        "method": "unclear from abstract",
+        "sample": "",
+        "finding": "The abstract contains only bibliographic metadata and citing-article listings, so no findings can be extracted.",
+        "sub_rq_ids": [],
+        "limitations": "No abstract content; off-topic (speech/language sampling reliability, 1960)."
+      },
+      {
+        "paper_id": "10.1017/s1366728920000656",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "behavioral experiment (lexical decision, categorization, vocabulary test)",
+        "sample": "two groups of German learners of English (advanced vs. intermediate)",
+        "finding": "Phonetic categorization predicted nonword rejection for intermediate L2 learners, while vocabulary size did so for advanced learners.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic: human L2 phonology, not NLP vocabulary or tokenization."
+      },
+      {
+        "paper_id": "10.14746/ssllt.2022.12.3.5",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "questionnaire survey with structural equation modeling, n=185",
+        "sample": "185 Korean secondary-level EFL learners",
+        "finding": "Motivation directly and indirectly (via vocabulary learning strategies) predicted L2 vocabulary size and depth, with intrinsic motivation having a stronger effect.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic (human L2 vocabulary learning); self-report; single population."
+      },
+      {
+        "paper_id": "10.1109/access.2023.3239668",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "empirical attack experiments on a Korean GPT model",
+        "sample": "Korean GPT model and its training data",
+        "finding": "Membership inference attacks on a Korean GPT found approximate training data with 20%-90% precision in the top-100 samples, and redundant sentences were hard to detect with existing methods, motivating token-level deduplication.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq5"
+        ],
+        "limitations": "Focus on privacy and security rather than tokenizer design; the abstract does not describe tokenization effects in detail."
+      },
+      {
+        "paper_id": "10.1111/ijal.12480",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "quasi-experimental study, n=60",
+        "sample": "60 Korean EFL learners aged 18-21",
+        "finding": "Model-text feedback improved revisions, and learners' receptive and productive vocabulary sizes predicted the effectiveness of the feedback.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic (human L2 writing); small sample."
+      },
+      {
+        "paper_id": "10.2197/ipsjjip.29.490",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "empirical study of OOV effects in transfer learning with a proposed mitigation method",
+        "sample": "pre-trained language models for CJK languages (sizes not stated in abstract)",
+        "finding": "OOV remains a problem under subword tokenization in CJK languages including Korean and hurts downstream transfer learning. The authors propose a mitigation approach and examine the correlation between OOV and task performance.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq6"
+        ],
+        "limitations": "Korean is one of several languages; abstract gives no quantitative results."
+      },
+      {
+        "paper_id": "10.7820/vli.v02.1.stoeckel.bennett",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "differential item functioning analysis with Rasch item difficulty, n=330",
+        "sample": "184 Korean and 146 Japanese undergraduate EFL learners",
+        "finding": "21 of 90 vocabulary test items showed DIF, and loanword status in the L1 explained some of it.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic (human vocabulary testing); not NLP."
+      },
+      {
+        "paper_id": "10.1021/acs.jcim.5c01856",
+        "relevance": 1,
+        "reliability": 4,
+        "method": "systematic evaluation of 35 tokenizers with n-gram proxies and 18 pretrained RoBERTa-style encoders",
+        "sample": "35 tokenizers (20 chemistry-specific); 18 RoBERTa-style models",
+        "finding": "Existing SMILES tokenizers have significant coverage gaps. The authors propose the Smirk and Smirk-GPE tokenizers with full OpenSMILES coverage and use n-gram language models as a low-cost proxy for tokenizer quality.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Chemistry domain, not Korean; only the proxy-metric methodology is transferable."
+      },
+      {
+        "paper_id": "10.3389/frai.2025.1538165",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "comparative tokenizer fertility measurement across LLMs, plus a transliteration experiment",
+        "sample": "tokenizers of current pretrained LLMs on Ukrainian text",
+        "finding": "Ukrainian is underrepresented in LLM tokenizer vocabularies, which raises token counts, cost and latency. The study measures fertility and tests transliteration to improve efficiency.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq5"
+        ],
+        "limitations": "Ukrainian rather than Korean; no numeric results in the abstract; useful only as an analogous methodology."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2106.03193",
+        "relevance": 1,
+        "reliability": 4,
+        "method": "benchmark dataset construction with professional translation",
+        "sample": "3001 English Wikipedia sentences translated into 101 languages",
+        "finding": "Introduces FLORES-101, a high-quality multilingually aligned benchmark for low-resource and multilingual machine translation. The abstract does not mention tokenization or Korean specifically.",
+        "sub_rq_ids": [],
+        "limitations": "Not about tokenization; MT benchmark only tangentially usable for evaluation."
+      },
+      {
+        "paper_id": "10.1162/089120102317341774",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "hybrid statistical and rule-based POS tagging with unknown-morpheme estimation; experiments on three domain corpora",
+        "sample": "three domain corpora; 10% of morphemes in the test corpora unknown",
+        "finding": "A syllable-pattern-based unknown-morpheme estimation method in the POSTAG tagger achieved 97% tagging accuracy even with 10% unknown morphemes. It addresses OOV handling in Korean morphological analysis.",
+        "sub_rq_ids": [
+          "rq6",
+          "rq1"
+        ],
+        "limitations": "Dated (2002) pre-neural approach; evaluates POS tagging rather than tokenization for downstream NLP."
+      },
+      {
+        "paper_id": "10.1186/s13321-024-00884-3",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "empirical pretraining study with BPE and unigram vocabularies plus a benchmark (PETA)",
+        "sample": "protein sequences; vocabularies of various sizes",
+        "finding": "Subword vocabularies (BPE, unigram) for protein language models outperform single-amino-acid vocabularies on downstream tasks, with vocabularies of 50 and 200 elements performing best. The study is not about Korean or natural language.",
+        "sub_rq_ids": [],
+        "limitations": "Protein domain, not Korean; only tangential evidence on vocabulary size effects."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2004.03289",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "benchmark dataset construction (machine translation of training sets, manual translation of dev/test) with baselines",
+        "sample": "Korean NLI and STS datasets",
+        "finding": "Releases KorNLI and KorSTS Korean NLU benchmarks and baseline results. It can serve as a downstream evaluation resource but does not study tokenization in the abstract.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Training sets are machine-translated; no tokenization analysis in the abstract."
+      },
+      {
+        "paper_id": "10.1162/tacl_a_00661",
+        "relevance": 1,
+        "reliability": 4,
+        "method": "benchmark dataset construction with large-scale survey; evaluation of multilingual LMs",
+        "sample": "268 templates, 76,048 samples across 12 bias categories",
+        "finding": "Presents KoBBQ, a Korean bias benchmark with a cultural adaptation framework, and uses it to measure accuracy and bias scores of multilingual LMs. It does not address tokenization.",
+        "sub_rq_ids": [],
+        "limitations": "Social-bias evaluation; not related to tokenization."
+      },
+      {
+        "paper_id": "10.1587/transinf.2017edp7085",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "phrase-based statistical model (CRF) for Korean morphological analysis, evaluated on SEJONG",
+        "sample": "SEJONG corpus",
+        "finding": "A phrase-based model for Korean morpheme segmentation and POS tagging outperforms morpheme-based baselines, with statistically significant gains over a state-of-the-art CRF when combined with CRF.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq4"
+        ],
+        "limitations": "Evaluated only intrinsically on morphological analysis, not on downstream NLP performance; no neural subword comparison."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2404.13292",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "intrinsic-extrinsic evaluation framework (UniMorph Labeller plus OOV Generalization Challenge benchmark)",
+        "sample": "ALBERT, BERT, RoBERTa, DeBERTa; three text classification tasks",
+        "finding": "UniMorph Labeller reaches 98% accuracy in classifying subword tokenization as morphological or alien, and alien tokenization leads to poorer OOV generalization than morphological tokenization across the models studied.",
+        "sub_rq_ids": [
+          "rq4",
+          "rq1",
+          "rq6"
+        ],
+        "limitations": "Not Korean-specific per the abstract; English-centric models and tasks."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2502.07057",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "tokenizer evaluation framework with five metrics applied to Turkish MMLU",
+        "sample": "6,200 Turkish multiple-choice MMLU questions",
+        "finding": "Proposes metrics including %TR and token purity for evaluating tokenizers on a morphologically rich language. %TR correlates more strongly with downstream MMLU performance than token purity.",
+        "sub_rq_ids": [
+          "rq4",
+          "rq3"
+        ],
+        "limitations": "Turkish rather than Korean; the abstract does not give the number of tokenizers or models evaluated."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2310.08754",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "controlled ablation training 24 mono- and multilingual LLMs at 2.6B parameters",
+        "sample": "24 LLMs; European languages",
+        "finding": "Tokenizer choice significantly affects downstream performance and training cost, and fertility and parity are not always predictive of downstream performance. Multilingual tokenizers need roughly three times larger vocabularies than English ones.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq4"
+        ],
+        "limitations": "Focuses on European languages, not Korean."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2307.06435",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "survey of LLM literature",
+        "sample": "",
+        "finding": "Provides a broad overview of LLM architectures, training, fine-tuning and benchmarking. The abstract does not mention Korean or tokenizer adaptation.",
+        "sub_rq_ids": [],
+        "limitations": "General survey; no Korean or tokenization focus in the abstract."
+      },
+      {
+        "paper_id": "10.1016/j.artmed.2024.102900",
+        "relevance": 0,
+        "reliability": 2,
+        "method": "narrative survey of transformers in healthcare",
+        "sample": "",
+        "finding": "Surveys how transformer architectures are applied to healthcare data (clinical NLP, imaging, EHR) and discusses benefits and limitations such as computational cost. It does not address Korean tokenization.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic domain; no Korean or tokenization content in the abstract."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2307.10169",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "survey/review of open problems in LLMs",
+        "sample": "",
+        "finding": "Aims to set out a systematic list of open problems and application successes for LLMs. The abstract does not mention tokenization or Korean.",
+        "sub_rq_ids": [],
+        "limitations": "General LLM overview; abstract gives no method and no Korean or tokenizer content."
+      },
+      {
+        "paper_id": "10.1613/jair.2863",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "annotation projection framework with experimental evaluation",
+        "sample": "English-German parallel corpus",
+        "finding": "Proposes a graph-optimization approach to project FrameNet semantic role annotations across languages and shows feasibility for inducing high-precision German annotations.",
+        "sub_rq_ids": [],
+        "limitations": "Concerns English-German semantic role labeling; unrelated to Korean or tokenization."
+      },
+      {
+        "paper_id": "10.1162/tacl_a_00061",
+        "relevance": 0,
+        "reliability": 4,
+        "method": "cross-lingual dependency parser transfer experiments",
+        "sample": "38 Universal Dependencies datasets; Bible and Europarl translation data",
+        "finding": "Presents a cross-lingual syntactic transfer method that improves over the state of the art when only small translation corpora such as the Bible are available.",
+        "sub_rq_ids": [],
+        "limitations": "Dependency parsing transfer; no tokenization focus and no Korean-specific findings in the abstract."
+      },
+      {
+        "paper_id": "10.1093/jamia/ocae090",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "case study plus brief review (position paper)",
+        "sample": "sample mobile sensing dataset tokenized with the OpenAI tokenizer",
+        "finding": "Argues that LLM tokenizers are poorly suited to numerical and temporal data and that naively passing timeseries to LLMs can be ineffective.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "Concerns numeric and time-series data in English-centric tokenizers; not Korean."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2305.15425",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "empirical comparison of tokenization lengths across languages",
+        "sample": "",
+        "finding": "The same text translated into different languages can have tokenization lengths differing by up to 15 times, even with multilingual tokenizers, and byte- and character-level models show over 4 times the difference. This implies unequal cost, latency and context capacity for some language communities.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq5",
+          "rq2"
+        ],
+        "limitations": "Abstract does not name Korean specifically; preprint."
+      },
+      {
+        "paper_id": "10.1613/jair.4786",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "computational model of lexical borrowing with MT applications",
+        "sample": "",
+        "finding": "Develops an Optimality-Theory-inspired model of morpho-phonological transformations to predict donor forms of borrowed words, and applies it to translating out-of-vocabulary loanwords in machine translation.",
+        "sub_rq_ids": [],
+        "limitations": "Not about Korean or tokenization; OOV loanword translation in other language pairs."
+      },
+      {
+        "paper_id": "10.1016/s0010-0277(99)00036-0",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "human simulation experiments",
+        "sample": "",
+        "finding": "Experiments test whether the noun-before-verb pattern in child vocabulary learning stems from the information requirements of verb learning rather than conceptual complexity.",
+        "sub_rq_ids": [],
+        "limitations": "Child language acquisition; irrelevant to Korean tokenization."
+      },
+      {
+        "paper_id": "10.1007/s10462-023-10471-x",
+        "relevance": 0,
+        "reliability": 4,
+        "method": "systematic literature review of 189 articles",
+        "sample": "189 articles on topic modelling for social media",
+        "finding": "Finds that the development of short-text topic models is not aligned with how they are used in applied social media analysis.",
+        "sub_rq_ids": [],
+        "limitations": "Topic modelling, not tokenization; no Korean focus."
+      },
+      {
+        "paper_id": "10.1145/3624725",
+        "relevance": 0,
+        "reliability": 2,
+        "method": "commentary/overview",
+        "sample": "",
+        "finding": "Discusses the challenges of detecting LLM-generated text; the abstract does not mention Korean or tokenization.",
+        "sub_rq_ids": [],
+        "limitations": "Brief abstract; off-topic."
+      },
+      {
+        "paper_id": "10.1017/s0958344020000038",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "quasi-experiment, pre-test/post-test/delayed post-test with control group, n=40",
+        "sample": "40 Russian-speaking elementary school EFL learners",
+        "finding": "An image-to-text recognition system was tested for supporting English vocabulary acquisition against a traditional textbook approach. The abstract does not describe the results.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic (language learning, not Korean tokenization); small sample; abstract truncated"
+      },
+      {
+        "paper_id": "10.3390/app10196936",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "corpus construction with baseline end-to-end ASR experiments",
+        "sample": "969 h of spontaneous Korean dialog, about 2000 native speakers",
+        "finding": "Introduces the KsponSpeech corpus with orthographic and pronunciation transcription and disfluency tags, and gives baseline end-to-end ASR results. It also investigates the number of sub-word units suitable for Korean.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq6"
+        ],
+        "limitations": "ASR task rather than text NLP; sub-word unit analysis is only one part of the paper; no quantitative results in the abstract"
+      },
+      {
+        "paper_id": "10.1186/s12911-020-01241-8",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "empirical NER experiments comparing BERT with a character-level BiLSTM-CRF baseline",
+        "sample": "New Korean clinical entity dataset from an online medical QA site, plus a standard NER dataset",
+        "finding": "A modified BERT labeling strategy that better separates Korean postpositions achieved micro-averaged precision 0.83, recall 0.85 and F1 0.84. BERT significantly outperformed the character-level BiLSTM-CRF baseline.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq6"
+        ],
+        "limitations": "Tokenization is not the main focus; uses multilingual BERT; single domain; the abstract gives no sample size"
+      },
+      {
+        "paper_id": "10.3390/s21082658",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "empirical comparison of a Transformer with copying mechanism and noise-implantation dataset construction",
+        "sample": "",
+        "finding": "Proposes novel noising methods to build Korean GEC datasets and applies a Transformer with copying mechanism. It outperforms two commercial grammar checkers and other NMT-based models.",
+        "sub_rq_ids": [
+          "rq6"
+        ],
+        "limitations": "Tokenization is not examined; the abstract gives no sample size or numbers"
+      },
+      {
+        "paper_id": "10.13088/jiis.2015.21.2.49",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "resource construction via crowdsourced voting (collective intelligence)",
+        "sample": "35,000+ word votes from university students, drawn from 517,178 dictionary words",
+        "finding": "Builds an open Korean sentiment lexicon and API through crowdsourced voting on words. The abstract notes that Korean's agglutinative nature makes NLP difficult.",
+        "sub_rq_ids": [
+          "rq6"
+        ],
+        "limitations": "Lexicon resource, not tokenization; no evaluation reported in the abstract"
+      },
+      {
+        "paper_id": "10.4040/jkan.2017.47.6.806",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "semantic network analysis of crawled text with KoNLPy morphological analysis",
+        "sample": "536 news pages and 464 tweets",
+        "finding": "Applies KoNLPy morphological analysis to build semantic networks of text about comprehensive nursing care service. The study uses morphological analysis only as a preprocessing tool and does not evaluate it.",
+        "sub_rq_ids": [],
+        "limitations": "Application study; tokenization is not evaluated; single topic"
+      },
+      {
+        "paper_id": "10.1111/weng.12345",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "lexical analysis of vocabulary items with a descriptive model",
+        "sample": "2014 New Words list from the National Institute of Korean Language",
+        "finding": "Finds that English borrowing into Korean is complex, involving at least four source-language combinations and hybridized word formation. It proposes a descriptive model of lexical borrowing.",
+        "sub_rq_ids": [
+          "rq6"
+        ],
+        "limitations": "Linguistic study, not computational; no tokenization evaluation"
+      },
+      {
+        "paper_id": "10.1145/3643540",
+        "relevance": 0,
+        "reliability": 4,
+        "method": "empirical evaluation of multiple LLMs (zero-shot, few-shot, instruction fine-tuning)",
+        "sample": "",
+        "finding": "Instruction fine-tuning significantly boosts LLM performance on mental health prediction tasks from online text; fine-tuned Mental-Alpaca and Mental-FLAN-T5 outperform GPT-3.5 by 10.9% balanced accuracy and GPT-4 by 4.8%.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic: mental health prediction, no tokenization or Korean content."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2304.08177",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "vocabulary extension plus secondary pre-training and instruction fine-tuning of LLaMA (Chinese)",
+        "sample": "",
+        "finding": "Extending LLaMA's vocabulary with 20,000 Chinese tokens improves encoding efficiency and Chinese understanding; with secondary pre-training and instruction tuning, it markedly improves Chinese proficiency.",
+        "sub_rq_ids": [
+          "rq5",
+          "rq3"
+        ],
+        "limitations": "Chinese, not Korean; abstract is truncated and gives few quantitative details."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2310.07554",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "method proposal (LLM-Embedder for retrieval augmentation)",
+        "sample": "",
+        "finding": "Proposes LLM-Embedder with rank-aware reward and graded distillation to unify diverse retrieval augmentation scenarios for LLMs.",
+        "sub_rq_ids": [],
+        "limitations": "Unrelated to tokenization or Korean."
+      },
+      {
+        "paper_id": "10.1080/20964471.2024.2396159",
+        "relevance": 2,
+        "reliability": 2,
+        "method": "framework proposal for domain-specific LLM pre-pretraining (data recipe, cleaning, vocabulary expansion, embedding initialization)",
+        "sample": "",
+        "finding": "Presents PreparedLLM, a pre-pretraining framework that includes vocabulary expansion and embedding initialization to improve domain term understanding and tokenization efficiency.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "Domain-specific (not Korean); abstract is truncated and has no results."
+      },
+      {
+        "paper_id": "10.1162/tacl_a_00560",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "proposal of sub-character tokenization with experiments on downstream tasks",
+        "sample": "",
+        "finding": "SubChar tokenizers produce much shorter sequences and, when pronunciation-based, are robust to homophone typos, while performing competitively on downstream tasks for Chinese PLMs.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq6"
+        ],
+        "limitations": "Chinese, not Korean; transferability to Hangul is not shown."
+      },
+      {
+        "paper_id": "10.1613/jair.4955",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "cross-lingual transfer parsing framework with distributed representations",
+        "sample": "English training data transferred to three other languages",
+        "finding": "Cross-lingual distributed representations reduce labeled attachment error by an average of 10.9% relative to a delexicalized parser.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic: dependency parsing transfer, no tokenization or Korean evidence in abstract."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2401.13660",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "byte-level state space model with language modeling experiments",
+        "sample": "",
+        "finding": "MambaByte, a token-free byte-level SSM, is competitive with or better than subword Transformers on language modeling, is robust to noise, and gains 2.6x inference speedup via speculative decoding.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq6"
+        ],
+        "limitations": "No Korean evaluation in abstract; byte-level focus."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2003.14056",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "probing experiments on multilingual RNN language models",
+        "sample": "",
+        "finding": "Exposure to a related language does not always increase grammatical knowledge in the target language, and optimal conditions for lexical-semantic transfer may differ from those for syntactic transfer.",
+        "sub_rq_ids": [],
+        "limitations": "Not about tokenization or Korean; RNN-based."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2402.14714",
+        "relevance": 5,
+        "reliability": 3,
+        "method": "technical report with vocabulary expansion method (parameter freezing, subword initialization) and leaderboard evaluation",
+        "sample": "EEVE-Korean-10.8B built on SOLAR-10.7B; trained with about 2 billion tokens",
+        "finding": "EEVE vocabulary expansion with parameter freezing and subword initialization boosts Korean proficiency of English-centric LLMs with only about 2B tokens. The model ranked top among open-source Korean pre-trained models on the Open Ko-LLM Leaderboard as of January 2024.",
+        "sub_rq_ids": [
+          "rq5",
+          "rq3"
+        ],
+        "limitations": "Technical report; leaderboard-based evaluation; limited ablations or tokenization-efficiency numbers in abstract."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2410.05864",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "interpretability experiments on LLM internal representations",
+        "sample": "",
+        "finding": "LLMs form whole-word representations from sub-word tokens at the last token in early and middle layers, robust to arbitrary splits, typos and OOV words. This enables finetuning-free vocabulary expansion that reduces input length and latency.",
+        "sub_rq_ids": [
+          "rq5",
+          "rq3",
+          "rq6"
+        ],
+        "limitations": "Not Korean-specific; abstract does not mention Korean."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2305.13707",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "systematic analysis of OpenAI API cost and utility on multilingual benchmarks",
+        "sample": "22 typologically diverse languages",
+        "finding": "Token counts for the same content vary widely across languages, so speakers of many supported languages are overcharged by the API while getting poorer results. The abstract does not mention Korean specifically.",
+        "sub_rq_ids": [
+          "rq5",
+          "rq3"
+        ],
+        "limitations": "Korean is not singled out in the abstract; it analyzes a commercial API only and does not propose a tokenizer fix."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2107.12627",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "proposed method (TreLM cross-lingual transfer framework) with experiments",
+        "sample": "",
+        "finding": "Proposes TreLM, a framework for transferring pre-trained contextualized language models across languages. It uses a TRILayer structure, a new cross-lingual language modeling objective, and adversarial embedding alignment to handle vocabulary and sequence-length differences between languages.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "The abstract is truncated, so the experimental results and languages are unclear. Korean is not mentioned, and the paper does not directly address tokenizer replacement or vocabulary extension."
+      },
+      {
+        "paper_id": "10.4230/oasics.commit2data.3",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "model description and benchmark evaluation (176B decoder-only LLM)",
+        "sample": "ROOTS corpus, 46 natural and 13 programming languages",
+        "finding": "BLOOM, an open-access 176B multilingual LLM trained on ROOTS, achieves competitive performance on a wide variety of benchmarks, with stronger results after multitask prompted finetuning.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Abstract says nothing about tokenization or Korean; relevance to Korean vocabulary design is indirect."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2007.01852",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "empirical model development and benchmark evaluation (LaBSE)",
+        "sample": "112 languages; Tatoeba bi-text retrieval",
+        "finding": "A pre-trained multilingual LM cuts the parallel data needed by 80%. The best combined model reaches 83.7% bi-text retrieval accuracy over 112 languages on Tatoeba, versus 65.5% for the prior method.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Abstract does not address tokenization or Korean specifically; the multilingual vocabulary angle is only implicit."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2209.06794",
+        "relevance": 1,
+        "reliability": 4,
+        "method": "model development and benchmark evaluation (vision-language model)",
+        "sample": "image-text training set of 10B images and texts in over 100 languages",
+        "finding": "PaLI jointly scales language and vision components and achieves state-of-the-art results on multiple vision and language tasks using a multilingual pretraining mix.",
+        "sub_rq_ids": [],
+        "limitations": "Multimodal focus; the abstract does not address tokenization or Korean."
+      },
+      {
+        "paper_id": "10.1162/tacl_a_00413",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "survey of BERT compression methods",
+        "sample": "",
+        "finding": "The paper surveys the state of the art in compressing Transformer models, focusing on BERT, and clarifies best practices and future directions.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic for Korean tokenization; the abstract states no review methodology."
+      },
+      {
+        "paper_id": "10.48550/arxiv.1906.01502",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "probing experiments and zero-shot cross-lingual transfer evaluation of M-BERT",
+        "sample": "M-BERT pre-trained on monolingual corpora in 104 languages",
+        "finding": "M-BERT transfers well zero-shot, even across scripts, and works best between typologically similar languages. It also shows systematic deficiencies for certain language pairs.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Abstract does not mention Korean or tokenization specifically."
+      },
+      {
+        "paper_id": "10.1155/2022/7893775",
+        "relevance": 0,
+        "reliability": 2,
+        "method": "unclear from abstract (proposed Bi-LSTM and BERT framework)",
+        "sample": "",
+        "finding": "The paper proposes a Bi-LSTM and BERT framework to identify depression- and anxiety-related social media posts.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic; mental health text classification with no link to Korean or tokenization. Results are not given in the abstract."
+      },
+      {
+        "paper_id": "10.1016/j.patter.2024.101118",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "survey / literature review of multilingual LLMs",
+        "sample": "",
+        "finding": "The paper presents a unified taxonomy and review of multilingual large language models and multilingual alignment, covering emerging frontiers and open-source resources.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq5"
+        ],
+        "limitations": "General survey; the abstract does not mention Korean, tokenizers or vocabulary design."
+      },
+      {
+        "paper_id": "10.1109/access.2021.3092735",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "proposed multimodal fusion model, empirical (details unclear from abstract)",
+        "sample": "",
+        "finding": "The paper proposes attention-based fusion modules that combine language, audio and visual features with BERT for multimodal emotion recognition.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic for Korean tokenization; abstract is truncated."
+      },
+      {
+        "paper_id": "10.1093/bioinformatics/btae196",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "empirical comparison of tokenization algorithms across eight biological tasks",
+        "sample": "eight tasks on protein and nucleotide sequences",
+        "finding": "The study examines how alternative tokenization algorithms affect transformer performance on biological sequences. Its motivation is that such sequences are extremely long and lack natural word boundaries.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq3"
+        ],
+        "limitations": "Biological sequences rather than Korean text; the abstract is truncated and gives no quantitative results."
+      },
+      {
+        "paper_id": "10.1145/3589131",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "comparative fine-tuning study of pretrained language models on five Vietnamese sentiment datasets",
+        "sample": "five benchmark Vietnamese sentiment analysis datasets",
+        "finding": "Monolingual PhoBERT and ViT5 outperform previous studies and set new state-of-the-art results on five Vietnamese sentiment analysis datasets.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Vietnamese rather than Korean; tokenization is not analyzed in the abstract, and the comparison confounds architecture, data and preprocessing."
+      },
+      {
+        "paper_id": "10.4218/etrij.2019-0441",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "empirical model development (fine-tuned BERT for Korean zero-anaphora resolution)",
+        "sample": "",
+        "finding": "Fine-tuning a pre-trained BERT for Korean zero anaphora resolution without hand-crafted or dependency features significantly improves performance over other models. The abstract does not discuss tokenization or vocabulary choices.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Tokenization and vocabulary are not examined; no numbers or sample details in abstract."
+      },
+      {
+        "paper_id": "10.48550/arxiv.1909.00100",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "empirical model compression/distillation from multilingual BERT; evaluation on 70 treebanks",
+        "sample": "70 treebanks, 48 languages",
+        "finding": "A model derived from multilingual BERT is 6x smaller and 27x faster with higher accuracy than a multilingual baseline on POS tagging and morphological prediction, especially for low-resource languages. Korean and tokenization are not mentioned in the abstract.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "No Korean-specific analysis; vocabulary effects not stated in abstract; preprint."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2108.05542",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "narrative survey of transformer-based pretrained language models",
+        "sample": "",
+        "finding": "Provides an overview of pretraining methods, a taxonomy of T-PTLMs, and intrinsic and extrinsic benchmarks. Korean and tokenization are not addressed in the abstract.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "General survey; not Korean-specific; no stated review methodology."
+      },
+      {
+        "paper_id": "10.1162/tacl_a_00633",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "multilingual GPT-3-style model pretraining with intrinsic and extrinsic evaluation",
+        "sample": "61 languages, 25 language families; downstream evaluation in 33 languages",
+        "finding": "mGPT is pretrained on 61 languages and evaluated on language modeling, cross-lingual NLU benchmarks and knowledge probing, with in-context learning on par with contemporaneous models. The abstract does not mention Korean tokenization.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Not Korean-specific; tokenization effects are not described in abstract."
+      },
+      {
+        "paper_id": "10.3390/app10196893",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "method proposal (skipgram extension with bridge-words) with intrinsic and extrinsic evaluation",
+        "sample": "",
+        "finding": "Bridge-words added to skipgram strengthen similarity between standard words and noisy variants, outperforming baselines on noisy text across intrinsic and extrinsic tasks while retaining performance on standard text. Korean is not mentioned in the abstract.",
+        "sub_rq_ids": [
+          "rq6",
+          "rq4"
+        ],
+        "limitations": "Not Korean-specific; concerns word embeddings rather than tokenizers."
+      },
+      {
+        "paper_id": "10.1162/tacl_a_00395",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "automatic and manual evaluation of negation translation, information-flow analysis, probing",
+        "sample": "EN–DE and EN–ZH translation directions",
+        "finding": "NMT negation translation accuracy is 91.7–95.7% in manual evaluation across four directions, with under-translation as the main error type. Unrelated to Korean tokenization.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic; no Korean data."
+      },
+      {
+        "paper_id": "10.1017/s1351324923000311",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "corpus annotation scheme and conversion algorithm, with experiments using traditional and neural NER models",
+        "sample": "",
+        "finding": "Proposes a morpheme-based CoNLL-U annotation scheme for Korean NER that separates functional morphemes such as postpositions and particles, reducing NE ambiguity. Results show the format is feasible, with model performance varying by added language-specific features.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq4",
+          "rq1"
+        ],
+        "limitations": "Abstract is truncated; no numeric results given; focuses on NER annotation rather than subword tokenizers."
+      },
+      {
+        "paper_id": "10.1145/3591206",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "multi-task learning neural model (ELECTRA + RNN-CRF) with syllable-level I/O, evaluated on the Sejong corpus",
+        "sample": "Sejong corpus test set",
+        "finding": "A syllable-level multi-task POS tagger is robust to Korean word spacing errors and reaches 98.30 F1 on the Sejong test set, better than previous studies.",
+        "sub_rq_ids": [
+          "rq6",
+          "rq4",
+          "rq1"
+        ],
+        "limitations": "Focus on POS tagging rather than tokenizer comparison; details on spacing-noise evaluation not given in abstract."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2308.05696",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "experimental study of instruction complexity (Tree-Instruct) for LLM alignment",
+        "sample": "",
+        "finding": "Increasing instruction complexity yields sustained LLM performance gains, and the paper examines whether improvements come from more training tokens. Unrelated to Korean tokenization.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic; preliminary experiments; preprint."
+      },
+      {
+        "paper_id": "10.1017/s136672892510076x",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "two eye-movement experiments",
+        "sample": "48 L1 and 48 high-proficiency L2 Chinese readers per experiment",
+        "finding": "Both L1 and L2 Chinese readers process temporary segmentation ambiguities efficiently using similar strategies. Concerns human reading of Chinese, not Korean tokenization.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic; human psycholinguistics of Chinese."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2402.04177",
+        "relevance": 1,
+        "reliability": 4,
+        "method": "empirical scaling-law experiments on LLM pretraining and finetuning for machine translation",
+        "sample": "",
+        "finding": "Downstream translation quality (BLEU, COMET) and cross-entropy improve monotonically with more pretraining data when pretraining and downstream distributions are well aligned. Finetuning dataset size and distribution alignment strongly shape the scaling behavior.",
+        "sub_rq_ids": [],
+        "limitations": "Not about Korean or tokenization; limited to machine translation finetuning."
+      },
+      {
+        "paper_id": "10.2196/29667",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "reference-standard development and validation with physician ratings",
+        "sample": "607 medical word pairs from 518 textbooks, 72,844 news items and 15,698 articles; 16 physicians",
+        "finding": "The authors built a Korean medical word pair set for evaluating embedding models on semantic similarity and relatedness. The abstract reports 90.8% of word pairs answered by all participants for the similarity task and 86.5% for the relatedness task.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Evaluates word embeddings in the medical domain, not tokenization; the abstract is truncated."
+      },
+      {
+        "paper_id": "10.3390/info17020128",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "framework development with intrinsic, extrinsic and external evaluation (Kazakh case study)",
+        "sample": "Kazakh corpus of CSE-generated wordforms and segmented sentences",
+        "finding": "A CSE-guided morphology-aware tokenization framework for Kazakh cut neural model training time by up to about 33%, mainly through shorter tokenized sentences. It also extends FEMSeg-CRF with vowel–consonant harmony rules and evaluates segmentation with intrinsic, extrinsic and external measures.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq4"
+        ],
+        "limitations": "Targets Kazakh, not Korean; the abstract is truncated; results come from a single experimental setting."
+      },
+      {
+        "paper_id": "10.64152/10125/67467",
+        "relevance": 0,
+        "reliability": 2,
+        "method": "error analysis with correlation and survey of learners",
+        "sample": "college learners of Chinese as a second language (size not stated)",
+        "finding": "Learners made five types of word segmentation errors, four of which correlated moderately with reading comprehension. Most learners considered segmentation skill important for reading comprehension.",
+        "sub_rq_ids": [],
+        "limitations": "Human reading study of Chinese learners, unrelated to NLP tokenization; sample size not given."
+      }
+    ]
+  },
+  "synthesis": {
+    "consensus": [
+      {
+        "statement": "Morphological pre-segmentation followed by subword learning is the strongest option on most Korean NLU and MT tasks tested, and subword units beat word- or morpheme-level units on OOV robustness; the Korean evidence is two moderate-reliability empirical studies, so the effect sizes are unknown.",
+        "evidence_ids": [
+          "10.48550/arxiv.2010.02534",
+          "10.3390/electronics10070845"
+        ],
+        "sub_rq_ids": [
+          "rq1",
+          "rq2"
+        ]
+      },
+      {
+        "statement": "Outside Korean, morphology-aware tokenization is competitive with or better than standard tokenizers on morphologically rich languages (Turkish) and generalizes better to OOV words (English-centric models); this is indirect support for Korean.",
+        "evidence_ids": [
+          "10.1145/3578707",
+          "10.48550/arxiv.2404.13292"
+        ],
+        "sub_rq_ids": [
+          "rq1",
+          "rq6"
+        ]
+      },
+      {
+        "statement": "Subword tokenization does not eliminate OOV problems for Korean and other CJK languages, and OOV hurts transfer learning; Korean-specific handling such as syllable-level modeling or syllable-pattern estimation of unknown morphemes keeps tagging accuracy high under spacing errors and unknown morphemes (97-98 points).",
+        "evidence_ids": [
+          "10.2197/ipsjjip.29.490",
+          "10.1145/3591206",
+          "10.1162/089120102317341774"
+        ],
+        "sub_rq_ids": [
+          "rq6"
+        ]
+      },
+      {
+        "statement": "The same content can need many times more tokens in some languages than in others, even with multilingual tokenizers, implying unequal API cost, latency and context capacity; the abstracts do not single out Korean.",
+        "evidence_ids": [
+          "10.48550/arxiv.2305.15425",
+          "10.48550/arxiv.2305.13707"
+        ],
+        "sub_rq_ids": [
+          "rq3",
+          "rq5"
+        ]
+      },
+      {
+        "statement": "Vocabulary extension of an English-centric LLM improves target-language proficiency with modest continued training. For Korean, the evidence is leaderboard proficiency from EEVE (about 2B training tokens, no efficiency numbers reported). The encoding-efficiency gain (20,000 added Chinese tokens) is shown only for Chinese LLaMA.",
+        "evidence_ids": [
+          "10.48550/arxiv.2402.14714",
+          "10.48550/arxiv.2304.08177"
+        ],
+        "sub_rq_ids": [
+          "rq5",
+          "rq3"
+        ]
+      }
+    ],
+    "conflicts": [
+      {
+        "claim": "Whether morpheme-based segmentation helps or hurts when used as a pre-segmenter versus as a standalone tokenizer for Korean.",
+        "side_a": {
+          "statement": "Morphological segmentation used as a pre-segmenter before BPE gave the best results on Korean-English MT and four NLU tasks, though plain BPE won on KorQuAD.",
+          "evidence_ids": [
+            "10.48550/arxiv.2010.02534"
+          ],
+          "sub_rq_ids": [
+            "rq1"
+          ]
+        },
+        "side_b": {
+          "statement": "Standalone morpheme-based tokenization lost to learned subwords: SentencePiece beat Mecab-Ko for review sentiment classification, and subword units were more OOV-robust than morpheme units in sentence-embedding sentiment analysis.",
+          "evidence_ids": [
+            "10.1080/08839514.2023.2175112",
+            "10.3390/electronics10070845"
+          ],
+          "sub_rq_ids": [
+            "rq1",
+            "rq6"
+          ]
+        },
+        "hypothesis_for_conflict": "The contrasts differ: morphemes feeding BPE keep subword coverage for rare forms, whereas standalone morpheme tokens leave OOVs and jargon in noisy review text. The tasks also differ (MT/NLU benchmarks vs. sentiment on reviews), and the sentiment studies are single-task and single-domain with unstated sample sizes."
+      }
+    ],
+    "conditional": [
+      {
+        "statement": "Replacing whitespace with a special symbol hurt Korean sentiment analysis in one study; whether this is task-dependent is untested because only sentiment was evaluated.",
+        "evidence_ids": [
+          "10.3390/electronics10070845"
+        ],
+        "sub_rq_ids": [
+          "rq2"
+        ]
+      },
+      {
+        "statement": "In Turkish, larger vocabularies helped morphological- and word-level tokenizers more than de facto tokenizers; Korean applicability is untested, so confidence for Korean is low.",
+        "evidence_ids": [
+          "10.1145/3578707"
+        ],
+        "sub_rq_ids": [
+          "rq3"
+        ]
+      },
+      {
+        "statement": "In controlled European-language experiments, multilingual tokenizers needed roughly three times larger vocabularies than English ones, and fertility and parity did not always predict downstream performance; transfer to Korean is untested.",
+        "evidence_ids": [
+          "10.48550/arxiv.2310.08754"
+        ],
+        "sub_rq_ids": [
+          "rq3",
+          "rq4"
+        ]
+      },
+      {
+        "statement": "Pronunciation-based sub-character tokenization shortens sequences and resists homophone typos while staying competitive on Chinese PLMs; whether Hangul benefits is not shown.",
+        "evidence_ids": [
+          "10.1162/tacl_a_00560"
+        ],
+        "sub_rq_ids": [
+          "rq2",
+          "rq6"
+        ]
+      }
+    ],
+    "coverage_note": "The Korean evidence is thin on rq4: no Korean study links intrinsic metrics such as fertility, boundary alignment or OOV rate to downstream scores, and the correlation evidence is Turkish (10.48550/arxiv.2502.07057), European (10.48550/arxiv.2310.08754) and English (10.48550/arxiv.2404.13292); KLUE (10.48550/arxiv.2105.09680) and the Sejong study (10.1587/transinf.2017edp7085) never connect tokenization metrics to downstream results. rq3 is similarly unanswered for Korean, since the Korean items are an ASR corpus (10.3390/app10196936), a multi-language OOV paper (10.2197/ipsjjip.29.490) and a report without efficiency numbers (10.48550/arxiv.2402.14714); vocabulary-size evidence is Turkish or European. rq1 and rq2 have the most direct Korean evidence (10.48550/arxiv.2010.02534, 10.3390/electronics10070845, 10.1080/08839514.2023.2175112), but these are moderate-reliability, mostly single-task studies with no effect sizes. rq5 rests on one Korean technical report with leaderboard evaluation plus Chinese and cross-language cost studies. rq6 has spacing and unknown-morpheme evidence from POS tagging and NER but little on noisy user-generated text. Missing are Korean ablations varying vocabulary size and monolingual vs. multilingual vocabularies with tokens-per-character and downstream scores, KLUE/KoBEST tokenizer ablations with intrinsic metrics, and Korean LLM tokenizer cost studies."
+  },
+  "gaps": {
+    "gaps": [
+      {
+        "description": "No Korean study reports intrinsic tokenizer metrics (fertility, morpheme-boundary alignment, OOV rate) next to downstream scores. The correlation evidence comes only from Turkish and European languages, where the metrics predict downstream results inconsistently. Whether any metric predicts Korean downstream performance is unknown.",
+        "evidence_ids": [
+          "10.48550/arxiv.2502.07057",
+          "10.48550/arxiv.2310.08754",
+          "10.48550/arxiv.2404.13292"
+        ],
+        "proposed_rq": "Which intrinsic tokenizer metrics (fertility, morpheme-boundary F1, OOV rate, token purity) predict KLUE and KoBEST downstream scores across Korean tokenizers?",
+        "method": "Pretrain about 12 identical small RoBERTa models that differ only in tokenizer (BPE, Unigram, morpheme+BPE, jamo-level, byte-level), fine-tune on KLUE/KoBEST with 3 seeds, and compute rank correlations and mixed-effects regressions of task score on each metric. The main outcome is the correlation between each metric and downstream score, benchmarked against the Turkish %TR result.",
+        "data": "Korean corpora such as Modu or Namuwiki/CC-100 Korean (at least 10B characters) and the public KLUE and KoBEST suites. Compute is about 12 pretraining runs at small scale."
+      },
+      {
+        "description": "Korean vocabulary design (size, monolingual vs multilingual composition) is unstudied. The vocabulary-size evidence concerns Turkish morphological tokenizers and European multilingual tokenizers, and the only Korean sub-word size analysis is in ASR. Nothing links Korean vocabulary size to tokens per character and downstream accuracy.",
+        "evidence_ids": [
+          "10.1145/3578707",
+          "10.48550/arxiv.2310.08754",
+          "10.3390/app10196936"
+        ],
+        "proposed_rq": "How do vocabulary size and monolingual vs multilingual composition affect tokens per Korean character and KLUE accuracy?",
+        "method": "Run a controlled ablation with vocabulary sizes of 16k, 32k, 64k and 128k, each as a Korean-only and a Korean+English+Chinese+Japanese tokenizer, in 8 pretraining runs at fixed compute. Report tokens per character and KLUE scores, and test a size-by-composition interaction with seeds.",
+        "data": "Balanced Korean and multilingual web corpora (e.g., CC-100 or mC4 subsets) plus KLUE. The 8 runs fit a small-model compute budget."
+      },
+      {
+        "description": "The pre-segmenter vs standalone morpheme question is confounded across studies. Morpheme+BPE won on MT and NLU while plain BPE won on KorQuAD, but standalone morpheme tokenization lost on sentiment, where each study used different tasks, domains and vocabularies. Whitespace handling was tested only on sentiment.",
+        "evidence_ids": [
+          "10.48550/arxiv.2010.02534",
+          "10.3390/electronics10070845",
+          "10.1080/08839514.2023.2175112"
+        ],
+        "proposed_rq": "With vocabulary size and training data fixed, does morpheme pre-segmentation before BPE outperform both standalone morpheme tokens and plain BPE, and does whitespace handling matter outside sentiment?",
+        "method": "Pretrain 2x3 models (whitespace marker vs none; BPE, morpheme+BPE, standalone morpheme) and fine-tune on a pre-registered suite of NLI, NER, QA, sentiment and MT. Compare pairwise with paired bootstrap, and report per-task effect sizes with a task-by-tokenizer interaction. The KLUE suite serves as the evaluation set only.",
+        "data": "One shared Korean corpus, Mecab-Ko or Kiwi for morpheme segmentation, and KLUE, KorQuAD and NSMC, plus a noisy-review test set."
+      },
+      {
+        "description": "Korean vocabulary-extension evidence is leaderboard proficiency only, with no efficiency numbers. EEVE reports no tokens-per-character or latency, and the encoding-efficiency gain is shown only for Chinese LLaMA. The roles of added-vocabulary size, initialization, parameter freezing and training-token budget are not separated, and cost disparity is documented across languages without Korean figures.",
+        "evidence_ids": [
+          "10.48550/arxiv.2402.14714",
+          "10.48550/arxiv.2304.08177",
+          "10.48550/arxiv.2305.15425"
+        ],
+        "proposed_rq": "How much does each of added-vocabulary size, embedding initialization, freezing schedule and training-token budget contribute to Korean encoding efficiency and task accuracy in an English-centric LLM?",
+        "method": "Use a one-factor-at-a-time design around a baseline (10k added tokens, subword-mean initialization, staged freezing, 2B tokens), varying vocabulary size (3 levels), initialization (1 alternative), freezing (1 alternative) and budget (2 levels) for about 8 runs. Outcomes are tokens per Korean character, inference latency and KoBEST/KMMLU accuracy against the unextended model.",
+        "data": "A 7-10B open LLM, Korean continued-pretraining corpora (about 0.5-4B tokens), and parallel Korean-English text to measure token-length ratios."
+      },
+      {
+        "description": "Robustness of Korean tokenizers to noisy text and Hangul sub-character units has not been compared. The spacing- and unknown-morpheme-robust taggers are intrinsic tagging studies, not tokenizer comparisons, and the review-text evidence compares only Mecab-Ko with SentencePiece. Pronunciation-based sub-character tokenization is shown only for Chinese.",
+        "evidence_ids": [
+          "10.1145/3591206",
+          "10.1162/tacl_a_00560",
+          "10.1080/08839514.2023.2175112"
+        ],
+        "proposed_rq": "Do jamo-level or syllable-pattern-aware tokenizers hold up better than BPE and morpheme+BPE under spacing errors, typos and slang in Korean user-generated text?",
+        "method": "Fine-tune matched PLMs with BPE, morpheme+BPE, syllable-level and jamo-level tokenizers on sentiment and NER, and evaluate on clean text and on test sets with synthetic spacing and typo noise at 10/20/30% rates. Compare accuracy degradation curves between tokenizers.",
+        "data": "NSMC, KLUE-NER and a newly collected annotated set of about 3,000 community or review posts, with noise injected programmatically."
+      }
+    ]
+  },
+  "limitations": [
+    "Only abstracts and metadata were read, not full texts, so effect sizes, sample sizes, hyperparameters and experimental controls could not be verified; claims rest on what authors chose to report in abstracts.",
+    "The quality gate rated rq4 (intrinsic metrics vs. downstream scores) and rq3 (vocabulary size/composition) as effectively unanswered for Korean after two replans; the correlation and vocabulary-size evidence comes from Turkish, European-language and English-centric studies, so transfer to Korean is untested.",
+    "The direct Korean evidence for rq1/rq2 is a handful of moderate-reliability, mostly single-task studies (MT/NLU benchmarks, review sentiment) using different tasks, domains and vocabularies, so the pre-segmenter vs. standalone morpheme conflict is confounded and cannot be resolved from this evidence.",
+    "Robustness evidence (rq6) comes mostly from POS tagging and NER with different metrics, including a 2002 pre-neural tagger, rather than tokenizer comparisons; noisy user-generated text (typos, slang) is barely covered, and the vocabulary-extension claim (rq5) is limited to one Korean leaderboard report with no cost or generation-quality data.",
+    "Search was limited to OpenAlex and arXiv within a fixed time window, with 93 of 397 candidates evaluated; absence of Korean ablations, KLUE/KoBEST tokenizer studies or Korean LLM cost studies in this set does not show that they do not exist elsewhere, e.g. in Korean-language venues or non-indexed technical reports.",
+    "[auto] critic: major issue(s) persist after re-search, recorded as limitation: rq4: rq4 has no Korean paper linking intrinsic tokenization metrics to downstream scores: 2502.07057 is Turkish, 2310.08754 is European, 2404.13292 is English-centric, and KLUE (2105.09680) and the Sejong study (1587/transinf.2017edp7085) never connect tokenization metrics to downstream results, so the sub-question passes the count check but is effectively unanswered. | rq3: rq3 is answered for Korean only by tangential papers: an ASR corpus (3390/app10196936), a multi-language OOV study (2197/ipsjjip.29.490) and an EEVE report without efficiency numbers (2402.14714), while the vocabulary-size evidence is Turkish (1145/3578707) or European (2310.08754), so the effect of Korean vocabulary size and composition on sequence length and performance is not actually answered."
+  ],
+  "executive_summary": "397편의 후보 중 93편을 평가했으며, 한국어에 직접 해당하는 근거는 중간 신뢰도의 실증 연구 소수(주로 단일 과제)로 한정되고 효과 크기는 알 수 없다. 합의된 점은 형태소 사전 분절 후 서브워드 학습(morpheme+BPE)이 한국어 NLU·MT 과제 대부분에서 가장 강하고, 서브워드 단위가 단어·형태소 단위보다 OOV에 강건하다는 것이다. 터키어 등 형태소가 풍부한 언어의 연구도 이를 간접적으로 뒷받침한다. 다만 서브워드로도 CJK의 OOV 문제는 사라지지 않으며, 음절 단위 모델링이나 음절 패턴 기반 미등록어 추정이 띄어쓰기 오류와 미등록 형태소에 강건하다는 태깅 연구가 있다. 상충하는 지점은 형태소 분절이 사전 분절기로 쓰일 때와 독립 토크나이저로 쓰일 때의 결과가 다르다는 것이며, 과제·도메인·어휘 조건이 제각각이라 교란되어 있다(KorQuAD에서는 plain BPE가 우세, 리뷰 감성 분석에서는 독립 형태소 토큰이 열세). 핵심 Gap은 첫째, 한국어에서 fertility·형태소 경계 정렬·OOV rate 같은 내재적 지표를 KLUE·KoBEST 등 하위 과제 성능과 연결한 연구를 찾지 못했다는 점이다. 둘째, 어휘 크기와 단일언어/다국어 구성의 영향, 그리고 어휘 확장(EEVE)의 효율 효과가 한국어에서는 검증되지 않았다(리더보드 성능만 보고됨). 노이즈 텍스트 강건성과 자모 단위 토크나이저 비교도 비어 있다."
+}

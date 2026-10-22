@@ -1,0 +1,53 @@
+{
+  "round": 3,
+  "passed": true,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [],
+  "weak_claims": [],
+  "actions": [],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq4",
+      "problem": "rq4 has no Korean paper linking intrinsic tokenization metrics to downstream scores: 2502.07057 is Turkish, 2310.08754 is European, 2404.13292 is English-centric, and KLUE (2105.09680) and the Sejong study (1587/transinf.2017edp7085) never connect tokenization metrics to downstream results, so the sub-question passes the count check but is effectively unanswered.",
+      "action": "search rq4: Korean tokenizer evaluation studies reporting fertility, tokens per character, morpheme-boundary alignment or OOV rate alongside KLUE, KoBEST or other downstream scores; also Korean LLM tokenizer benchmarks and multilingual tokenizer-evaluation papers with Korean results"
+    },
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq3",
+      "problem": "rq3 is answered for Korean only by tangential papers: an ASR corpus (3390/app10196936), a multi-language OOV study (2197/ipsjjip.29.490) and an EEVE report without efficiency numbers (2402.14714), while the vocabulary-size evidence is Turkish (1145/3578707) or European (2310.08754), so the effect of Korean vocabulary size and composition on sequence length and performance is not actually answered.",
+      "action": "search rq3: Korean-specific studies varying vocabulary size or monolingual vs. multilingual vocabulary (e.g., KoBERT, KLUE, KoGPT or Korean LLM tokenizer reports) with tokens-per-character or sequence-length and downstream results"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq6",
+      "problem": "The third consensus claim merges three different tagging studies (2197/ipsjjip.29.490 on OOV in transfer learning, 1145/3591206 on spacing-robust POS tagging, 1162/089120102317341774 on a 2002 unknown-morpheme tagger) and attributes '97-98 points' to both spacing errors and unknown morphemes, although each paper tested only one and they are tagging results rather than tokenizer comparisons.",
+      "action": "synthesize: split the claim by robustness type (spacing vs. unknown morphemes vs. subword OOV), state that the evidence comes from POS tagging with different metrics (accuracy vs. F1), flag the 2002 pre-neural study as dated, and drop the pooled '97-98' figure"
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq6",
+      "problem": "rq6 asks about noisy user-generated text, but the only direct Korean evidence is review sentiment (1080/08839514.2023.2175112) and OOV robustness in 3390/electronics10070845; spacing evidence comes from POS tagging, so noise handling by tokenizers is thinly covered.",
+      "action": "search rq6: Korean noisy-text or user-generated-content studies (typos, slang, spacing errors) that compare tokenizers on downstream tasks, e.g., Korean toxicity, chat or social-media benchmarks"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq3",
+      "problem": "The vocabulary-design gap states that Korean vocabulary design is 'unstudied', which overclaims since absence from this 23-paper table does not show absence from the literature, and the cited evidence ids (1145/3578707, 2310.08754, 3390/app10196936) are non-Korean or ASR papers.",
+      "action": "gap: rephrase as 'no Korean study of vocabulary size or composition was found in the retrieved evidence' and note that the search was limited"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq5",
+      "problem": "The rq5 consensus on vocabulary extension rests on a single Korean technical report (2402.14714, leaderboard only) and a Chinese study (2304.08177), and no cited paper evaluates generation quality or Korean inference cost, which the sub-question explicitly asks about.",
+      "action": "synthesize: state explicitly that effects on Korean cost and generation quality are not evidenced in the retrieved papers and that the claim is limited to leaderboard proficiency"
+    }
+  ]
+}

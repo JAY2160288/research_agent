@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq5",
+      "reason": "Only 1 relevant paper among 69 candidates; earlier queries were too generic, so more precise queries on Korean-specific LLM tokenizer extension, continual pretraining, and cost are needed.",
+      "queries": [
+        "Korean vocabulary expansion continual pretraining LLaMA",
+        "embedding initialization new tokens Korean LLM adaptation",
+        "Korean-centric LLM tokenizer extension token efficiency"
+      ]
+    }
+  ],
+  "rationale": "Only rq5 was flagged, with just 1 relevant paper out of 69 candidates. I replaced the generic queries with precise ones targeting Korean vocabulary expansion in existing LLMs, new-token embedding initialization, and tokenizer efficiency effects on cost and generation."
+}

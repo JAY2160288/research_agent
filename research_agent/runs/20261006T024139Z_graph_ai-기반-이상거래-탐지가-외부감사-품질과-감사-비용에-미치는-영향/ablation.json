@@ -1,0 +1,9 @@
+{
+  "topic_id": "T3",
+  "lang": "ko",
+  "condition": "D",
+  "model": "claude-sonnet-5-5",
+  "max_replans": 2,
+  "plan_from": null,
+  "topic": "AI 기반 이상거래 탐지가 외부감사 품질과 감사 비용에 미치는 영향"
+}

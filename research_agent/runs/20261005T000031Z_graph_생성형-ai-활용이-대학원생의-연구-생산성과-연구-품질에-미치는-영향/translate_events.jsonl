@@ -1,0 +1,4 @@
+{"t": 0.0, "kind": "run_start", "topic": "20261005T000031Z_graph_생성형-ai-활용이-대학원생의-연구-생산성과-연구-품질에-미치는-영향", "mode": "translate"}
+{"t": 68.94, "kind": "llm_call", "role": "translate", "model": "claude-sonnet-5-5", "input_tokens": 8362, "cache_read": 0, "cache_write": 0, "output_tokens": 8821, "cost_usd": 0.104934, "attempt": 1, "ok": true, "error": null}
+{"t": 68.941, "kind": "translate_check", "attempt": 1, "issues": []}
+{"t": 68.955, "kind": "translate_end", "items": 62, "fallback": 0, "cost_usd": 0.1049, "bytes": 119615}

@@ -1,0 +1,542 @@
+{
+  "topic_frame": {
+    "original_topic": "생성형 AI 활용이 대학원생의 연구 생산성과 연구 품질에 미치는 영향",
+    "topic_en": "Effects of generative AI use on graduate students' research productivity and research quality",
+    "domain": "education / higher education research",
+    "concepts": [
+      "generative AI",
+      "ChatGPT",
+      "graduate students",
+      "research productivity",
+      "research quality",
+      "academic writing",
+      "literature review",
+      "research integrity",
+      "cognitive offloading"
+    ],
+    "variables": {
+      "independent": [
+        "generative AI use (ChatGPT, LLM tools)",
+        "AI training/instruction"
+      ],
+      "dependent": [
+        "research productivity (time, output)",
+        "research/writing quality",
+        "critical thinking and scholarly independence",
+        "research integrity"
+      ],
+      "population": "Master's and doctoral students",
+      "context": "Higher education, 2023 onward"
+    },
+    "synonyms_en": [
+      "GenAI",
+      "large language models",
+      "AI-assisted writing",
+      "postgraduate students",
+      "doctoral researchers",
+      "scholarly output",
+      "thesis writing"
+    ],
+    "research_question": "How does generative AI use affect graduate students' research productivity and research quality, and under what conditions do benefits or harms arise?"
+  },
+  "plan": {
+    "sub_rqs": [
+      {
+        "id": "rq1",
+        "question": "What is the effect of GenAI on graduate students' writing and research productivity?",
+        "rationale": "Core productivity outcome.",
+        "queries": [
+          "generative AI graduate students research productivity",
+          "generative AI graduate student writing productivity quality"
+        ],
+        "source_pref": "openalex"
+      },
+      {
+        "id": "rq2",
+        "question": "How does GenAI affect the quality of research outputs (writing, ideas, evaluation)?",
+        "rationale": "Core quality outcome.",
+        "queries": [
+          "ChatGPT academic writing quality researchers experiment"
+        ],
+        "source_pref": "openalex"
+      },
+      {
+        "id": "rq3",
+        "question": "How accurate and reliable are LLMs for literature review tasks?",
+        "rationale": "Reliability limits quality gains.",
+        "queries": [
+          "LLM literature review automation hallucinated references"
+        ],
+        "source_pref": "both"
+      },
+      {
+        "id": "rq4",
+        "question": "What are the ethical, integrity, and supervision issues of GenAI in graduate research?",
+        "rationale": "Moderators of responsible use.",
+        "queries": [
+          "doctoral students generative AI ethics integrity supervision"
+        ],
+        "source_pref": "openalex"
+      },
+      {
+        "id": "rq5",
+        "question": "Does GenAI use lead to cognitive offloading and weaker scholarly independence?",
+        "rationale": "Long-term capability costs.",
+        "queries": [
+          "generative AI cognitive offloading critical thinking overreliance"
+        ],
+        "source_pref": "openalex"
+      }
+    ],
+    "search_strategy": "Six searches (five OpenAlex, one arXiv) restricted mainly to 2023 onward, covering graduate-student GenAI use, writing quality experiments, LLM literature review accuracy, ethics/integrity/supervision, and cognitive offloading. The arXiv productivity query returned mostly irrelevant bibliometrics papers and was not used. Evidence is based on abstracts only; many 2026 items are low-citation or non-peer-reviewed (Zenodo, SSRN, OSF)."
+  },
+  "evidence": {
+    "items": [
+      {
+        "paper_id": "10.1007/s40593-025-00528-z",
+        "relevance": 5,
+        "reliability": 4,
+        "method": "Mixed-methods within-subject comparison with and without genAI plus instruction",
+        "sample": "Graduate students, professional writing assignments",
+        "finding": "Examines the effect of genAI and targeted instruction on graduate students' writing productivity and quality in graded professional writing tasks; the abstract notes efficacy varies among users and use cases.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq2"
+        ],
+        "limitations": "Professional writing tasks, not thesis research; abstract excerpt gives no effect sizes."
+      },
+      {
+        "paper_id": "10.1007/s40593-024-00454-6",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "Qualitative semi-structured interviews, thematic analysis",
+        "sample": "n=10 (4 doctoral, 6 master's), Western Canada",
+        "finding": "Graduate students using a GenAI research application for one month raised themes of academic integrity and AI collaboration and its effect on their sense of scholarly ethics.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Small sample, single institution, perceptions only."
+      },
+      {
+        "paper_id": "10.34089/jknr.2025.9.3.5",
+        "relevance": 4,
+        "reliability": 2,
+        "method": "Phenomenological interviews (Colaizzi)",
+        "sample": "n=10 nursing graduate students (Korea)",
+        "finding": "Explores nursing graduate students' experiences using generative AI such as ChatGPT during thesis work.",
+        "sub_rq_ids": [
+          "rq1"
+        ],
+        "limitations": "Small sample, one discipline; abstract truncated."
+      },
+      {
+        "paper_id": "10.5281/zenodo.18861154",
+        "relevance": 3,
+        "reliability": 1,
+        "method": "Qualitative study (Zenodo repository)",
+        "sample": "Philippine graduate students",
+        "finding": "Investigates how Philippine graduate students interpret and critically regulate GenAI use in academic practice, including perceived benefits, limitations and ethical concerns.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq5"
+        ],
+        "limitations": "Repository record, not clearly peer reviewed; abstract truncated."
+      },
+      {
+        "paper_id": "10.5281/zenodo.21773951",
+        "relevance": 3,
+        "reliability": 1,
+        "method": "Phenomenological interviews",
+        "sample": "n=7 graduate students",
+        "finding": "Reports that GenAI in research writing shapes graduate students' academic experiences, offering both advantages and challenges.",
+        "sub_rq_ids": [
+          "rq1"
+        ],
+        "limitations": "Tiny sample; non-peer-reviewed repository."
+      },
+      {
+        "paper_id": "10.63313/esw.2007",
+        "relevance": 3,
+        "reliability": 1,
+        "method": "Conceptual application model with practice examples",
+        "sample": "",
+        "finding": "Proposes a model for applying GenAI across the graduate research workflow (literature, experimental design, writing) to build research capability.",
+        "sub_rq_ids": [
+          "rq1"
+        ],
+        "limitations": "Proposed model; abstract shows no rigorous outcome measurement."
+      },
+      {
+        "paper_id": "10.47772/ijriss.2026.100500498",
+        "relevance": 3,
+        "reliability": 2,
+        "method": "Survey with exploratory factor analysis",
+        "sample": "Graduate students and faculty at selected state universities",
+        "finding": "Surveys graduate students and instructors on opportunities and challenges of GenAI in research writing, identifying underlying dimensions of use.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq4"
+        ],
+        "limitations": "Descriptive, perceptions only; abstract lacks outcome data."
+      },
+      {
+        "paper_id": "10.1016/j.frl.2023.103662",
+        "relevance": 5,
+        "reliability": 3,
+        "method": "Expert reviewer ratings of ChatGPT-generated research output",
+        "sample": "",
+        "finding": "Finance reviewers rated ChatGPT as able to assist research, strong for idea generation and data identification but weaker for literature synthesis and testing frameworks. Output quality depended on private data and researcher domain expertise.",
+        "sub_rq_ids": [
+          "rq2"
+        ],
+        "limitations": "Single field; ratings of generated output rather than user outcomes."
+      },
+      {
+        "paper_id": "10.1080/07853890.2024.2426760",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "Graded comparison of 130 student systematic reviews plus questionnaire",
+        "sample": "130 third-year medical students",
+        "finding": "Examined ChatGPT's impact on academic writing efficiency and quality among medical undergraduates using blinded reviewers' EASE grading.",
+        "sub_rq_ids": [
+          "rq2"
+        ],
+        "limitations": "Undergraduates, not graduate students; abstract excerpt gives no results."
+      },
+      {
+        "paper_id": "10.1186/s40561-024-00295-9",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "Mixed-methods intervention study",
+        "sample": "Tertiary ESL students",
+        "finding": "Studies ChatGPT as a formative feedback tool for undergraduate ESL writing skills.",
+        "sub_rq_ids": [
+          "rq2"
+        ],
+        "limitations": "Undergraduate ESL context; limited transfer to graduate research."
+      },
+      {
+        "paper_id": "10.46328/ijte.5150",
+        "relevance": 2,
+        "reliability": 2,
+        "method": "Within-subject experiment, two 25-minute essays",
+        "sample": "21 UK undergraduates",
+        "finding": "Tests whether ChatGPT helped students write better essays with versus without it.",
+        "sub_rq_ids": [
+          "rq2"
+        ],
+        "limitations": "Small sample, short timed task, undergraduates."
+      },
+      {
+        "paper_id": "10.1016/j.chbah.2024.100095",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "Snippet-based survey of peer reviewers",
+        "sample": "17 HCI conference reviewers",
+        "finding": "Reviewers found AI-augmented writing improved readability and informativeness but lacked research details and reflective insights, and could not reliably distinguish AI-augmented from human writing.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq4"
+        ],
+        "limitations": "Very small sample, one field."
+      },
+      {
+        "paper_id": "10.2478/jdis-2024-0013",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "Case study comparing ChatGPT-4 with author's own REF-based quality judgements",
+        "sample": "51 articles by one author",
+        "finding": "ChatGPT-4 produced plausible summaries and quality rationales for research evaluation, but the abstract frames accuracy as a question to be tested.",
+        "sub_rq_ids": [
+          "rq2"
+        ],
+        "limitations": "Single-author case study; evaluates articles, not students."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2412.13612",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "Automatic evaluation framework for LLM literature review tasks",
+        "sample": "",
+        "finding": "Introduces multidimensional metrics, including hallucination rates, to evaluate LLMs on reference generation, summarization and literature review composition.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Benchmark; abstract excerpt lacks results; preprint."
+      },
+      {
+        "paper_id": "10.48550/arxiv.2305.18248",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "Computational analysis of hallucinated references",
+        "sample": "",
+        "finding": "Studies language models' hallucination of book and article references as a model case of hallucination.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Model-level analysis, not user study; preprint."
+      },
+      {
+        "paper_id": "10.1093/nsr/nwaf169",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "Method development with statistical validation",
+        "sample": "",
+        "finding": "An LLM-based automated review-generation method produced reviews reported to match or exceed manual quality, and cut cognitive load.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq1"
+        ],
+        "limitations": "Developer-reported; tested mainly on a chemistry case."
+      },
+      {
+        "paper_id": "10.1101/2024.10.01.24314702",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "Diagnostic test accuracy study",
+        "sample": "500 abstracts per review",
+        "finding": "Evaluated LLMs for abstract screening in systematic and scoping reviews against two human readers' reference standard.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Preprint; abstract lacks results."
+      },
+      {
+        "paper_id": "10.5334/bc.560",
+        "relevance": 4,
+        "reliability": 2,
+        "method": "Qualitative exploration of supervisor and doctoral perspectives",
+        "sample": "",
+        "finding": "GenAI may disrupt relationships between doctoral researchers and supervisors and affects doctoral research and publication practices.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Single discipline (construction management)."
+      },
+      {
+        "paper_id": "10.38140/obp4-2026-02",
+        "relevance": 3,
+        "reliability": 2,
+        "method": "Collaborative autoethnography",
+        "sample": "4 supervisors (UK, South Africa)",
+        "finding": "Four supervisors describe GenAI as a precipitant of existing challenges in PhD supervision.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Autoethnography, opinion-based."
+      },
+      {
+        "paper_id": "10.1186/s12910-026-01415-5",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "Cross-sectional survey",
+        "sample": "5,731 researchers",
+        "finding": "Compares GenAI adoption and ethical perceptions of medical and non-medical researchers in Chinese universities, including postdocs.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Self-report; abstract excerpt lacks results."
+      },
+      {
+        "paper_id": "10.3390/aieduc1010002",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "Survey",
+        "sample": "401 US university students",
+        "finding": "Students' ethical beliefs, not institutional policy awareness, were the strongest predictors of perceived misconduct and actual AI use in writing.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "General students, not graduate-specific; self-report."
+      },
+      {
+        "paper_id": "10.46787/ijaipil.v2026i1.6971",
+        "relevance": 4,
+        "reliability": 2,
+        "method": "Critical review of 47 sources",
+        "sample": "47 sources",
+        "finding": "Argues that tools that enhance doctoral research productivity may weaken intellectual independence when used without guidance.",
+        "sub_rq_ids": [
+          "rq5",
+          "rq1"
+        ],
+        "limitations": "Narrative critical review; low-citation journal."
+      },
+      {
+        "paper_id": "10.3389/feduc.2026.1878665",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "Systematic review (PRISMA 2020)",
+        "sample": "",
+        "finding": "Synthesizes evidence on the tension between cognitive offloading and critical autonomy in higher education GenAI use.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "General higher education, not graduate-specific; abstract excerpt lacks conclusions."
+      },
+      {
+        "paper_id": "10.35631/ijepc.1162072",
+        "relevance": 3,
+        "reliability": 2,
+        "method": "Narrative review of 56 studies",
+        "sample": "56 studies (2022-2025)",
+        "finding": "GenAI consistently enhances task efficiency by accelerating drafting and feedback, but efficiency gains do not uniformly translate into deeper learning.",
+        "sub_rq_ids": [
+          "rq5",
+          "rq1"
+        ],
+        "limitations": "Narrative review; general education."
+      },
+      {
+        "paper_id": "10.3389/fpsyg.2026.1878629",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "Empirical study distinguishing dependent versus autonomous offloading",
+        "sample": "",
+        "finding": "Distinguishes whether AI substitutes for or scaffolds user thinking, arguing that cognitive offloading to GenAI is not unidimensional.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "Abstract excerpt lacks results and sample; general students."
+      }
+    ]
+  },
+  "synthesis": {
+    "consensus": [
+      {
+        "statement": "Studies across graduate and general higher-education samples portray GenAI as speeding up drafting and related tasks, but efficiency gains are not matched by evidence of deeper learning or independent scholarly thinking.",
+        "evidence_ids": [
+          "10.35631/ijepc.1162072",
+          "10.46787/ijaipil.v2026i1.6971",
+          "10.1007/s40593-025-00528-z"
+        ],
+        "sub_rq_ids": [
+          "rq1",
+          "rq5"
+        ]
+      },
+      {
+        "statement": "LLM output quality for research tasks is uneven: GenAI helps with ideation and data identification but is weaker on literature synthesis and reference accuracy, so hallucination is a recognized risk.",
+        "evidence_ids": [
+          "10.1016/j.frl.2023.103662",
+          "10.48550/arxiv.2412.13612",
+          "10.48550/arxiv.2305.18248"
+        ],
+        "sub_rq_ids": [
+          "rq2",
+          "rq3"
+        ]
+      },
+      {
+        "statement": "Graduate-student GenAI use raises integrity and supervision concerns, though the evidence is mostly small qualitative studies.",
+        "evidence_ids": [
+          "10.1007/s40593-024-00454-6",
+          "10.5334/bc.560",
+          "10.38140/obp4-2026-02"
+        ],
+        "sub_rq_ids": [
+          "rq4"
+        ]
+      }
+    ],
+    "conflicts": [
+      {
+        "claim": "Does GenAI-generated or GenAI-augmented text match human research quality?",
+        "side_a": {
+          "statement": "An LLM-based review-generation method is reported to match or exceed manual review quality.",
+          "evidence_ids": [
+            "10.1093/nsr/nwaf169"
+          ],
+          "sub_rq_ids": []
+        },
+        "side_b": {
+          "statement": "Reviewers found AI-augmented writing lacked research details and reflective insights, and benchmarks emphasize hallucination risk in literature tasks.",
+          "evidence_ids": [
+            "10.1016/j.chbah.2024.100095",
+            "10.48550/arxiv.2412.13612"
+          ],
+          "sub_rq_ids": []
+        },
+        "hypothesis_for_conflict": "Differences in task (automated pipeline with retrieval versus unaided student writing), evaluation criteria (developer-validated metrics versus expert peer review), and domain expertise of the user."
+      }
+    ],
+    "conditional": [
+      {
+        "statement": "The quality benefit of GenAI appears to depend on user domain expertise, private data input, and instruction, rather than on tool access alone.",
+        "evidence_ids": [
+          "10.1016/j.frl.2023.103662",
+          "10.1007/s40593-025-00528-z"
+        ],
+        "sub_rq_ids": [
+          "rq2"
+        ]
+      },
+      {
+        "statement": "Whether offloading harms thinking may depend on whether AI substitutes for or scaffolds the user's own cognition.",
+        "evidence_ids": [
+          "10.3389/fpsyg.2026.1878629",
+          "10.3389/feduc.2026.1878665"
+        ],
+        "sub_rq_ids": [
+          "rq5"
+        ]
+      }
+    ],
+    "coverage_note": "Evidence on graduate-specific productivity and quality is thin: one mixed-methods study (professional writing tasks) and several small qualitative or low-quality sources. Quality of research outputs is addressed mainly by indirect evidence from LLM benchmarks and expert ratings, mostly in other populations. Integrity and cognitive-offloading topics are covered mostly by general student samples. No causal study of thesis or publication output was found."
+  },
+  "gaps": {
+    "gaps": [
+      {
+        "description": "No rigorous causal studies measure GenAI effects on real graduate research outputs (thesis progress, publications, time-to-degree); existing work is small qualitative or task-based.",
+        "evidence_ids": [
+          "10.1007/s40593-025-00528-z",
+          "10.34089/jknr.2025.9.3.5",
+          "10.5281/zenodo.21773951"
+        ],
+        "proposed_rq": "Does structured GenAI training change graduate students' thesis progress and manuscript quality over one to two semesters?",
+        "method": "Randomized or staggered-rollout trial with blinded expert rating of manuscripts and time logs",
+        "data": "Master's/doctoral cohorts across disciplines; manuscript ratings, time logs, supervisor assessments"
+      },
+      {
+        "description": "Long-term effects on scholarly independence and critical thinking in graduate students are argued conceptually but not measured longitudinally.",
+        "evidence_ids": [
+          "10.46787/ijaipil.v2026i1.6971",
+          "10.3389/fpsyg.2026.1878629"
+        ],
+        "proposed_rq": "Do dependent versus autonomous GenAI use patterns predict later independent research competence among doctoral students?",
+        "method": "Longitudinal panel survey with performance-based research-skill tasks",
+        "data": "Doctoral students tracked over 1-2 years"
+      },
+      {
+        "description": "Reliability of LLM literature-review support is benchmarked on models, but not in the hands of graduate students with differing expertise.",
+        "evidence_ids": [
+          "10.48550/arxiv.2412.13612",
+          "10.1016/j.frl.2023.103662"
+        ],
+        "proposed_rq": "How do graduate students' domain expertise and verification practices moderate errors and quality in GenAI-assisted literature reviews?",
+        "method": "Experimental task comparison with error auditing of citations and synthesis",
+        "data": "Graduate students of varying expertise; audited reviews"
+      },
+      {
+        "description": "Supervision and institutional policy effects on GenAI use are explored only qualitatively in few disciplines.",
+        "evidence_ids": [
+          "10.5334/bc.560",
+          "10.38140/obp4-2026-02",
+          "10.3390/aieduc1010002"
+        ],
+        "proposed_rq": "How do supervisor guidance and institutional policies moderate GenAI use and research integrity outcomes among graduate students, including in Korea?",
+        "method": "Multilevel survey plus interviews",
+        "data": "Graduate students and supervisors across institutions"
+      }
+    ]
+  },
+  "limitations": [
+    "Evaluation is based on abstracts only; several abstracts were truncated, so effect sizes were not available.",
+    "Search was limited to six queries; the arXiv query returned mostly irrelevant results.",
+    "Many 2026 items are low-citation or non-peer-reviewed repository records (Zenodo, SSRN, OSF); reliability scores reflect this.",
+    "Few studies are graduate-specific; much evidence comes from undergraduates, general students, or model benchmarks, limiting transfer.",
+    "Korean-language literature was not searched directly; only one Korean nursing study appeared.",
+    "Productivity was rarely measured objectively; most evidence is perceptual."
+  ],
+  "executive_summary": "생성형 AI가 대학원생의 연구 생산성과 품질에 미치는 영향에 대한 직접적이고 엄밀한 증거는 아직 매우 적습니다. 대학원생 대상 혼합방법 연구(전문 글쓰기 과제)가 생성형 AI와 교육의 효과를 비교했으며, 효과는 사용자와 사용 맥락에 따라 달라진다고 보고합니다. 그 밖의 대학원생 연구는 대부분 소규모 질적 연구로, 이점과 함께 윤리·무결성 우려를 제기합니다. 연구 품질 측면에서는 아이디어 생성과 데이터 식별에는 유용하나 문헌 종합과 참고문헌 정확성(환각)은 약하다는 결과가 있고, 사용자의 전문성과 지도·교육이 품질을 좌우하는 조건으로 나타납니다. 효율성 향상이 더 깊은 학습이나 독립적 학문 사고로 이어진다는 증거는 부족하며, 인지적 오프로딩과 AI 의존이 박사과정생의 독립성을 약화시킬 수 있다는 우려가 문헌에서 제기됩니다. 지도교수와의 관계 변화도 논의되지만 대부분 정성적·개념적 논의입니다. 따라서 실제 논문 진행, 출판 성과, 원고 품질을 객관적으로 측정하는 무작위·종단 연구가 필요합니다. 한계로는 초록 기반 평가, 비동료심사 자료 포함, 학부생 중심 증거, 국내 문헌 미검색이 있습니다.\""
+}

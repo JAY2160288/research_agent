@@ -1,0 +1,228 @@
+{
+  "model": "claude-opus-5-5",
+  "claims_total": 9,
+  "pairs_total": 23,
+  "pairs_judged": 23,
+  "pairs_supported": 19,
+  "pairs_partial": 4,
+  "pairs_unsupported": 0,
+  "pairs_unverified_quote": 0,
+  "pairs_no_abstract": 0,
+  "citation_support_rate": 0.8261,
+  "citation_support_rate_lenient": 1.0,
+  "claim_support_rate": 1.0,
+  "claims": [
+    {
+      "id": "c1",
+      "statement": "Greater AI use by audit firms is associated with a lower likelihood of client restatements in two archival studies (about 5.0% lower per SD of AI investment in one). This is only an indirect quality proxy, since fewer restatements could reflect fewer errors or weaker detection, and the Nigerian perception survey adds only self-reported quality.",
+      "supported": true
+    },
+    {
+      "id": "c2",
+      "statement": "Evidence on efficiency gains from AI or audit technology is perception-based or comes from internal audit, with self-reported efficiency gains and fewer audit days. No study measures external-audit hours or effort, so efficiency gains are unmeasured in external audit.",
+      "supported": true
+    },
+    {
+      "id": "c3",
+      "statement": "The ML fraud-detection literature is dominated by firm-level financial-statement and other non-audit fraud applications, with supervised methods more common than unsupervised ones. The reviews give no audit-specific, transaction-level accuracy benchmark, so no cross-paper consensus on journal-entry accuracy exists.",
+      "supported": true
+    },
+    {
+      "id": "c4",
+      "statement": "Conceptual and qualitative work, largely about audit data analytics generally and not AI anomaly detection specifically, raises concerns that analytics could weaken professional skepticism and erode junior auditors' sensemaking.",
+      "supported": true
+    },
+    {
+      "id": "c5",
+      "statement": "Reviews, interviews and tool descriptions identify ethical concerns, difficulty hiring skilled staff, and the difficulty of quantifying benefits as barriers and risks. Technology readiness and perceived usefulness drive adoption in one small survey. This evidence is mostly descriptive and low to moderate reliability.",
+      "supported": true
+    },
+    {
+      "id": "c6",
+      "statement": "In one Chinese archival study, audit report lag falls only when audit firms and clients use AI together; separate use increases lag. This is a within-study moderation by joint versus separate use, not a conflict, and report lag is not audit hours.",
+      "supported": true
+    },
+    {
+      "id": "c7",
+      "statement": "Experienced reviewers rate data-and-analytics procedures as lower quality because of an effort heuristic, even at equal assurance, and a theory-based intervention reduces this bias. This is reviewer perception, not evidence of eroded auditor judgment, and it concerns D&A generally.",
+      "supported": true
+    },
+    {
+      "id": "c8",
+      "statement": "The practical value of fraud-prediction models depends on whose costs are counted. At false-to-true-positive ratios above 100:1, all seven tested models were too costly for auditors, while some gave net benefits to investors or regulators. This tests traditional models, not modern AI.",
+      "supported": true
+    },
+    {
+      "id": "c9",
+      "statement": "Model rankings are dataset-specific single-study results at firm level: logistic regression and SVM did well against ANN, bagging and stacking in a 2011 study, and bagging beat boosting among ensembles in Chinese A-share data. Neither addresses transaction-level or journal-entry detection.",
+      "supported": true
+    }
+  ],
+  "pairs": [
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1007/s11142-022-09697-x",
+      "verdict": "supported",
+      "quote": "Specifically, a one-standard-deviation change in recent AI investments is associated with a 5.0% reduction in the likelihood of an audit restatement, a 0.9% drop in audit fees, and a reduction in the number of accounting employees that reaches 3.6% after three years and 7.1% after four years.",
+      "reason": "AI 투자 1표준편차당 재작성 가능성 5.0% 감소를 직접 보고한다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1108/maj-03-2023-3846",
+      "verdict": "supported",
+      "quote": "Next, the authors observe a negative link between AI use and the likelihood of a restatement.",
+      "reason": "중국 아카이브 자료에서 AI 사용과 재작성 가능성 간 음의 관계를 보고한다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.22624/aims/humanities/v11n1p4",
+      "verdict": "supported",
+      "quote": "The study employed a survey research design.",
+      "reason": "설문 기반으로 AI와 감사품질 간 양의 관계를 보고하므로 자기보고식 품질 증거라는 서술과 일치한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.1108/maj-03-2023-3846",
+      "verdict": "partial",
+      "quote": "It uses audit report lag as a proxy for audit efficiency and the likelihood of annual report restatement as a proxy for audit quality.",
+      "reason": "외부감사 효율성을 감사보고 지연으로 측정할 뿐 시간·노력을 측정하지 않는다는 점은 맞지만, 인식 기반이나 내부감사 증거는 아니어서 주장 전체와는 부분적으로만 부합한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.1111/1911-3846.12847",
+      "verdict": "supported",
+      "quote": "Specifically, an increase in the use of TBATs is associated with completing more audits, finding more risk factors, providing more recommendations, and decreasing audit days.",
+      "reason": "내부감사인 대상 설문에서 감사일수 감소를 보고한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.15611/pn.2022.4.06",
+      "verdict": "supported",
+      "quote": "The research outcomes indicate that, in the opinion of the respondents, AI adoption increases audit efficiency, and enhances client communication and service.",
+      "reason": "응답자 인식에 기반한 효율성 향상을 보고하여 인식 기반 증거라는 주장과 일치한다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.1057/s41599-024-03606-0",
+      "verdict": "partial",
+      "quote": "Notably, credit card fraud detection models are the most widely used for detecting credit card loan fraud.",
+      "reason": "비감사 부정(신용카드) 응용이 많음을 시사하지만 지도/비지도 비교나 벤치마크 부재는 언급하지 않는다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.1109/access.2021.3096799",
+      "verdict": "supported",
+      "quote": "Since supervised algorithms were employed more than unsupervised approaches like clustering, the future research should focus on unsupervised, semi-supervised, as well as bio-inspired and evolutionary heuristic methods for anomaly (fraud) detection.",
+      "reason": "재무제표 부정 탐지 문헌에서 지도학습이 비지도학습보다 많이 쓰였음을 보고한다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.3390/app12199637",
+      "verdict": "partial",
+      "quote": "The reviewed articles showed that support vector machine (SVM) and artificial neural network (ANN) are popular ML algorithms used for fraud detection, and credit card fraud is the most popular fraud type addressed using ML techniques.",
+      "reason": "신용카드 등 비감사 부정이 지배적이고 지도학습 알고리즘이 인기임을 보이나 주장 전체를 직접 다루지는 않는다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.6339/jds.201607_14(3).0010",
+      "verdict": "supported",
+      "quote": "In general, supervised learning tool have been used more frequently than the unsupervised ones. Financial statement fraud and bank fraud are the two largest financial applications being investigated in this area – about 63%, which corresponds to 41 articles out of the 65 reviewed articles.",
+      "reason": "지도학습 우세와 재무제표·은행 부정 응용의 지배를 직접 보고한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.1111/1911-3846.12901",
+      "verdict": "supported",
+      "quote": "We show that significant elements of deliberation, sensemaking, and reflexivity, arguably critical for the socialization of early career auditors into the profession, may be lost when automating areas of work perceived as low value, leading us to question what it means to apply judgment in auditing.",
+      "reason": "인터뷰 기반으로 초년 감사인의 의미형성 상실 우려를 제기한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.5117/mab.96.78525",
+      "verdict": "supported",
+      "quote": "Although applying ADA brings many benefits to audit practice, they simultaneously raise many challenges to the application of appropriate levels of auditor professional skepticism.",
+      "reason": "감사 데이터 분석이 전문가적 회의주의에 도전을 제기한다는 개념적 논의를 제시한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.1016/j.respol.2023.104828",
+      "verdict": "partial",
+      "quote": "This study also expands our knowledge of AI adoption, presenting a process tailored to address the challenges inherent in AI adoption for PSFs.",
+      "reason": "AI 도입의 과제를 언급하지만 윤리·인력·편익 정량화 같은 구체적 장벽은 제시하지 않는다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.1108/aaaj-09-2020-4934",
+      "verdict": "supported",
+      "quote": "In the thematic coding of the selected papers the authors identify five major ethical challenges of AI-based decision-making in accounting: objectivity, privacy, transparency, accountability and trustworthiness.",
+      "reason": "문헌 검토를 통해 AI 기반 회계의 윤리적 문제를 식별한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.1111/1911-3846.12847",
+      "verdict": "supported",
+      "quote": "Finally, interviews with CAEs suggest that TBATs are not used more often because of difficulties in quantifying their benefits, observing their benefits in a timely manner, and hiring auditors with appropriate skills.",
+      "reason": "편익 정량화 어려움과 숙련 인력 채용 어려움을 장벽으로 보고한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.17261/pressacademia.2020.1337",
+      "verdict": "supported",
+      "quote": "On the other hand, the ethical problems and potential risks of security and violating privacy regulations by using machine learning applications in accounting and auditing should also be considered.",
+      "reason": "도구 기술 분석에서 윤리적 문제와 위험을 지적한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.20525/ijrbs.v12i9.2737",
+      "verdict": "supported",
+      "quote": "Opponents raise pragmatic concerns such as the violation of ethical principles governing the audit profession, potential biases (loss of employment) as well as the challenges of coordinating machine and human activities.",
+      "reason": "문헌 검토에서 윤리적 우려 등 위험을 식별한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.3390/jrfm17010027",
+      "verdict": "supported",
+      "quote": "Based on 143 survey responses, the results demonstrate a positive relationship between TR and AI adoption among professionals in the accounting and auditing industry. Additionally, the analysis reveals that the intermediary factors PU and PEOU positively influence AI adoption.",
+      "reason": "소규모 설문에서 기술준비도와 인지된 유용성이 AI 채택을 이끈다고 보고한다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.1108/maj-03-2023-3846",
+      "verdict": "supported",
+      "quote": "The findings show that when audit firms and their clients use AI separately, there's a positive link between AI use and audit report lag. However, when audit firms and clients use AI together, there's a negative link between AI use and audit report delays that enhance overall audit efficiency.",
+      "reason": "별도 사용 시 지연 증가, 공동 사용 시 지연 감소를 직접 보고한다."
+    },
+    {
+      "claim_id": "c7",
+      "paper_id": "10.1111/1911-3846.12894",
+      "verdict": "supported",
+      "quote": "Our first experiment provides evidence that external reviewers rely on an effort heuristic when evaluating D&A audit procedures—they perceive D&A audit procedures as lower in quality than traditional audit procedures because they perceive them to be less effortful.",
+      "reason": "동일 확신 수준에서 노력 휴리스틱으로 D&A 절차를 낮게 평가하고 개입이 이를 줄임을 보고한다."
+    },
+    {
+      "claim_id": "c8",
+      "paper_id": "10.2308/tar-2020-0068",
+      "verdict": "supported",
+      "quote": "We find that even the best models trade off false to true positives at rates exceeding 100:1. Indeed, the high number of false positives makes all seven models considered too costly for auditors to implement, even in subsamples where misreporting is more likely.",
+      "reason": "7개 모형 모두 감사인에게 비용이 과도하고 투자자·규제기관에는 일부 순편익이 있음을 보고한다."
+    },
+    {
+      "claim_id": "c9",
+      "paper_id": "10.1111/acfi.13159",
+      "verdict": "supported",
+      "quote": "Results show that bagging outperforms boosting in various evaluation indicators, with profitability and asset quality positively affecting financial fraud.",
+      "reason": "중국 A주 자료에서 배깅이 부스팅보다 우수함을 보고한다."
+    },
+    {
+      "claim_id": "c9",
+      "paper_id": "10.2308/ajpt-50009",
+      "verdict": "supported",
+      "quote": "The results show, somewhat surprisingly, that logistic regression and support vector machines perform well relative to an artificial neural network, bagging, C4.5, and stacking.",
+      "reason": "로지스틱 회귀와 SVM이 ANN, 배깅, 스태킹보다 우수함을 보고한다."
+    }
+  ],
+  "notes": [],
+  "cost_usd": 0.1414,
+  "llm_calls": 1,
+  "elapsed_sec": 36.9
+}

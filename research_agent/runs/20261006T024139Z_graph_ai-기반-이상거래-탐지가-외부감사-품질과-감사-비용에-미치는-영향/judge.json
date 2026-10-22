@@ -1,0 +1,70 @@
+{
+  "model": "claude-opus-5-5",
+  "scores": {
+    "J1": 4,
+    "J2": 4,
+    "J3": 4,
+    "J4": 3,
+    "J5": 4,
+    "J6": 5,
+    "J7": 5
+  },
+  "mean": 4.14,
+  "items": [
+    {
+      "id": "J1",
+      "name": "주제 이해의 정확성",
+      "score": 4,
+      "quote": "독립변수: AI-based anomaly detection adoption in external audits",
+      "reason": "독립변수, 종속변수(감사품질·감사비용), 대상이 원 주제와 일치하고 핵심 개념도 문헌 용어다. 다만 종속변수가 'audit costs (audit fees)'로 적혀 비용을 보수로 좁힐 여지가 있다. 감사시간은 rq2에서 보완된다."
+    },
+    {
+      "id": "J2",
+      "name": "조사 계획의 완결성",
+      "score": 4,
+      "quote": "rq2 How does the use of AI and audit analytics affect audit fees, audit hours and effort, and audit efficiency?",
+      "reason": "품질, 비용, 탐지 정확도, 메커니즘·조건, 도입 위험으로 주제를 빈틈없이 나눴다. rq4와 rq5가 회의주의·설명가능성에서 일부 겹치고, rq3는 결과변수보다 기술 성능 쪽이라 약간 외곽에 있다."
+    },
+    {
+      "id": "J3",
+      "name": "근거 평가의 충실성",
+      "score": 4,
+      "quote": "firm-level fraud and restatement samples (size not stated in abstract)",
+      "reason": "초록에 없는 표본 크기는 'not stated'로, 결과가 잘린 초록은 결과 미제시로 정직하게 표시했다. 신뢰도도 실증·실험 4, 설문 3, 개념 연구 2로 설계를 반영한다. 다만 IoT·스마트그리드 등 무관 문헌이 표를 상당 부분 채워 실질 근거는 얇다."
+    },
+    {
+      "id": "J4",
+      "name": "종합의 깊이",
+      "score": 3,
+      "quote": "The reviews give no audit-specific, transaction-level accuracy benchmark, so no cross-paper consensus on journal-entry accuracy exists.",
+      "reason": "조건부 결과(공동 사용 시 보고지연 감소, 비용 주체별 순편익)는 구체적이다. 그러나 '합의' 항목 상당수가 실제 합의가 아니라 근거 부재에 대한 진술이다. 또 종합 섹션에 JSON 교정 문구 같은 생성 잔해가 섞여 있어 완성도가 떨어진다."
+    },
+    {
+      "id": "J5",
+      "name": "Research Gap 의 타당성",
+      "score": 4,
+      "quote": "External-audit hours and effort have not been measured in relation to AI adoption. Fees are a price, report lag is a timing proxy, and the efficiency evidence otherwise comes from internal audit or perception surveys.",
+      "reason": "모든 공백이 2편 이상의 평가 문헌으로 뒷받침되며(5/5), 표의 내용과 일치하는 구체적 부재를 짚는다. 다만 rq3 추가 검색이 미완료여서 일부 공백이 검색 한계에서 비롯됐을 가능성이 남는다."
+    },
+    {
+      "id": "J6",
+      "name": "향후 연구 제안의 구체성",
+      "score": 5,
+      "quote": "Difference-in-differences with staggered adoption, comparing engagements before and after tool rollout against not-yet-adopting offices. The main outcomes are total and staff-level hours, fees and realization rates.",
+      "reason": "각 제안이 RQ, 설계(DiD, 도구변수, 2×2×2 실험), 결과지표, 데이터 출처와 대안 데이터까지 명시해 바로 실행 가능한 수준이다."
+    },
+    {
+      "id": "J7",
+      "name": "한계 서술의 정직성",
+      "score": 5,
+      "quote": "The final quality gate flagged rq3 as a major unresolved gap, and the requested follow-up searches for labelled-misstatement accuracy studies and for auditor-response or moderation studies were not completed.",
+      "reason": "이번 실행에 특유한 한계를 명시했다. 미완료 검색, 초록만 열람한 점, 403편 중 80편 평가, [auto] critic 경고가 모두 포함된다. 다만 [auto] 문장이 잘려 있는 점은 사소한 흠이다."
+    }
+  ],
+  "overall_comment": "주제 분해, 공백 도출, 후속 연구 설계가 구체적이고, 근거의 한계를 정직하게 드러낸 실용적인 브리프다. 반면 증거표에 무관 문헌이 많아 실질 근거는 아카이벌 연구 2편 정도로 얇다. 종합의 '합의' 항목은 대부분 근거 부재 진술이며, §4에 JSON 교정 문구 같은 생성 잔해가 남아 있다. rq3 관련 추가 검색이 미완료라는 점도 감안해 활용해야 한다.",
+  "flags": [],
+  "notes": [],
+  "cost_usd": 0.1393,
+  "llm_calls": 1,
+  "elapsed_sec": 27.4
+}

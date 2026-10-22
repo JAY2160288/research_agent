@@ -1,0 +1,143 @@
+{
+  "consensus": [
+    {
+      "statement": "Generative AI tools are widely adopted by students globally with high awareness and familiarity, and students view text-related tasks (paraphrasing, idea generation, proofreading, summarizing) as acceptable and primary use cases.",
+      "evidence_ids": [
+        "10.1186/s41239-024-00453-6",
+        "10.17323/jle.2023.17379"
+      ],
+      "sub_rq_ids": [
+        "rq4",
+        "rq5"
+      ]
+    },
+    {
+      "statement": "All evaluated generative AI systems (ChatGPT, Bard, Claude, legal research tools, and others) exhibit measurable hallucination rates (17–33% for legal research, documented in systematic reviews and reference generation tasks), raising reliability concerns for academic research outputs.",
+      "evidence_ids": [
+        "10.2196/53164",
+        "10.1111/jels.12413"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq5"
+      ]
+    },
+    {
+      "statement": "Institutional policies across universities emphasize ethical guidelines, academic integrity safeguards, and faculty/student training, though comprehensive implementation and enforcement frameworks remain incomplete.",
+      "evidence_ids": [
+        "10.1016/j.caeai.2024.100348",
+        "10.1186/s41239-025-00507-3",
+        "10.1080/00987913.2025.2581429"
+      ],
+      "sub_rq_ids": [
+        "rq4",
+        "rq6"
+      ]
+    },
+    {
+      "statement": "Graduate and university students with higher AI literacy demonstrate more active, collaborative problem-solving approaches to tool use and achieve better task performance compared to those with lower literacy, suggesting AI skill development is a moderating factor.",
+      "evidence_ids": [
+        "10.1007/s12528-025-09444-6"
+      ],
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ]
+    },
+    {
+      "statement": "Ease of use and perceived usefulness of generative AI significantly influence adoption and sustained use among students, with social learning and collaborative contexts fostering adoption, though personal innovativeness and social norms play weaker roles than traditional technology adoption theories predict.",
+      "evidence_ids": [
+        "10.1145/3652154",
+        "10.1016/j.heliyon.2024.e32220",
+        "10.1007/s10755-023-09686-1"
+      ],
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ]
+    },
+    {
+      "statement": "AI-assisted tools show promise for enhancing specific learning outcomes including collaborative problem-solving, creativity performance, and personalized feedback delivery, though effectiveness varies by discipline, task type, and integration method.",
+      "evidence_ids": [
+        "10.1287/orsc.2023.18430",
+        "10.1186/s41239-025-00526-0",
+        "10.1016/j.caeo.2025.100284"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq3",
+        "rq6"
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "claim": "Whether reliance on generative AI for complex cognitive tasks strengthens or weakens academic performance and learning outcomes.",
+      "side_a": {
+        "statement": "Increased LLM reliance for critical thinking-intensive tasks (code generation, debugging) correlates with lower final grades, suggesting that substituting tool use for cognitive effort impairs skill development and performance.",
+        "evidence_ids": [
+          "10.3390/app14104115"
+        ],
+        "sub_rq_ids": [
+          "rq3"
+        ]
+      },
+      "side_b": {
+        "statement": "Human-AI collaborative solutions and AI-guided problem-solving demonstrate superior strategic and financial value, and AI tool integration significantly enhances collaborative problem-solving skills and team creativity compared to traditional methods.",
+        "evidence_ids": [
+          "10.1287/orsc.2023.18430",
+          "10.1186/s41239-025-00526-0"
+        ],
+        "sub_rq_ids": [
+          "rq3"
+        ]
+      },
+      "hypothesis_for_conflict": "The conflict likely stems from differences in task type, tool application strategy, and student baseline skill. Supplementary tool use for explanation-seeking appears beneficial, while primary reliance for critical thinking tasks correlates with performance declines; however, collaborative AI-human solutions with active problem-formulation show performance gains. Undergraduate samples in programming (10-week duration, n=32) versus business problem-solving (125 solvers, extended duration) and discipline-specific variation (software development vs. creative problem-solving) may also explain divergent outcomes. The mechanism appears to depend on whether AI substitutes for cognitive engagement or augments human reasoning."
+    }
+  ],
+  "conditional": [
+    {
+      "statement": "Adoption of generative AI is primarily driven by workflow compatibility and ease of use in software engineering contexts, whereas perceived usefulness and social learning factors drive adoption among university students, suggesting disciplinary and population-specific adoption mechanisms.",
+      "evidence_ids": [
+        "10.1145/3652154",
+        "10.1016/j.heliyon.2024.e32220",
+        "10.1007/s10755-023-09686-1"
+      ],
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ]
+    },
+    {
+      "statement": "Gender and disciplinary differences significantly moderate AI adoption and attitudes: male STEM students show notably different adoption patterns and technology interest compared to female non-STEM students, suggesting that field-specific epistemologies and prior technical experience shape generative AI integration.",
+      "evidence_ids": [
+        "10.1007/s10755-024-09774-w"
+      ],
+      "sub_rq_ids": [
+        "rq4"
+      ]
+    },
+    {
+      "statement": "AI-assisted feedback effectiveness is contingent on feedback target (task, process, self-regulation, or self-related) and complexity level, with flexible scaffolding across multiple foci yielding the strongest targeted learning outcomes.",
+      "evidence_ids": [
+        "10.1016/j.caeo.2025.100284"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq3",
+        "rq6"
+      ]
+    },
+    {
+      "statement": "AI tool effectiveness in collaborative problem-solving and learning depends on active human engagement and differentiated search strategies; passive tool interaction or substitution for cognitive effort does not replicate collaborative benefits observed in structured challenge environments.",
+      "evidence_ids": [
+        "10.1287/orsc.2023.18430",
+        "10.3390/app14104115"
+      ],
+      "sub_rq_ids": [
+        "rq3"
+      ]
+    }
+  ],
+  "coverage_note": "RQ1 (direct productivity effects on graduate students) remains critically underpowered: only one survey of UK academics (10.1007/s42438-023-00440-6) addresses perceived workload, not objective graduate student output metrics (word count, completion time, pages per week). No randomized controlled trials or longitudinal studies measuring actual dissertation progress or research output volume exist in the evidence. RQ2 (research quality and rigor in graduate research) suffers from similar gaps—hallucination rates (10.2196/53164) and AI-generated article experiments (10.2196/47049) do not measure quality in actual graduate dissertations or theses; only one undergraduate coding study (10.3390/app14104115, n=32, 10 weeks) links tool reliance to performance. RQ3 (mechanisms: cognitive load, skill development) relies heavily on non-graduate populations and non-research contexts (digital storytelling, undergraduate programming); evidence for problem-solving and skill atrophy mechanisms in graduate dissertation workflows is sparse. RQ4 (contextual moderators) has moderate strength from cross-cultural surveys (10.1186/s41239-024-00453-6, n=1217 across 76 countries) and single-site studies of adoption drivers (10.1007/s12528-025-09444-6 with Chinese graduate students, n=36), but lacks comparative evidence across disciplines and expertise levels in graduate research specifically. RQ5 (academic integrity and plagiarism) relies on hallucination rate studies and reviews (10.3390/info16040296, 10.2196/53164, policy analyses 10.1080/00987913.2025.2581429) rather than empirical audits of actual integrity violations or undetected plagiarism among graduate students; no prevalence data exist. RQ6 (best practices and training) synthesizes institutional policies and expert commentary (10.1016/j.caeai.2024.100348, 10.1186/s41239-025-00507-3) but lacks randomized controlled trials testing training interventions (literacy modules, workshops with follow-up) on graduate student responsible AI use or research quality outcomes. Missing study types: (1) longitudinal tracking of graduate dissertation progress and quality (semester or annual) comparing AI users to non-users with blind expert rubrics; (2) randomized trials of training conditions for graduate research workflows; (3) empirical audits of graduate student integrity violations and plagiarism correlated with AI tool use intensity."
+}

@@ -1,0 +1,78 @@
+{
+  "round": 2,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq3"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "search rq3: empirical studies of ML or unsupervised anomaly detection on real or labelled journal-entry or transaction data in audit settings, reporting precision/recall or false-positive rates, e.g. on AAER-labelled or confirmed-misstatement cases"
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq3",
+      "problem": "rq3 asks about accuracy on fraudulent transactions and journal entries, but the only comparative accuracy result (10.2308/ajpt-50009, 2011) is firm-level financial-statement fraud prediction with conventional models, and the one journal-entry paper (10.3390/systems10050130) tests predefined anomalies on a single ledger. The insurance-claims paper reports no validation, the access.2022.3153478 paper shows no results, and the two reviews are not audit-specific, so the question is effectively unanswered.",
+      "action": "search rq3: empirical studies of ML or unsupervised anomaly detection on real or labelled journal-entry or transaction data in audit settings, reporting precision/recall or false-positive rates, e.g. on AAER-labelled or confirmed-misstatement cases"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "The rq3 'consensus' rests on one comparative study (10.2308/ajpt-50009) plus two reviews that add no accuracy findings, so it is a single-study result rather than a cross-paper consensus. It also concerns firm-level fraud prediction, not transaction or journal-entry detection.",
+      "action": "synthesize: move the LR/SVM finding out of consensus into a limited single-study finding labelled firm-level and dated 2011, and state that no cross-paper consensus on transaction-level accuracy exists"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The efficiency claim treats lower audit fees (10.1007/s11142-022-09697-x, 0.9% per SD) and report lag as evidence of efficiency, although fees are a price and not audit hours or effort. The perception surveys (10.15611/pn.2022.4.06) and internal-audit evidence are weak support, and no external-audit hours evidence exists.",
+      "action": "synthesize: separate fees (price) from hours/effort (cost) and report lag, state that efficiency gains are unmeasured in external audit, and downgrade the 'mostly toward gains' wording; also search rq2: studies of audit hours or effort in relation to audit analytics or AI adoption"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "Conflict 1 compares the report-lag result of 10.1108/maj-03-2023-3846 on both sides and sets it against the fee result in 10.1007/s11142-022-09697-x, which is a different outcome. Side B's 'audit-firm AI alone is linked to efficiency gains' is not supported by a lag finding. Conflict 2 contrasts firm-level AI investment with partner expertise premiums, which are different constructs, so it is closer to a distinction than a contradiction.",
+      "action": "synthesize: recast conflict 1 as a within-study moderation by joint versus separate use, and recast conflict 2 as a construct difference, or drop both as conflicts"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq4",
+      "problem": "The claim that studies 'agree that analytics can undermine auditor judgment' cites 10.1111/1911-3846.12894, which shows reviewers rate D&A procedures as lower quality. That is reviewer perception, not auditor judgment. The remaining support is a reli-2 narrative review (10.5117/mab.96.78525) and interviews, and none concerns AI anomaly detection directly.",
+      "action": "synthesize: rephrase so the reviewer-effort-heuristic finding is not presented as evidence of eroded auditor judgment, and mark the skepticism evidence as conceptual or qualitative and about ADA generally"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "The conditional section includes the journal-entry and insurance-claims item (10.3390/systems10050130, 10.4192/1577-8517-v11_4), which states a limitation and names no moderator. The fee-premium item is a moderator of partner expertise pricing, not of AI's effect on audit outcomes.",
+      "action": "synthesize: move the limitation-only item to the coverage note, and keep conditional entries only where a moderator of the AI effect is stated"
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq4",
+      "problem": "No paper tests the named moderators (client complexity, firm size, regulation) or auditor use of AI flags. The evidence is generic D&A experiments, interviews, and one archival effort-lag mechanism (10.1108/maj-03-2023-3846).",
+      "action": "search rq4: experimental or archival studies of auditors using ML or analytics outputs that test moderation by client complexity, firm size (Big 4 versus others) or regulatory regime"
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq5",
+      "problem": "The coverage note says the searches on false positives, explainability, data quality, liability and PCAOB/IAASB guidance were never run. The rq5 risk dimension therefore rests on descriptive ethics and tool reviews (10.1108/aaaj-09-2020-4934, 10.17261/pressacademia.2020.1337).",
+      "action": "search rq5: studies or regulatory documents on explainability, false-positive burden, data quality, liability and PCAOB/IAASB guidance for AI or data analytics in external audit"
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq1",
+      "problem": "rq1 covers misstatement and fraud detection and discretionary accruals, but the evidence is restatement likelihood only. A lower restatement rate could mean fewer errors or less detection, and the Nigerian survey (10.22624/aims/humanities/v11n1p4) uses perceived quality.",
+      "action": "search rq1: archival studies linking auditor analytics or AI adoption to discretionary accruals, misstatement detection, AAERs or going-concern outcomes"
+    }
+  ]
+}

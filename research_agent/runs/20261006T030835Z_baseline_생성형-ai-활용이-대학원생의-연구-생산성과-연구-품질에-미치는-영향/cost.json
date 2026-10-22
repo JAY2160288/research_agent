@@ -1,0 +1,25 @@
+{
+  "status": "ok",
+  "elapsed_sec": 62.5,
+  "llm_calls": 3,
+  "input_tokens": 54474,
+  "output_tokens": 8335,
+  "cost_usd": 0.1558,
+  "checks": {
+    "submitted": true,
+    "citations_total": 25,
+    "citations_verified": 25,
+    "citation_verified_rate": 1.0,
+    "claims_total": 7,
+    "claims_with_source": 7,
+    "sub_rqs": 5,
+    "sub_rqs_covered": 5,
+    "gaps": 4,
+    "gaps_with_2_evidence": 4,
+    "conflicts": 1,
+    "conflicts_with_hypothesis": 1,
+    "unknown_ids": []
+  },
+  "papers_seen": 80,
+  "model": "claude-sonnet-5-5"
+}

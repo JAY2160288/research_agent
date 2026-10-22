@@ -1,0 +1,70 @@
+{
+  "model": "claude-opus-5-5",
+  "scores": {
+    "J1": 4,
+    "J2": 4,
+    "J3": 3,
+    "J4": 4,
+    "J5": 4,
+    "J6": 5,
+    "J7": 4
+  },
+  "mean": 4.0,
+  "items": [
+    {
+      "id": "J1",
+      "name": "주제 이해의 정확성",
+      "score": 4,
+      "quote": "독립변수: Long-term memory design of LLM agents (e.g., memory architecture, storage, retrieval, and update mechanisms)",
+      "reason": "독립변수(메모리 설계), 종속변수(멀티스텝 과업 성공률), 대상(LLM 에이전트)이 원 주제와 왜곡 없이 일치하고, 핵심 개념도 문헌에서 실제로 쓰는 용어입니다. 다만 '과업 성공률'의 측정 맥락(환경·벤치마크 유형)까지 명시하지는 않아 4점입니다."
+    },
+    {
+      "id": "J2",
+      "name": "조사 계획의 완결성",
+      "score": 4,
+      "quote": "rq4 How does long-term memory interact with agent planning and reasoning modules to support long-horizon task completion?",
+      "reason": "아키텍처, 검색·저장, 갱신·망각, 계획 연계, 평가 방법, 실패·비용의 여섯 측면으로 주제를 빈틈없이 덮습니다. 다만 rq1(아키텍처)과 rq2·rq3(메커니즘) 사이에 일부 경계 중복이 있습니다."
+    },
+    {
+      "id": "J3",
+      "name": "근거 평가의 충실성",
+      "score": 3,
+      "quote": "| 10.48550/arxiv.2404.13501 | A Survey on the Memory Mechanism of Large Language Model based Agents (2024) | 5 | 4 | systematic survey/literature review |",
+      "reason": "초록 절단이나 결과 부재를 솔직히 표기해 필드 내용은 초록 범위와 대체로 일치합니다. 그러나 서베이(reli 4)가 Wilson CI를 쓴 통제 실험(2606.29178, reli 3)보다 높게 평가되는 등 신뢰도 점수가 설계 위계를 일관되게 반영하지 못하고, 표본 필드도 다수 비어 있습니다."
+    },
+    {
+      "id": "J4",
+      "name": "종합의 깊이",
+      "score": 4,
+      "quote": "가설: AriGraph and AWM are bespoke agents whose memory construction, update and use are co-designed for one environment family and compared against selected baselines. The harness holds substrates fixed across models and suites, so the gains may come from domain-tuned design rather than structure itself.",
+      "reason": "합의·상충·조건부가 명확히 구분되고, 상충 항목에는 설계·맥락 차원의 구체적 가설이 붙어 있습니다. QA 정확도 근거와 과업 성공률 근거도 분리했습니다. 다만 상충이 1건뿐이고, §7 스스로 이를 범위 차이일 가능성이 크다고 인정해 4점입니다."
+    },
+    {
+      "id": "J5",
+      "name": "Research Gap 의 타당성",
+      "score": 4,
+      "quote": "No study ablates memory retrieval inside planning or task-decomposition loops on long-horizon tasks. RAP, TRAD and CAPEAM link retrieved experience to planning, but their abstracts give no numbers or no isolating ablation.",
+      "reason": "다섯 Gap 모두 2편 이상의 근거로 뒷받침되며(지표 5/5), 각 문헌이 무엇을 답하지 못하는지 구체적으로 짚습니다. 다만 망각 Gap에 인용된 MemoryAgentBench는 '근거의 부재'를 보여 주기보다 데이터원 역할에 가깝습니다."
+    },
+    {
+      "id": "J6",
+      "name": "향후 연구 제안의 구체성",
+      "score": 5,
+      "quote": "Within-agent dose-response experiment sweeping top-k (0, 1, 3, 5, 10, 20) crossed with retrieval granularity (step vs trajectory) and oracle versus noisy relevance. Fit per-condition curves of success against retrieved tokens and estimate the inflection point with bootstrap CIs.",
+      "reason": "모든 제안에 RQ, 실험 설계(요인 수준, 시드 수, 분석 방법), 데이터(구체적 벤치마크와 과업 수)가 갖춰져 있어 그대로 실행할 수 있는 수준입니다."
+    },
+    {
+      "id": "J7",
+      "name": "한계 서술의 정직성",
+      "score": 4,
+      "quote": "[auto] search: arXiv unavailable (disabled after 2 failures, 10 queries skipped); OpenAlex only",
+      "reason": "rq4 미해결, QA 편중, 단일 환경·2개 시드, 비용 수치의 자기보고 문제 등 이번 실행에 특화된 한계를 [auto] 노트와 함께 정직하게 서술합니다. 다만 본문의 'Search covered OpenAlex and arXiv'는 arXiv가 비활성화되었다는 auto 노트와 상충합니다."
+    }
+  ],
+  "overall_comment": "주제 분해와 조사 계획이 정확하고, 종합에서 QA 근거와 과업 성공률 근거를 분리한 점, 그리고 Gap과 후속 연구 제안의 구체성이 돋보이는 브리프입니다. 반면 Evidence Table의 신뢰도 점수가 연구 설계 위계를 일관되게 반영하지 못하고, 관련성 0인 생물·신경과학 문헌이 다수 섞여 검색 노이즈가 큽니다. 또한 §7에서 arXiv 검색 범위가 auto 노트와 모순됩니다. 전반적으로 연구 착수에 유용하지만, 근거 평가 부분은 보정이 필요합니다.",
+  "flags": [],
+  "notes": [],
+  "cost_usd": 0.1508,
+  "llm_calls": 1,
+  "elapsed_sec": 32.2
+}

@@ -1,0 +1,169 @@
+{
+  "model": "claude-opus-5-5",
+  "claims_total": 7,
+  "pairs_total": 16,
+  "pairs_judged": 16,
+  "pairs_supported": 6,
+  "pairs_partial": 10,
+  "pairs_unsupported": 0,
+  "pairs_unverified_quote": 0,
+  "pairs_no_abstract": 0,
+  "citation_support_rate": 0.375,
+  "citation_support_rate_lenient": 1.0,
+  "claim_support_rate": 0.7143,
+  "claims": [
+    {
+      "id": "c1",
+      "statement": "Studies across graduate and general higher-education samples portray GenAI as speeding up drafting and related tasks, but efficiency gains are not matched by evidence of deeper learning or independent scholarly thinking.",
+      "supported": false
+    },
+    {
+      "id": "c2",
+      "statement": "LLM output quality for research tasks is uneven: GenAI helps with ideation and data identification but is weaker on literature synthesis and reference accuracy, so hallucination is a recognized risk.",
+      "supported": false
+    },
+    {
+      "id": "c3",
+      "statement": "Graduate-student GenAI use raises integrity and supervision concerns, though the evidence is mostly small qualitative studies.",
+      "supported": true
+    },
+    {
+      "id": "c4",
+      "statement": "The quality benefit of GenAI appears to depend on user domain expertise, private data input, and instruction, rather than on tool access alone.",
+      "supported": true
+    },
+    {
+      "id": "c5",
+      "statement": "Whether offloading harms thinking may depend on whether AI substitutes for or scaffolds the user's own cognition.",
+      "supported": true
+    },
+    {
+      "id": "c6",
+      "statement": "An LLM-based review-generation method is reported to match or exceed manual review quality.",
+      "supported": true
+    },
+    {
+      "id": "c7",
+      "statement": "Reviewers found AI-augmented writing lacked research details and reflective insights, and benchmarks emphasize hallucination risk in literature tasks.",
+      "supported": true
+    }
+  ],
+  "pairs": [
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1007/s40593-025-00528-z",
+      "verdict": "partial",
+      "quote": "Results showed genAI, with proper instruction, reduced writing time by 56.7% and improved writing quality from an A- to an A on average.",
+      "reason": "대학원생의 작성 시간 단축은 뒷받침하지만, 심층 학습이나 독립적 사고의 부재에 대해서는 다루지 않습니다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.35631/ijepc.1162072",
+      "verdict": "partial",
+      "quote": "The review reveals consistent evidence that GenAI enhances task efficiency by accelerating drafting, feedback cycles, and information processing. However, efficiency gains do not uniformly translate into deeper learning, as several studies report tendencies toward surface-level completion strategies.",
+      "reason": "효율 향상과 심층 학습으로의 불균일한 전환을 보고하지만, '균일하지 않다'는 표현과 고차 추론 지원 언급을 고려하면 '증거가 없다'는 주장은 초록보다 강합니다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.46787/ijaipil.v2026i1.6971",
+      "verdict": "partial",
+      "quote": "This paper examines a central paradox in doctoral education: the same tools that enhance research productivity may also weaken intellectual independence when used without guidance.",
+      "reason": "박사과정에서 생산성 향상과 독립성 약화 가능성을 비판적 문헌검토로 개념적으로 제시할 뿐 실증적으로 보여주지는 않습니다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.1016/j.frl.2023.103662",
+      "verdict": "partial",
+      "quote": "There are clear advantages for idea generation and data identification. The technology, however, is weaker on literature synthesis and developing appropriate testing frameworks.",
+      "reason": "아이디어 생성·데이터 식별의 강점과 문헌 종합의 약점은 직접 뒷받침하지만, 참고문헌 정확성이나 환각은 언급하지 않습니다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.48550/arxiv.2305.18248",
+      "verdict": "partial",
+      "quote": "In this work, we focus on hallucinated book and article references and present them as the \"model organism\" of language model hallucination research, due to their frequent and easy-to-discern nature.",
+      "reason": "참고문헌 환각이 빈번한 위험임을 뒷받침하지만, 연구 과업별 품질 차이는 다루지 않습니다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.48550/arxiv.2412.13612",
+      "verdict": "partial",
+      "quote": "The experimental results reveal that even the most advanced models still generate hallucinated references, despite recent progress.",
+      "reason": "참고문헌 환각 위험은 뒷받침하지만, 아이디어 생성·데이터 식별에서의 도움은 다루지 않습니다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.1007/s40593-024-00454-6",
+      "verdict": "partial",
+      "quote": "Although some participants initially expressed concerns about the potential for AI to compromise academic integrity, many came to view COREI as a collaborative tool that, when used responsibly, could enhance their research without infringing upon their scholarly ethics.",
+      "reason": "소규모 질적 연구(n=10)에서 연구윤리 우려가 제기되었습니다. 다만 많은 참여자가 오히려 긍정적으로 인식하게 되었고, 지도(supervision) 문제는 다루지 않습니다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.38140/obp4-2026-02",
+      "verdict": "supported",
+      "quote": "The role of supervisors has become more problematic since the rise of generative Artificial Intelligence (GenAI) in higher education and the disruption it has caused to teaching and research practices.",
+      "reason": "지도교수 4인의 협력적 자문화기술지라는 소규모 질적 연구로, 지도 및 연구윤리 문제를 직접 다룹니다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.5334/bc.560",
+      "verdict": "partial",
+      "quote": "Findings highlight that the often-unacknowledged use of GenAI in doctoral research can confer undue agency on the technology that disrupts traditional relationships in an unacknowledged way.",
+      "reason": "박사생-지도교수 관계 교란 우려는 뒷받침하지만, 혼합방법 연구이며 연구윤리(integrity) 측면은 윤리 프레임워크 부재 정도로만 언급됩니다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.1007/s40593-025-00528-z",
+      "verdict": "partial",
+      "quote": "Results showed genAI, with proper instruction, reduced writing time by 56.7% and improved writing quality from an A- to an A on average.",
+      "reason": "교육이 함께 제공된 조건에서의 이점을 보고하지만, 교육 없이 도구만 사용한 경우와 비교하지는 않았습니다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.1016/j.frl.2023.103662",
+      "verdict": "supported",
+      "quote": "Importantly, we further demonstrate that the extent of private data and researcher domain expertise input, are key factors in determining the quality of output.",
+      "reason": "사적 데이터와 연구자의 도메인 전문성 투입이 산출 품질의 핵심 요인임을 직접 보여줍니다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.3389/feduc.2026.1878665",
+      "verdict": "partial",
+      "quote": "The findings reveal that GenAI simultaneously functions as a cognitive scaffold and a source of epistemic vulnerability.",
+      "reason": "비계와 무비판적 의존이라는 구분과 방향은 같지만, 결과가 주로 교수설계·AI 리터러시에 의해 매개된다고 보아 대체/비계 구분을 핵심 요인으로 제시하지는 않습니다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.3389/fpsyg.2026.1878629",
+      "verdict": "supported",
+      "quote": "Dependent offloading was positively associated with cognitive agency transfer and negatively associated with intrinsic motivation, which in turn were linked to poorer perceived outcomes. Autonomous offloading was positively associated with intrinsic motivation and more favorable perceived outcomes.",
+      "reason": "AI가 사고를 대체하는지 비계 역할을 하는지에 따라 인지적 결과가 달라짐을 직접 보여줍니다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.1093/nsr/nwaf169",
+      "verdict": "supported",
+      "quote": "Our statistically validated evaluation framework demonstrates that the generated reviews match or exceed manual quality, offering broad applicability across research fields without requiring user domain knowledge.",
+      "reason": "LLM 기반 리뷰 생성물이 수작업 리뷰의 품질과 같거나 그 이상이라고 직접 보고합니다."
+    },
+    {
+      "claim_id": "c7",
+      "paper_id": "10.1016/j.chbah.2024.100095",
+      "verdict": "supported",
+      "quote": "Our findings indicate that while AI-augmented writing improves readability, language diversity, and informativeness, it often lacks research details and reflective insights from authors.",
+      "reason": "심사자들이 AI 보조 글에서 연구 세부사항과 성찰적 통찰이 부족하다고 평가했음을 직접 보고합니다."
+    },
+    {
+      "claim_id": "c7",
+      "paper_id": "10.48550/arxiv.2412.13612",
+      "verdict": "supported",
+      "quote": "The experimental results reveal that even the most advanced models still generate hallucinated references, despite recent progress.",
+      "reason": "문헌 작성 과업 벤치마크에서 참고문헌 환각 위험을 직접 보여줍니다."
+    }
+  ],
+  "notes": [],
+  "cost_usd": 0.1092,
+  "llm_calls": 1,
+  "elapsed_sec": 31.5
+}

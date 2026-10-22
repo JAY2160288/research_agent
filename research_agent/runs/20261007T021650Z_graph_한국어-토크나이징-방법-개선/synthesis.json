@@ -1,0 +1,126 @@
+{
+  "consensus": [
+    {
+      "statement": "Morphological pre-segmentation followed by subword learning is the strongest option on most Korean NLU and MT tasks tested, and subword units beat word- or morpheme-level units on OOV robustness; the Korean evidence is two moderate-reliability empirical studies, so the effect sizes are unknown.",
+      "evidence_ids": [
+        "10.48550/arxiv.2010.02534",
+        "10.3390/electronics10070845"
+      ],
+      "sub_rq_ids": [
+        "rq1",
+        "rq2"
+      ]
+    },
+    {
+      "statement": "Outside Korean, morphology-aware tokenization is competitive with or better than standard tokenizers on morphologically rich languages (Turkish) and generalizes better to OOV words (English-centric models); this is indirect support for Korean.",
+      "evidence_ids": [
+        "10.1145/3578707",
+        "10.48550/arxiv.2404.13292"
+      ],
+      "sub_rq_ids": [
+        "rq1",
+        "rq6"
+      ]
+    },
+    {
+      "statement": "Subword tokenization does not eliminate OOV problems for Korean and other CJK languages, and OOV hurts transfer learning; Korean-specific handling such as syllable-level modeling or syllable-pattern estimation of unknown morphemes keeps tagging accuracy high under spacing errors and unknown morphemes (97-98 points).",
+      "evidence_ids": [
+        "10.2197/ipsjjip.29.490",
+        "10.1145/3591206",
+        "10.1162/089120102317341774"
+      ],
+      "sub_rq_ids": [
+        "rq6"
+      ]
+    },
+    {
+      "statement": "The same content can need many times more tokens in some languages than in others, even with multilingual tokenizers, implying unequal API cost, latency and context capacity; the abstracts do not single out Korean.",
+      "evidence_ids": [
+        "10.48550/arxiv.2305.15425",
+        "10.48550/arxiv.2305.13707"
+      ],
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ]
+    },
+    {
+      "statement": "Vocabulary extension of an English-centric LLM improves target-language proficiency with modest continued training. For Korean, the evidence is leaderboard proficiency from EEVE (about 2B training tokens, no efficiency numbers reported). The encoding-efficiency gain (20,000 added Chinese tokens) is shown only for Chinese LLaMA.",
+      "evidence_ids": [
+        "10.48550/arxiv.2402.14714",
+        "10.48550/arxiv.2304.08177"
+      ],
+      "sub_rq_ids": [
+        "rq5",
+        "rq3"
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "claim": "Whether morpheme-based segmentation helps or hurts when used as a pre-segmenter versus as a standalone tokenizer for Korean.",
+      "side_a": {
+        "statement": "Morphological segmentation used as a pre-segmenter before BPE gave the best results on Korean-English MT and four NLU tasks, though plain BPE won on KorQuAD.",
+        "evidence_ids": [
+          "10.48550/arxiv.2010.02534"
+        ],
+        "sub_rq_ids": [
+          "rq1"
+        ]
+      },
+      "side_b": {
+        "statement": "Standalone morpheme-based tokenization lost to learned subwords: SentencePiece beat Mecab-Ko for review sentiment classification, and subword units were more OOV-robust than morpheme units in sentence-embedding sentiment analysis.",
+        "evidence_ids": [
+          "10.1080/08839514.2023.2175112",
+          "10.3390/electronics10070845"
+        ],
+        "sub_rq_ids": [
+          "rq1",
+          "rq6"
+        ]
+      },
+      "hypothesis_for_conflict": "The contrasts differ: morphemes feeding BPE keep subword coverage for rare forms, whereas standalone morpheme tokens leave OOVs and jargon in noisy review text. The tasks also differ (MT/NLU benchmarks vs. sentiment on reviews), and the sentiment studies are single-task and single-domain with unstated sample sizes."
+    }
+  ],
+  "conditional": [
+    {
+      "statement": "Replacing whitespace with a special symbol hurt Korean sentiment analysis in one study; whether this is task-dependent is untested because only sentiment was evaluated.",
+      "evidence_ids": [
+        "10.3390/electronics10070845"
+      ],
+      "sub_rq_ids": [
+        "rq2"
+      ]
+    },
+    {
+      "statement": "In Turkish, larger vocabularies helped morphological- and word-level tokenizers more than de facto tokenizers; Korean applicability is untested, so confidence for Korean is low.",
+      "evidence_ids": [
+        "10.1145/3578707"
+      ],
+      "sub_rq_ids": [
+        "rq3"
+      ]
+    },
+    {
+      "statement": "In controlled European-language experiments, multilingual tokenizers needed roughly three times larger vocabularies than English ones, and fertility and parity did not always predict downstream performance; transfer to Korean is untested.",
+      "evidence_ids": [
+        "10.48550/arxiv.2310.08754"
+      ],
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ]
+    },
+    {
+      "statement": "Pronunciation-based sub-character tokenization shortens sequences and resists homophone typos while staying competitive on Chinese PLMs; whether Hangul benefits is not shown.",
+      "evidence_ids": [
+        "10.1162/tacl_a_00560"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq6"
+      ]
+    }
+  ],
+  "coverage_note": "The Korean evidence is thin on rq4: no Korean study links intrinsic metrics such as fertility, boundary alignment or OOV rate to downstream scores, and the correlation evidence is Turkish (10.48550/arxiv.2502.07057), European (10.48550/arxiv.2310.08754) and English (10.48550/arxiv.2404.13292); KLUE (10.48550/arxiv.2105.09680) and the Sejong study (10.1587/transinf.2017edp7085) never connect tokenization metrics to downstream results. rq3 is similarly unanswered for Korean, since the Korean items are an ASR corpus (10.3390/app10196936), a multi-language OOV paper (10.2197/ipsjjip.29.490) and a report without efficiency numbers (10.48550/arxiv.2402.14714); vocabulary-size evidence is Turkish or European. rq1 and rq2 have the most direct Korean evidence (10.48550/arxiv.2010.02534, 10.3390/electronics10070845, 10.1080/08839514.2023.2175112), but these are moderate-reliability, mostly single-task studies with no effect sizes. rq5 rests on one Korean technical report with leaderboard evaluation plus Chinese and cross-language cost studies. rq6 has spacing and unknown-morpheme evidence from POS tagging and NER but little on noisy user-generated text. Missing are Korean ablations varying vocabulary size and monolingual vs. multilingual vocabularies with tokens-per-character and downstream scores, KLUE/KoBEST tokenizer ablations with intrinsic metrics, and Korean LLM tokenizer cost studies."
+}

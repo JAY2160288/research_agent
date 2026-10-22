@@ -1,0 +1,77 @@
+{
+  "sub_rqs": [
+    {
+      "id": "rq1",
+      "question": "How effective are digital therapeutics at reducing depressive symptom severity in the short term compared with control conditions?",
+      "rationale": "Establishes the core post-treatment efficacy evidence base on which durability questions depend.",
+      "queries": [
+        "digital therapeutics depression randomized controlled trial efficacy",
+        "internet-delivered cognitive behavioral therapy depressive symptoms meta-analysis",
+        "smartphone app intervention depression symptom reduction",
+        "prescription digital therapeutic major depressive disorder"
+      ],
+      "source_pref": "openalex"
+    },
+    {
+      "id": "rq2",
+      "question": "How long do reductions in depressive symptoms persist after digital intervention ends, based on follow-up assessments?",
+      "rationale": "Directly addresses the durability dimension of the topic through long-term follow-up evidence.",
+      "queries": [
+        "digital intervention depression long-term follow-up sustained effect",
+        "internet CBT depression durability of treatment effects",
+        "digital mental health depression 12-month follow-up outcomes",
+        "relapse after computerized CBT depression"
+      ],
+      "source_pref": "openalex"
+    },
+    {
+      "id": "rq3",
+      "question": "How do effects and durability differ by intervention type, delivery format, and level of human support (guided vs. unguided)?",
+      "rationale": "Identifies design features of digital therapeutics that moderate effect size and persistence.",
+      "queries": [
+        "guided versus unguided internet intervention depression effect",
+        "therapist support digital mental health intervention depression outcomes",
+        "app-based versus web-based depression intervention comparison",
+        "computerized CBT human support moderator effectiveness"
+      ],
+      "source_pref": "openalex"
+    },
+    {
+      "id": "rq4",
+      "question": "How do patient characteristics and clinical context (severity, comorbidity, primary care vs. community, adjunct vs. standalone use) moderate outcomes?",
+      "rationale": "Clarifies for whom and under which conditions digital therapeutics work and sustain benefit.",
+      "queries": [
+        "moderators of digital intervention outcomes depression baseline severity",
+        "digital therapeutics adjunct to antidepressant treatment depression",
+        "eHealth intervention depression primary care effectiveness",
+        "digital CBT comorbid anxiety depression subgroup analysis"
+      ],
+      "source_pref": "openalex"
+    },
+    {
+      "id": "rq5",
+      "question": "How do engagement, adherence, and attrition relate to symptom improvement and its persistence?",
+      "rationale": "Engagement is a key mechanism and threat to real-world effectiveness and durability.",
+      "queries": [
+        "adherence engagement digital depression intervention symptom improvement",
+        "dropout attrition internet-delivered depression treatment",
+        "dose-response app usage depressive symptoms",
+        "machine learning predict engagement mental health app"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq6",
+      "question": "What methodological limitations, placebo or attention-control effects, and adverse effects affect the interpretation of digital therapeutic evidence for depression?",
+      "rationale": "Assesses evidence quality and risks, tempering conclusions about effectiveness and durability.",
+      "queries": [
+        "risk of bias digital mental health depression trials",
+        "placebo sham control digital therapeutic depression",
+        "negative effects deterioration internet interventions depression",
+        "real-world effectiveness digital mental health depression"
+      ],
+      "source_pref": "openalex"
+    }
+  ],
+  "search_strategy": "Search 2010 to present, emphasizing systematic reviews, meta-analyses, and randomized controlled trials with adult or adolescent participants with depression or elevated depressive symptoms, plus regulatory-cleared prescription digital therapeutics studies. Exclude protocol-only papers, general wellness or prevention-only apps without depressive symptom outcomes, and non-digital telehealth that is purely video therapy. Expect rq2 (durability beyond 12 months) and rq6 (adverse effects and sham-controlled designs) to be the thinnest in the literature."
+}

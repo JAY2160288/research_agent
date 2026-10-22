@@ -1,0 +1,58 @@
+{
+  "round": 1,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq4"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "synthesize: split the rq3 claim into firm-level financial-statement fraud prediction and transaction/journal-entry anomaly detection. Cite only papers with reported results for 'performance', state that journal-entry evidence is a single predefined-anomaly experiment, and note that 10.4192/1577-8517-v11_4 and 10.1109/access.2022.3153478 do not support accuracy claims. Also search rq3: empirical studies reporting precision/recall for journal-entry or transaction-level anomaly detection in audit data.",
+    "search rq4: empirical studies (archival, experimental, or field) on how auditor AI/analytics affects professional skepticism and judgment, and moderation by client complexity, audit firm size (Big 4 vs non-Big 4), or regulatory regime"
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "The first consensus claim says ML detects anomalous journal entries and fraudulent statements with 'promising performance', but 10.1109/access.2022.3153478 has no visible results and 10.4192/1577-8517-v11_4 reports no validation or accuracy. 10.2308/ajpt-50009 and the reviews concern firm-level fraud prediction, so only 10.3390/systems10050130 addresses journal entries, and only for predefined anomalies.",
+      "action": "synthesize: split the rq3 claim into firm-level financial-statement fraud prediction and transaction/journal-entry anomaly detection. Cite only papers with reported results for 'performance', state that journal-entry evidence is a single predefined-anomaly experiment, and note that 10.4192/1577-8517-v11_4 and 10.1109/access.2022.3153478 do not support accuracy claims. Also search rq3: empirical studies reporting precision/recall for journal-entry or transaction-level anomaly detection in audit data."
+    },
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq4",
+      "problem": "rq4 asks about mechanisms and conditions (skepticism, client complexity, firm size, regulation), but only one archival study (10.1108/maj-03-2023-3846, effort lag) supplies a mechanism. 10.13189/ujaf.2021.090527 is truncated and about internal auditors, and 10.1111/1911-3846.12894 and 10.1111/1911-3846.12901 do not test client complexity, firm size, or regulation.",
+      "action": "search rq4: empirical studies (archival, experimental, or field) on how auditor AI/analytics affects professional skepticism and judgment, and moderation by client complexity, audit firm size (Big 4 vs non-Big 4), or regulatory regime"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The conditional claim says efficiency benefits appear 'only when auditor and client use AI jointly', but 10.1007/s11142-022-09697-x finds lower fees from audit-firm AI investment alone. The joint-use condition holds only for report lag in 10.1108/maj-03-2023-3846.",
+      "action": "synthesize: restrict the joint-use condition to report lag, state that fee reductions were found for audit-firm AI alone in 10.1007/s11142-022-09697-x, and replace 'only' with the specific measure and study."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The conflict's side B uses internal-audit function size (10.1111/1911-3846.12847) as evidence that AI slows audits or raises costs, yet that same paper finds fewer audit days. This is a different setting and outcome, so the conflict is partly constructed.",
+      "action": "synthesize: present the real conflict as the separate-use lag result in 10.1108/maj-03-2023-3846 versus the lower fees and lag under joint use. Label the internal-audit staffing finding as a non-comparable setting and note that 10.1111/1911-3846.12847 also reports fewer audit days."
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq5",
+      "problem": "rq5 names false positives, explainability, data quality, and liability, but no cited paper addresses these. The rq5 consensus covers only adoption lag, ethical/privacy concerns, and technology readiness.",
+      "action": "search rq5: studies or practitioner/regulator reports on false-positive burden, explainability or black-box concerns, auditor liability, and regulatory guidance (e.g., PCAOB, IAASB) for AI in external audit"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq2",
+      "problem": "The AI-cost gap proposes PCAOB Form AP as a source of audit hours, but Form AP does not disclose engagement hours, so the proposed design cannot be executed with that data.",
+      "action": "gap: replace the Form AP hours source with a feasible one (e.g., proprietary firm time records, or Audit Analytics fees and non-US jurisdictions that disclose hours such as the UK, Korea, or Taiwan) and note the data-access constraint."
+    }
+  ]
+}

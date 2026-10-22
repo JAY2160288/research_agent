@@ -1,0 +1,62 @@
+{
+  "gaps": [
+    {
+      "description": "Graduate-student productivity is only ever perceived, never measured. Postgraduates report faster progress, while workload and time-pressure studies of academics and general students point the other way, and none of these studies track time-on-task or output. Whether task-level speed-ups survive rising workload expectations is untested in graduate researchers.",
+      "evidence_ids": [
+        "10.14742/ajet.8843",
+        "10.1080/14703297.2023.2271445",
+        "10.1007/s42438-023-00440-6",
+        "10.1186/s41239-024-00444-7"
+      ],
+      "proposed_rq": "Does GenAI access change measured time-on-task, output volume and total weekly research hours among master's and doctoral students, compared with matched peers without structured access?",
+      "method": "Pre-registered randomized or stepped-wedge field trial over one semester with two arms (supported GenAI access vs. usual practice). Primary outcomes are logged time-on-task and milestone completion, plus a weekly workload diary.",
+      "data": "About 120-200 thesis-stage students from several graduate schools, recruited through graduate offices, with consented tool usage logs and supervisor-verified milestones."
+    },
+    {
+      "description": "Graduate use of GenAI for literature search and screening, coding and data analysis has not been studied with graduate users. Evidence comes from model-capability tests or reviews of generated text, or from non-graduate and truncated sources, so graduate outcomes on these tasks are unknown.",
+      "evidence_ids": [
+        "10.2196/56537",
+        "10.2196/53164",
+        "10.3390/computers14020053",
+        "10.2196/47049"
+      ],
+      "proposed_rq": "How do graduate students' accuracy, hallucination rate and time differ on literature screening, citation retrieval and data-analysis coding tasks with and without GenAI?",
+      "method": "Within-subject crossover experiment in which each student completes matched tasks with and without GenAI. Outcomes are recall/precision against an expert gold standard, fabricated-reference rate, error rate in code, and time to completion.",
+      "data": "60-100 master's/doctoral students in two or three disciplines, with expert-built gold-standard review and analysis tasks and screen/log recording."
+    },
+    {
+      "description": "The only graduate-level link between usage pattern and outcome is a 10-person doctoral study of one writing task and one tool. The doctoral intention study reports no outcomes, and guidance effects are shown only in programming students. Whether interactive use predicts better work across tasks, tools and guidance conditions is unknown.",
+      "evidence_ids": [
+        "10.1080/03075079.2024.2323593",
+        "10.3389/fpsyg.2023.1259531",
+        "10.1007/s10639-025-13337-7"
+      ],
+      "proposed_rq": "Do interaction patterns with GenAI predict thesis-chapter quality among doctoral students, and does prompt training shift those patterns?",
+      "method": "Longitudinal observational study with sequence analysis of interaction logs, linked to blinded rater scores of chapters. Nested within it, randomize prompt training vs. none and compare pattern distributions and quality.",
+      "data": "Interaction logs and drafts from 80-150 doctoral students at multiple institutions, with consent and blinded raters from their fields."
+    },
+    {
+      "description": "No paper reports a validated way to measure the quality of AI-assisted graduate research. Existing quality evidence is reviewer ratings of generated articles or self-reports, and the policy sources address coursework or publishers rather than theses. Policy awareness did not affect behaviour in the one test, so policy effects on graduate work are unknown.",
+      "evidence_ids": [
+        "10.2196/47049",
+        "10.1057/s41599-024-03526-z",
+        "10.12688/f1000research.142411.2",
+        "10.3390/aieduc1010002"
+      ],
+      "proposed_rq": "Can a rubric for AI-assisted thesis and manuscript quality (accuracy, originality, citation integrity, disclosure) reach acceptable inter-rater reliability, and does it differ between graduate programs with and without explicit AI policies?",
+      "method": "Develop the rubric with a Delphi panel, then double-rate thesis chapters and compute inter-rater reliability. Compare scores across programs with and without thesis-specific AI policies.",
+      "data": "A sample of 100-200 chapters or manuscripts from graduate schools, plus the programs' AI policy documents and supervisor panels."
+    },
+    {
+      "description": "It is unresolved whether critical appraisal of AI output helps or hurts real outcomes. Appraisal lowered perceived output quality and self-efficacy in general students, and reflective training produced de-enchantment in doctoral students, but neither study measured actual error detection or work quality.",
+      "evidence_ids": [
+        "10.1186/s40561-025-00384-3",
+        "10.1016/j.jslw.2024.101156",
+        "10.1080/14703297.2025.2600476"
+      ],
+      "proposed_rq": "Does appraisal training change doctoral students' detection of AI errors, the accuracy of their final text and their self-efficacy?",
+      "method": "Two-arm randomized experiment (appraisal training vs. generic tool training) on a research-writing task with seeded AI errors. Outcomes are error-detection rate, blinded quality score and self-efficacy.",
+      "data": "About 100 doctoral students recruited through graduate schools, with a task containing known seeded errors."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "topic_id": "T2",
+  "lang": "ko",
+  "condition": "D",
+  "model": "claude-sonnet-5-5",
+  "max_replans": 2,
+  "plan_from": null,
+  "topic": "LLM 에이전트의 장기 메모리 설계가 멀티스텝 과업 성공률에 미치는 영향"
+}

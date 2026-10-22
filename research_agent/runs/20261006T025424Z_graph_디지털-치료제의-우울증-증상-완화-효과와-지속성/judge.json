@@ -1,0 +1,70 @@
+{
+  "model": "claude-opus-5-5",
+  "scores": {
+    "J1": 4,
+    "J2": 4,
+    "J3": 4,
+    "J4": 4,
+    "J5": 4,
+    "J6": 4,
+    "J7": 5
+  },
+  "mean": 4.14,
+  "items": [
+    {
+      "id": "J1",
+      "name": "주제 이해의 정확성",
+      "score": 4,
+      "quote": "독립변수: digital therapeutics (software-based therapeutic interventions for depression)",
+      "reason": "원 주제의 변수(디지털 치료제, 우울 증상 완화, 지속성)와 대상이 왜곡 없이 분해되었고, 핵심 개념도 문헌에서 실제로 쓰는 용어입니다. 다만 전략에서 예고한 처방형 DTx 근거가 실제로는 거의 없어 iCBT·앱 중심으로 범위가 사실상 좁아졌는데, 이 점이 §1에 명시되지 않았습니다."
+    },
+    {
+      "id": "J2",
+      "name": "조사 계획의 완결성",
+      "score": 4,
+      "quote": "Expect rq2 (durability beyond 12 months) and rq6 (adverse effects and sham-controlled designs) to be the thinnest in the literature.",
+      "reason": "6개 sub-RQ가 단기 효과·지속성·형식·조절변수·순응도·방법론을 빈틈 없이 다루고, 결정적 지표상 6/6이 충족됩니다. 다만 rq3의 '지속성 차이'가 rq2와 겹치고, rq6은 방법론·위약·부작용을 한데 묶어 다소 비대합니다."
+    },
+    {
+      "id": "J3",
+      "name": "근거 평가의 충실성",
+      "score": 4,
+      "quote": "The abstract excerpt does not give the numerical results.",
+      "reason": "초록이 잘린 경우를 솔직히 표기해 초록에 없을 내용을 채워 넣지 않았고, 신뢰도도 대체로 설계를 반영합니다(IPD·메타분석 5, 논평 1). 다만 서술적 리뷰(wps.20610)가 RCT와 같은 3점을 받았고, 관련성 0~1인 무관 논문이 다수 포함됐으며, REEACT의 rq5 태그처럼 sub-RQ 태깅이 일부 과도합니다."
+    },
+    {
+      "id": "J4",
+      "name": "종합의 깊이",
+      "score": 4,
+      "quote": "가설: REEACT tested add-on use against unconstrained usual care in unblinded patients with PHQ-9 of 10 or more, while the others used standalone iCBT against TAU, with different programs, support and follow-up lengths.",
+      "reason": "합의·상충·조건부가 분리되어 있고, 두 상충 모두 표본·비교조건·맥락에 대한 구체적 가설을 갖추었으며(2/2), 간접 근거도 구분해 표시했습니다. 다만 REEACT의 24개월 null 결과가 '지속성 합의'에 대한 반증이라는 점은 상충 항목이 아닌 한계 절에서만 다뤄집니다."
+    },
+    {
+      "id": "J5",
+      "name": "Research Gap 의 타당성",
+      "score": 4,
+      "quote": "The 6- and 12-month guided vs unguided estimates in the IPD network meta-analysis and the long-term results of the 2013 meta-analysis were not retrieved, so their numbers are unknown to us.",
+      "reason": "5개 gap 모두 2편 이상의 근거로 뒷받침되며(5/5), 일반론이 아닌 구체적 부재를 지적하고 검색 실패와 실제 공백도 구분합니다. 다만 첫 gap은 진단된 우울증의 지속성 수치가 12개월에서 멈춘다고 했으나, REEACT(24개월)와 2011 RCT(6개월)가 임상 표본 추적 자료라는 점과 다소 어긋납니다."
+    },
+    {
+      "id": "J6",
+      "name": "향후 연구 제안의 구체성",
+      "score": 4,
+      "quote": "The RCT needs about 300 adults with PHQ-9 of 10 or more, recruited from primary care or online.",
+      "reason": "RQ·방법·데이터·표본 규모·측정 시점이 모두 제시되어 실행 가능한 수준입니다. 다만 표본 크기의 검정력 근거가 없고, 4번 제안은 '더 크고 오래가는 효과'를 묻는 RQ에 비열등성 설계를 붙여 RQ와 방법이 서로 맞지 않습니다."
+    },
+    {
+      "id": "J7",
+      "name": "한계 서술의 정직성",
+      "score": 5,
+      "quote": "several key results (the IPD network meta-analysis 10.1001/jamapsychiatry.2020.4364 with 6- and 12-month guided vs unguided estimates, the 2013 meta-analysis, the moderator results of the two IPD analyses, and the adherence review 10.2196/43727) were truncated, so these gaps are partly retrieval failures rather than true research gaps.",
+      "reason": "이번 실행에 특정된 한계(초록 잘림으로 놓친 논문, 준임상 표본 의존, 대조군 유형 문제, 검색 DB 범위)를 구체적으로 밝혔고, [auto] critic 노트도 포함해 정직합니다."
+    }
+  ],
+  "overall_comment": "인용 검증 100%와 gap·상충 근거 지표가 모두 충족된, 전반적으로 신중하고 정직한 브리프입니다. 간접 근거와 검색 실패를 일관되게 구분한 점이 강점입니다. 다만 무관 문헌이 다수 평가표에 남아 있고, REEACT 장기 null 결과와 지속성 합의 사이의 긴장이 종합에서 충분히 다뤄지지 않았으며, 일부 제안의 설계 불일치가 보완 과제입니다.",
+  "flags": [],
+  "notes": [],
+  "cost_usd": 0.1581,
+  "llm_calls": 1,
+  "elapsed_sec": 27.4
+}

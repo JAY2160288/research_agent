@@ -1,0 +1,35 @@
+{
+  "original_topic": "LLM 에이전트의 장기 메모리 설계가 멀티스텝 과업 성공률에 미치는 영향",
+  "topic_en": "The effect of long-term memory design in LLM agents on multi-step task success rates",
+  "domain": "computer science",
+  "concepts": [
+    "LLM agents",
+    "long-term memory",
+    "memory architecture",
+    "multi-step tasks",
+    "task success rate",
+    "retrieval-augmented memory",
+    "agent planning"
+  ],
+  "variables": {
+    "independent": [
+      "Long-term memory design of LLM agents (e.g., memory architecture, storage, retrieval, and update mechanisms)"
+    ],
+    "dependent": [
+      "Multi-step task success rate"
+    ],
+    "population": "LLM-based autonomous agents",
+    "context": "Multi-step task settings (e.g., sequential decision-making and long-horizon tasks) in agent benchmarks and applications"
+  },
+  "synonyms_en": [
+    "large language model agents",
+    "autonomous language agents",
+    "agent memory mechanisms",
+    "external memory for LLMs",
+    "episodic memory",
+    "long-horizon tasks",
+    "memory-augmented agents",
+    "task completion rate"
+  ],
+  "research_question": "How does the design of long-term memory in LLM agents affect their success rate on multi-step tasks?"
+}

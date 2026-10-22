@@ -1,0 +1,77 @@
+{
+  "sub_rqs": [
+    {
+      "id": "rq1",
+      "question": "How do different long-term memory architectures (e.g., episodic, semantic, hierarchical, vector-store, graph-based) affect task success rates of LLM agents on multi-step tasks?",
+      "rationale": "This is the core independent-to-dependent variable relationship: which memory architectures improve multi-step success and by how much.",
+      "queries": [
+        "LLM agent long-term memory architecture task success",
+        "memory-augmented language agents long-horizon tasks",
+        "episodic memory LLM agents multi-step performance",
+        "hierarchical graph memory autonomous language agents"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq2",
+      "question": "How do memory retrieval and storage mechanisms (retrieval-augmented memory, indexing, relevance scoring, summarization) influence agent success on sequential tasks?",
+      "rationale": "Retrieval and write strategies are key design components that may determine whether stored information helps or harms task completion.",
+      "queries": [
+        "retrieval-augmented memory LLM agents sequential decision-making",
+        "external memory retrieval strategy agent task completion",
+        "memory write summarization compression LLM agents",
+        "embedding-based memory retrieval agent benchmark"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq3",
+      "question": "How do memory update, consolidation, reflection, and forgetting mechanisms affect agent performance over extended interactions and repeated tasks?",
+      "rationale": "Dynamic memory management determines long-term performance, memory quality, and learning from experience across tasks.",
+      "queries": [
+        "memory update forgetting mechanism LLM agents",
+        "reflection experience learning language agents memory",
+        "memory consolidation long-term agent self-improvement",
+        "lifelong learning LLM agent experience memory"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq4",
+      "question": "How does long-term memory interact with agent planning and reasoning modules to support long-horizon task completion?",
+      "rationale": "Memory's effect on success likely operates through planning, so understanding this interaction clarifies the mechanism.",
+      "queries": [
+        "agent planning memory integration long-horizon tasks",
+        "LLM agent planning with memory-augmented reasoning",
+        "autonomous language agents memory and task decomposition",
+        "tool-using agents memory planning success rate"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq5",
+      "question": "Which benchmarks, metrics, and ablation methodologies are used to evaluate memory's contribution to multi-step task success rate in LLM agents?",
+      "rationale": "Understanding evaluation practices is needed to judge the validity and comparability of reported memory effects.",
+      "queries": [
+        "benchmark evaluating LLM agent memory long-horizon",
+        "ablation study memory module agent success rate",
+        "long-term memory evaluation conversational agents benchmark",
+        "agent benchmark task completion rate memory comparison"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq6",
+      "question": "What limitations, failure modes, and costs (e.g., memory noise, error propagation, context overload, latency) arise from long-term memory in LLM agents?",
+      "rationale": "Memory can also harm performance, so a balanced view of risks and trade-offs is necessary.",
+      "queries": [
+        "memory errors propagation LLM agents failure analysis",
+        "irrelevant memory retrieval degrades agent performance",
+        "long-term memory latency cost trade-off language agents",
+        "hallucination stale memory autonomous agents"
+      ],
+      "source_pref": "both"
+    }
+  ],
+  "search_strategy": "Focus on 2022–2025 literature, since LLM agents with explicit memory designs emerged recently, prioritizing arXiv preprints and top venues (NeurIPS, ICLR, ACL, EMNLP) alongside OpenAlex records. Prefer empirical studies with ablations or benchmark comparisons (e.g., ALFWorld, WebArena, long-horizon agent benchmarks) and surveys for taxonomy; exclude papers on pure long-context modeling or non-LLM reinforcement-learning memory unless they directly address agents. The thinnest literature is expected for rq6 (failure modes and costs) and for controlled comparisons isolating memory design effects in rq1/rq3."
+}

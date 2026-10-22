@@ -1,0 +1,60 @@
+{
+  "round": 3,
+  "passed": true,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [],
+  "weak_claims": [],
+  "actions": [],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq3",
+      "problem": "rq3 asks about accuracy at identifying fraudulent transactions and journal entries in audit settings. The only audit-relevant papers are 10.3390/systems10050130 (one ledger, predefined anomalies), 10.4192/1577-8517-v11_4 (no validation) and 10.1109/access.2022.3153478 (no results shown). The rest are firm-level or non-audit fraud models, so it is effectively unanswered despite passing the count.",
+      "action": "search rq3: empirical studies of ML or unsupervised anomaly detection on real audit journal-entry or transaction data, with precision, recall or false-positive rates and labelled or confirmed misstatements (including forensic or AAER-linked cases)"
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq1",
+      "problem": "rq1 is supported only by restatement likelihood (10.1007/s11142-022-09697-x, 10.1108/maj-03-2023-3846) and a perception survey (10.22624/aims/humanities/v11n1p4). No paper covers misstatement or fraud detection or discretionary accruals, and 10.1108/ara-03-2024-0085 concerns client AI use.",
+      "action": "search rq1: archival or experimental studies linking auditor AI or analytics use to abnormal accruals, detected misstatements, audit adjustments, AAERs or going-concern opinions"
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq4",
+      "problem": "The rq4 mechanism and moderator evidence consists of generic audit data analytics work (10.1111/1911-3846.12894, 10.5117/mab.96.78525, 10.1111/1911-3846.12901) plus one effort-lag mediation in 10.1108/maj-03-2023-3846. Client complexity, firm size and regulation are untested, and no paper examines how auditors act on AI flags.",
+      "action": "search rq4: experiments or archival studies on auditor response to AI or analytics exceptions (skepticism, follow-up), or on moderation by client complexity, Big 4 versus non-Big 4 status, or regulatory regime"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": null,
+      "problem": "The coverage_note field is corrupted by stray text ('}</br>Correction: the JSON above must be a single object; see below.</br>{'). It also claims the critic's requested searches are still outstanding, which is stale process commentary rather than evidence coverage.",
+      "action": "synthesize: rewrite coverage_note as clean prose, remove the stray markup and the reference to outstanding critic searches, and keep only the per-sub-question coverage assessment"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The fee results are not in the rq2 consensus. They point in opposite directions: 10.1007/s11142-022-09697-x reports lower fees with firm AI investment, while 10.1080/09638180.2023.2298433 reports a fee premium for digitally expert partners. The synthesis lists no conflict and mentions this only in the coverage note.",
+      "action": "synthesize: add a conflict or conditional item contrasting the firm-level AI fee discount with the partner digital-expertise premium, with a hypothesis (different constructs, cost pass-through versus specialist pricing, industry digitalization)"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq5",
+      "problem": "The risk gap proposes a survey and interviews, but its stated outcome (the share of AI output accepted as sufficient evidence) cannot be obtained from document analysis, so the design does not fit the gap on explainability, data quality and liability.",
+      "action": "gap: align the outcome with the method, for example coded themes from inspection findings and interviews, or vignette-based acceptance ratings, and tie each outcome to explainability, data quality or liability"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq1",
+      "problem": "The quality gap instruments AI investment with the firm's pre-period digital hiring, which is likely correlated with firm quality and client selection. The exclusion restriction is not defended, so the proposed identification is weak.",
+      "action": "gap: replace or justify the instrument, or use a staggered-adoption or event-study design with client-assignment controls"
+    }
+  ]
+}

@@ -1,0 +1,1099 @@
+{
+  "items": [
+    {
+      "paper_id": "10.1016/s0140-6736(17)32802-7",
+      "relevance": 1,
+      "reliability": 5,
+      "method": "systematic review and network meta-analysis of double-blind RCTs",
+      "sample": "",
+      "finding": "Compares and ranks 21 antidepressant drugs for acute treatment of adult major depressive disorder. It does not evaluate digital interventions, though it offers a pharmacological benchmark.",
+      "sub_rq_ids": [],
+      "limitations": "Pharmacotherapy only, not digital therapeutics; abstract truncated before results."
+    },
+    {
+      "paper_id": "10.1017/s0033291706008944",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "meta-analysis of 12 RCTs",
+      "sample": "13 contrast groups, 2334 participants",
+      "finding": "Internet-based CBT showed a small mean effect on depressive symptoms (FEA d=0.27, MEA d=0.32) with significant heterogeneity, reduced after removing an outlier study. Anxiety effects were large (d=0.96).",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq6"
+      ],
+      "limitations": "Early (2006) and small set of trials; heterogeneity and an outlier study; mixed depression and anxiety outcomes."
+    },
+    {
+      "paper_id": "10.1002/wps.20151",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 13 studies comparing guided ICBT with face-to-face CBT",
+      "sample": "13 studies, N=1053 (2 on depressive symptoms)",
+      "finding": "Guided ICBT and face-to-face CBT produced equivalent post-treatment effects overall (Hedges' g=-0.01, 95% CI -0.13 to 0.12). Study quality did not affect outcomes.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq6"
+      ],
+      "limitations": "Only two studies on depression; few studies per condition; mixed psychiatric and somatic disorders; compares to active in-person treatment rather than control."
+    },
+    {
+      "paper_id": "10.1001/jamapsychiatry.2020.4364",
+      "relevance": 5,
+      "reliability": 5,
+      "method": "systematic review and individual patient data network meta-analysis of RCTs",
+      "sample": "IPD from eligible RCTs of guided and unguided iCBT for depression (42 eligible studies per abstract)",
+      "finding": "Estimates personalized short-term and long-term (6 and 12 month) relative efficacy of guided versus unguided iCBT for depression using PHQ-9 and patient characteristics. The abstract excerpt does not give the numerical results.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Abstract truncated before results; IPD available only from a subset of studies."
+    },
+    {
+      "paper_id": "10.1002/wps.20673",
+      "relevance": 4,
+      "reliability": 5,
+      "method": "meta-analysis of 66 RCTs",
+      "sample": "66 RCTs of app-supported smartphone interventions (54 for depression)",
+      "finding": "Smartphone interventions outperformed control conditions for depressive symptoms (g=0.28, n=54) and most effects remained robust after adjusting for control type and risk of bias. Effects were nonsignificant for some outcomes such as panic symptoms.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Transdiagnostic mental health scope; follow-up durability not shown in the excerpt."
+    },
+    {
+      "paper_id": "10.1016/j.jad.2017.04.046",
+      "relevance": 1,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 9 RCTs",
+      "sample": "9 RCTs, 1837 participants",
+      "finding": "Smartphone psychological interventions reduced anxiety symptoms more than controls (g=0.325, 95% CI 0.17-0.48). It does not address depression.",
+      "sub_rq_ids": [],
+      "limitations": "Anxiety outcomes only; small number of trials."
+    },
+    {
+      "paper_id": "10.1001/jamapsychiatry.2017.0044",
+      "relevance": 5,
+      "reliability": 5,
+      "method": "individual participant data meta-analysis of RCTs",
+      "sample": "3876 participants from 13 of 16 eligible studies",
+      "finding": "Pooled IPD from RCTs comparing self-guided iCBT with controls (usual care, waiting list, attention control) in adults with depressive symptoms, examining treatment outcome, response, and moderators. Specific effect sizes are not in the abstract excerpt.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq4",
+        "rq6"
+      ],
+      "limitations": "IPD from only 13 of 16 eligible studies; missing data handled by imputation; abstract truncated."
+    },
+    {
+      "paper_id": "10.1038/s41380-019-0585-z",
+      "relevance": 0,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 75 prospective studies",
+      "sample": "75 prospective articles",
+      "finding": "Reviews prospective biomarkers (neuroimaging, immunology, hormones, etc.) predicting MDD onset and relapse. It does not address digital therapeutics.",
+      "sub_rq_ids": [],
+      "limitations": "Off-topic; biomarker prediction rather than treatment."
+    },
+    {
+      "paper_id": "10.1371/journal.pone.0149139",
+      "relevance": 1,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 15 RCTs",
+      "sample": "15 randomized trials of internet CBT for insomnia",
+      "finding": "Evaluates internet-delivered CBT for insomnia on sleep efficiency and insomnia severity. Depression outcomes are not reported in the abstract.",
+      "sub_rq_ids": [],
+      "limitations": "Insomnia outcomes, not depression; abstract truncated."
+    },
+    {
+      "paper_id": "10.1002/wps.21110",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "narrative comprehensive review",
+      "sample": "",
+      "finding": "Reviews epidemiology, mechanisms and management of comorbidity between MDD and physical diseases. It offers context on comorbidity but no digital therapeutic evidence.",
+      "sub_rq_ids": [
+        "rq4"
+      ],
+      "limitations": "Narrative review without stated method; no digital intervention data."
+    },
+    {
+      "paper_id": "10.1016/j.cpr.2016.09.005",
+      "relevance": 2,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 25 studies (24 in meta-analysis)",
+      "sample": "Children and adolescents, N=1882 in meta-analysis",
+      "finding": "ICBT yielded a moderate between-group effect versus waitlist (g=0.62, 95% CI 0.41-0.84) across 11 disorders. Study quality and reporting of variables such as therapist time and adherence varied widely.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3"
+      ],
+      "limitations": "Covers many disorders, not depression specifically; youth population; waitlist comparators; variable study quality."
+    },
+    {
+      "paper_id": "10.2196/mhealth.3713",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "app store review and content analysis",
+      "sample": "1054 apps identified, 243 unique depression apps included",
+      "finding": "Of 243 depression apps, about a third mainly provided therapeutic treatment (33.7%) and about a third psychoeducation (32.1%). The abstract describes marketplace content, not clinical efficacy.",
+      "sub_rq_ids": [],
+      "limitations": "Based on app store descriptions only; no efficacy or outcome data."
+    },
+    {
+      "paper_id": "10.2196/12869",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "systematic review (PRISMA, narrative synthesis, quality assessment)",
+      "sample": "College student samples; number of studies not stated in abstract",
+      "finding": "The review assesses effectiveness, usability, acceptability, uptake, and adoption of digital mental health interventions for depression, anxiety and well-being in college students. The abstract excerpt gives no results.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq6"
+      ],
+      "limitations": "Narrative synthesis; student population only; abstract truncated so results are not visible."
+    },
+    {
+      "paper_id": "10.2196/jmir.6588",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "systematic review of blended face-to-face and internet interventions",
+      "sample": "64 publications describing 44 studies, 27 of them randomized",
+      "finding": "The review maps formats, treatment stages, and objectives of blended interventions for depression, anxiety, and substance abuse, and assesses their effectiveness. The abstract excerpt does not report effect results.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Covers several disorders; heterogeneous designs; abstract truncated before results."
+    },
+    {
+      "paper_id": "10.1002/14651858.cd003437.pub3",
+      "relevance": 1,
+      "reliability": 4,
+      "method": "Cochrane systematic review of RCTs",
+      "sample": "Post-stroke patients; sample size not stated in abstract",
+      "finding": "The review evaluates pharmaceutical, psychological, and ECT treatments for post-stroke depression. The abstract excerpt reports no digital intervention and no results.",
+      "sub_rq_ids": [],
+      "limitations": "Not about digital therapeutics; 2008 search; abstract truncated."
+    },
+    {
+      "paper_id": "10.1016/j.eurpsy.2018.12.008",
+      "relevance": 2,
+      "reliability": 4,
+      "method": "systematic review and meta-regression of 31 RCTs, GRADE",
+      "sample": "Youth with depression, 4335 participants",
+      "finding": "Moderate-quality evidence showed face-to-face CBT reduced depressive symptoms at end of treatment and at follow-up, and CBT as indicated prevention gave 63% less risk of depression at follow-up. Persistence of effects is informative but not for digital delivery.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq3"
+      ],
+      "limitations": "Not specific to digital delivery; youth only; abstract truncated."
+    },
+    {
+      "paper_id": "10.1145/3564752",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "human-centered design study with interview study (n=15 iCBT supporters)",
+      "sample": "15 iCBT supporters",
+      "finding": "The paper describes developing an AI tool to predict outcomes for human-supported iCBT for depression and anxiety, informed by supporter interviews. It does not measure symptom reduction or durability.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "Design and process paper; no efficacy outcomes; small qualitative sample."
+    },
+    {
+      "paper_id": "10.1038/s41746-020-0293-8",
+      "relevance": 5,
+      "reliability": 4,
+      "method": "pragmatic randomized waitlist-controlled trial with cost-effectiveness analysis, 8 weeks, 3-month diagnostic follow-up",
+      "sample": "361 participants referred to IAPT Step 2 (iCBT 241, waitlist 120)",
+      "finding": "The 8-week iCBT trial in IAPT stepped-care assessed PHQ-9 depressive symptoms against a waitlist, with diagnostic interviews at 3 months. The abstract excerpt does not give effect sizes.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq4"
+      ],
+      "limitations": "Waitlist control (no attention control); short follow-up; abstract truncated before results."
+    },
+    {
+      "paper_id": "10.1007/s44192-022-00012-3",
+      "relevance": 0,
+      "reliability": 2,
+      "method": "narrative review",
+      "sample": "",
+      "finding": "The review covers ketamine and esketamine for depression, noting rapid antidepressant effects lasting three to seven days after a single infusion. It concerns a pharmacological treatment, not digital therapeutics.",
+      "sub_rq_ids": [],
+      "limitations": "Off-topic pharmacological treatment; narrative review without stated method."
+    },
+    {
+      "paper_id": "10.1017/s1041610220000459",
+      "relevance": 2,
+      "reliability": 3,
+      "method": "mixed-methods study: single-group before-after quasi-experiment plus interviews",
+      "sample": "20 older adults with depression in four long-term care facilities in Taiwan",
+      "finding": "Participants had no significant changes during the 8-week observation phase; the abstract excerpt is cut off before the intervention results. The Paro social robot is a technology-based, not a conventional digital therapeutic, intervention.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq4"
+      ],
+      "limitations": "Small sample, no control group, single-group design; abstract truncated."
+    },
+    {
+      "paper_id": "10.2196/33704",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "longitudinal observational study n=239",
+      "sample": "239 patients with confirmed COVID-19 and persistent complaints, recruited from online long COVID peer support groups",
+      "finding": "At 3 months, 46.9% had depressive symptoms (HADS ≥8), with PTSD and anxiety symptoms also common; outcomes were assessed up to 6 months after symptom onset. This is a natural-course study, not a digital intervention.",
+      "sub_rq_ids": [],
+      "limitations": "Not a digital therapeutic study; self-selected peer-support group sample; mostly female; no control group"
+    },
+    {
+      "paper_id": "10.1089/apc.2017.0303",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "pilot pre-post mHealth intervention study with 12-month follow-up",
+      "sample": "77 people living with HIV at a Ryan White clinic",
+      "finding": "Retention in care rose from 51% at baseline to 88% at 6 months and 81% at 12 months. The abstract does not report depressive symptom outcomes.",
+      "sub_rq_ids": [],
+      "limitations": "Not targeted at depression; single clinic; no control group; pilot design"
+    },
+    {
+      "paper_id": "10.1186/1471-244x-13-113",
+      "relevance": 5,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 14 RCTs (16 comparisons)",
+      "sample": "adults with depression; 14 RCTs",
+      "finding": "Meta-analysis of computerised CBT RCTs with adequate concealment and blinded outcome assessment, evaluating short-term effectiveness, long-term effects, functional improvement and dropout. The abstract is truncated, so the effect sizes are not available.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Self-reported primary outcomes in all trials; abstract truncated"
+    },
+    {
+      "paper_id": "10.1016/j.drugalcdep.2019.03.016",
+      "relevance": 1,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 30 RCTs (21 in meta-analyses)",
+      "sample": "8138 participants in prevention interventions and 5195 cannabis users in treatment interventions",
+      "finding": "Digital interventions reduced cannabis use at post-treatment (prevention g=0.33; treatment g=0.12) compared with controls, and prevention effects were maintained at follow-up. The outcome is cannabis use rather than depression.",
+      "sub_rq_ids": [],
+      "limitations": "Outcome is substance use, not depression; self-reported use; small effect for treatment interventions"
+    },
+    {
+      "paper_id": "10.2196/24387",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "systematic review of 208 articles (qualitative and quantitative)",
+      "sample": "208 empirical studies on digital mental health interventions",
+      "finding": "Engagement barriers included severe mental health issues, technical issues and a lack of personalization. The review identifies end-user, program-content and technology/implementation factors that influence engagement.",
+      "sub_rq_ids": [
+        "rq5",
+        "rq3"
+      ],
+      "limitations": "Covers mental health in general rather than depression specifically; heterogeneous methods; does not link engagement to symptom outcomes (per the abstract)"
+    },
+    {
+      "paper_id": "10.1016/j.invent.2014.08.003",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 14 RCTs",
+      "sample": "14 RCTs comparing guided vs. unguided or different guidance formats of internet-based interventions",
+      "finding": "Guided interventions were superior to unguided ones for symptom severity (SMD=-0.27), completed modules (SMD=0.52) and completer rate (OR=2.76).",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Few trials per guidance-dose and e-coach qualification comparison; covers mental health conditions broadly rather than depression only"
+    },
+    {
+      "paper_id": "10.2196/jmir.3142",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of RCTs",
+      "sample": "university students; trials of computer-delivered and web-based interventions for depression, anxiety and stress",
+      "finding": "The review evaluates the effectiveness of web-based and computer-delivered interventions on depression, anxiety and stress in university students. The abstract is truncated, so results are not available.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Student population only; abstract truncated; mixed outcomes beyond depression"
+    },
+    {
+      "paper_id": "10.2196/jmir.5774",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 26 comparisons",
+      "sample": "n=4226 adults in web- and computer-based stress-management trials",
+      "finding": "Stress interventions had a small effect on depression at posttest (d=0.34) and larger effects on stress for guided than unguided formats (d=0.64 for guided). Follow-up data at 1-3 and 4-6 months were assessed for stress only.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3"
+      ],
+      "limitations": "Primary outcome is stress and depression is secondary; follow-up assessed for stress only; population not selected for depression"
+    },
+    {
+      "paper_id": "10.3389/fpsyt.2019.00759",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "systematic review with meta-analysis of 9 RCTs vs. no-intervention control and 6 vs. active control, plus thematic synthesis of 41 studies",
+      "sample": "young people; 15 RCTs in meta-analysis and 41 studies in narrative synthesis",
+      "finding": "Digital interventions had a moderate pooled effect on depression in young people compared with no-intervention control (d=0.33, 95% CI 0.11-0.55). The review also examined factors related to adherence, engagement and outcomes, and compared with active controls.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq4",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Young-people population only; mixed-methods synthesis; small number of RCTs; abstract truncated"
+    },
+    {
+      "paper_id": "10.1080/16506073.2011.616531",
+      "relevance": 5,
+      "reliability": 4,
+      "method": "RCT n=76 (guided vs unguided vs waitlist)",
+      "sample": "76 individuals with major depression or dysthymia; 69 (91%) completed posttreatment and 59 (78%) the 6-month follow-up",
+      "finding": "Both guided and unguided internet treatments significantly reduced depressive symptoms compared with waiting-list control, with a BDI-II between-group effect size of d=0.66 for unguided at posttreatment. Follow-up was at 6 months.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Small sample; single trial; waitlist control only; abstract truncated"
+    },
+    {
+      "paper_id": "10.3389/fdgth.2021.764079",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of RCTs (35 studies narrative, 25 meta-analyzed)",
+      "sample": "35 eligible studies; 25 with sufficient data for meta-analysis",
+      "finding": "Greater engagement with digital mental health interventions was significantly associated with better post-intervention outcomes (correlational r = 0.24; between-groups Hedges' g = 0.40). The association held regardless of intervention type (unguided/guided).",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Outcomes are broad mental health, not depression-specific; engagement-outcome link is correlational and may be confounded; abstract is truncated and gives no follow-up data."
+    },
+    {
+      "paper_id": "10.1371/journal.pone.0099912",
+      "relevance": 2,
+      "reliability": 4,
+      "method": "meta-analysis of 16 RCTs (23 comparisons)",
+      "sample": "5,612 participants with adult alcohol misuse",
+      "finding": "Internet interventions for alcohol misuse had a small but significant overall effect versus controls (g = 0.20), with participants drinking about 22 g less ethanol and more likely to meet low-risk guidelines at post-treatment. The paper compares guided and unguided formats, but the outcome is alcohol use, not depression.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "Population and outcome are alcohol misuse, not depression; only post-treatment outcomes are reported in the abstract."
+    },
+    {
+      "paper_id": "10.1192/bjp.bp.108.060996",
+      "relevance": 2,
+      "reliability": 4,
+      "method": "RCT (two trials, n=235)",
+      "sample": "235 participants with social anxiety disorder",
+      "finding": "Guided internet-based treatment and unguided bibliotherapy both outperformed waiting list on social anxiety, general anxiety, depression and quality of life. Gains were well maintained at one year.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq3"
+      ],
+      "limitations": "Population has social anxiety disorder, so depression is a secondary outcome; waiting-list control; unguided arm was bibliotherapy rather than a digital format."
+    },
+    {
+      "paper_id": "10.2196/10120",
+      "relevance": 2,
+      "reliability": 2,
+      "method": "systematic app identification with functionality analysis and user review analysis",
+      "sample": "",
+      "finding": "The study analyzed the therapeutic functionality and engagement features of CBT apps for depression and user opinions about them, to identify factors affecting user experience and engagement. The abstract is truncated and reports no clinical outcomes.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "No symptom outcomes; relies on app store functionality and user reviews; abstract is truncated."
+    },
+    {
+      "paper_id": "10.1002/wps.21120",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "narrative review",
+      "sample": "",
+      "finding": "The review discusses the lack of a consensus definition of treatment-resistant depression, its estimated prevalence (at least 30% of persons with depression) and management. The abstract does not address digital therapeutics.",
+      "sub_rq_ids": [
+        "rq4"
+      ],
+      "limitations": "Narrative review of treatment-resistant depression; no digital intervention evidence in the abstract."
+    },
+    {
+      "paper_id": "10.2196/jmir.2790",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "systematic review of systematic reviews and meta-analyses",
+      "sample": "",
+      "finding": "The review assesses the effectiveness and cost-effectiveness of eHealth interventions in somatic diseases, based on reviews published 2009-2012. The abstract gives no depression-specific results.",
+      "sub_rq_ids": [],
+      "limitations": "Somatic disease population, not depression; abstract truncated before results; review of reviews."
+    },
+    {
+      "paper_id": "10.1017/s0033291708003590",
+      "relevance": 1,
+      "reliability": 4,
+      "method": "meta-analysis of 29 RCTs",
+      "sample": "1,628 subjects with social anxiety disorder",
+      "finding": "Psychological treatments for social anxiety disorder had a mean effect size of 0.70 on depression measures (19 contrast groups). Waiting-list controlled studies showed larger effects than placebo or treatment-as-usual controls.",
+      "sub_rq_ids": [
+        "rq6"
+      ],
+      "limitations": "Not digital-specific; depression is a secondary outcome in social anxiety patients; heterogeneity and variable study quality."
+    },
+    {
+      "paper_id": "10.1016/j.cpr.2021.102079",
+      "relevance": 2,
+      "reliability": 5,
+      "method": "systematic review and meta-analysis of 118 RCTs",
+      "sample": "45,924 school-aged participants",
+      "finding": "School-based prevention programs had small post-intervention effects on depression (g = 0.21) and anxiety (g = 0.18), with larger effects for targeted than universal programs. External providers showed some benefit over school staff.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Prevention programs in schools, not specifically digital therapeutics; the population is youth rather than adults with clinical depression."
+    },
+    {
+      "paper_id": "10.1371/journal.pone.0189904",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of eHealth trials with quality/bias assessment",
+      "sample": "employee populations",
+      "finding": "The review evaluates the effectiveness of app- or web-based mental health interventions for employees, stratified by follow-up length, intervention type, and universal versus targeted delivery. The abstract is truncated, so effect sizes are not available.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Occupational population; mental health outcomes broader than depression; abstract is truncated and gives no results."
+    },
+    {
+      "paper_id": "10.1038/s41386-023-01629-w",
+      "relevance": 0,
+      "reliability": 2,
+      "method": "narrative review",
+      "sample": "",
+      "finding": "The review covers the rapid antidepressant effects of ketamine and its synaptic mechanisms. It does not address digital therapeutics.",
+      "sub_rq_ids": [],
+      "limitations": "Pharmacological mechanism review; off-topic for digital interventions."
+    },
+    {
+      "paper_id": "10.1186/s12888-017-1473-1",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 10 RCTs",
+      "sample": "10 RCTs of eHealth prevention interventions for anxiety and depression in the general population",
+      "finding": "Ten RCTs, all using cognitive behavioural techniques and judged of sufficient quality, were pooled with a random-effects model to estimate the effects of eHealth prevention programs. The abstract is truncated before the effect sizes.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq4"
+      ],
+      "limitations": "Prevention in the general population rather than treatment of clinical depression; only 10 trials; abstract truncated"
+    },
+    {
+      "paper_id": "10.1016/s2215-0366(18)30006-3",
+      "relevance": 1,
+      "reliability": 4,
+      "method": "two-arm parallel individually randomised controlled trial",
+      "sample": "community sample of mothers with persistent postnatal major depression, infants aged 4.5-9 months at recruitment",
+      "finding": "Tested whether parenting video-feedback therapy versus progressive muscle relaxation, both added to CBT, improves child outcomes at age 2 for persistent postnatal depression. The abstract does not report results.",
+      "sub_rq_ids": [],
+      "limitations": "Face-to-face therapy rather than a digital therapeutic; primary outcomes are child outcomes; abstract truncated"
+    },
+    {
+      "paper_id": "10.2196/jmir.2812",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "systematic literature review (PRISMA), 17 studies",
+      "sample": "17 studies of eHealth in palliative care",
+      "finding": "No RCTs of eHealth in palliative care were found; studies were mostly observational, non-controlled or quasi-experimental and highly heterogeneous.",
+      "sub_rq_ids": [],
+      "limitations": "Palliative care setting, not depression; no RCTs; heterogeneous studies"
+    },
+    {
+      "paper_id": "10.1007/s11920-022-01326-3",
+      "relevance": 2,
+      "reliability": 3,
+      "method": "narrative review of adequately powered RCTs",
+      "sample": "patients with insomnia and comorbid MDD, GAD or PTSD",
+      "finding": "CBT-I may improve depression and anxiety outcomes in patients with comorbid insomnia and is superior to traditional depression/anxiety treatment for insomnia symptoms. Results are mixed on whether CBT-I alone or augmented has effects on depression outcomes.",
+      "sub_rq_ids": [
+        "rq4"
+      ],
+      "limitations": "Narrative review; not specific to digital delivery; mixed results"
+    },
+    {
+      "paper_id": "10.1016/j.cpr.2018.01.008",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "systematic review of 78 studies (62 interventions), narrative synthesis",
+      "sample": "family carers of people with long term illness",
+      "finding": "eHealth interventions for carers were mostly psychoeducational and delivered via an enriched online environment. Heterogeneity precluded meta-analysis, so the findings were synthesised narratively.",
+      "sub_rq_ids": [],
+      "limitations": "Carer population, not depression-focused; no meta-analysis due to heterogeneity"
+    },
+    {
+      "paper_id": "10.2196/jmir.1194",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "systematic review of RCTs of internet interventions for anxiety and depression",
+      "sample": "",
+      "finding": "Attrition in RCTs ranged from about 1% to 50%, lower than in open-access sites. Predictors of adherence included disease severity, treatment length and chronicity, but few studies examined reasons for dropout or used appropriate statistical techniques.",
+      "sub_rq_ids": [
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Older review (2009); does not link adherence to symptom outcomes; poor statistical handling in primary studies"
+    },
+    {
+      "paper_id": "10.1348/014466509x472138",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "systematic review of 19 studies",
+      "sample": "19 studies of internet-based treatment with minimal therapist contact for psychological disorders",
+      "finding": "Dropout ranged from 2% to 83%, with a weighted average of 31%. Evidence on specific variables predicting dropout was inconclusive.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "Covers various psychological disorders, not only depression; two databases; inconclusive predictors"
+    },
+    {
+      "paper_id": "10.1017/s0033291715000665",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "individual patient data meta-analysis of 10 RCTs",
+      "sample": "2705 participants in 10 RCTs of self-guided web-based depression interventions",
+      "finding": "Male gender (RR 1.08), lower education (primary, RR 1.26) and comorbid anxiety symptoms (RR 1.18) were among the significant predictors of dropout from self-guided web-based interventions for depression.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4",
+        "rq5"
+      ],
+      "limitations": "Focuses on dropout predictors, not symptom outcomes or persistence; only self-guided interventions; abstract truncated"
+    },
+    {
+      "paper_id": "10.1016/j.pmcj.2018.09.003",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "survey (narrative review) of sensing and machine-learning research",
+      "sample": "",
+      "finding": "Surveys sensor- and machine-learning-based mental health monitoring systems and proposes a taxonomy, challenges and future opportunities.",
+      "sub_rq_ids": [],
+      "limitations": "About monitoring, not treatment; no effectiveness data; no systematic method described"
+    },
+    {
+      "paper_id": "10.1007/s40501-023-00297-3",
+      "relevance": 3,
+      "reliability": 2,
+      "method": "narrative review",
+      "sample": "",
+      "finding": "Engagement with digital mental health interventions is influenced by patient-, intervention- and systems-level factors. Human support, gamification, financial incentives and persuasive technology may improve engagement.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "No systematic method stated; does not quantify effects on symptom outcomes"
+    },
+    {
+      "paper_id": "10.1037/a0033247",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "RCT (wait-list controlled)",
+      "sample": "Patients with major depressive episode; n=38 intervention (CBM-I + iCBT) vs n=31 wait-list",
+      "finding": "Intent-to-treat analyses showed significant reductions in depressive symptoms and distress with medium-large effects (Cohen's d = 0.62-2.40) after CBM-I and the combined CBM-I + iCBT intervention versus wait-list. Change in interpretation bias partially mediated the symptom reduction after CBM-I.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3"
+      ],
+      "limitations": "Small sample; wait-list control (no attention control); abstract truncated and gives no follow-up data or adherence results"
+    },
+    {
+      "paper_id": "10.1016/j.jad.2017.06.013",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "RCT n=42",
+      "sample": "42 pregnant women (gestational week 12-28) with major depression; ICBT add-on to usual care vs TAU",
+      "finding": "Tested a pregnancy-adapted 10-week ICBT program as an add-on to usual care against TAU on MADRS-S, with acceptability and adherence also assessed. The abstract excerpt is cut off before the results, so the effect size is not stated.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq4",
+        "rq5"
+      ],
+      "limitations": "Small sample; TAU comparator; results not visible in the abstract; self-referred participants"
+    },
+    {
+      "paper_id": "10.2196/40719",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "Single-blind 3-arm RCT n=148",
+      "sample": "148 Chinese university students with depressive symptoms; chatbot (n=49), e-book (n=49), general chatbot (n=50)",
+      "finding": "Compared a CBT-based chatbot (XiaoE) with an e-book and a general chatbot control for 1 week, with PHQ-9 measured at 1 week and 1 month. Results are not shown in the abstract excerpt.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq3",
+        "rq6"
+      ],
+      "limitations": "Very short 1-week intervention; short follow-up of 1 month; young university sample; results truncated in abstract"
+    },
+    {
+      "paper_id": "10.2196/26811",
+      "relevance": 2,
+      "reliability": 2,
+      "method": "narrative review/commentary (unclear from abstract)",
+      "sample": "",
+      "finding": "Argues that digital mental health tools show promising efficacy in trials but face challenges in sustained implementation and evaluation. Notes the limits of traditional research methods for evaluating digital mental health.",
+      "sub_rq_ids": [
+        "rq6"
+      ],
+      "limitations": "No stated methods or quantitative data; not specific to depression outcomes"
+    },
+    {
+      "paper_id": "10.2196/12106",
+      "relevance": 3,
+      "reliability": 2,
+      "method": "real-world data evaluation, mixed-methods study",
+      "sample": "",
+      "finding": "Presents a preliminary real-world evaluation of Wysa, an AI conversational agent for mental well-being, in the context of depression burden. The abstract excerpt does not report outcomes.",
+      "sub_rq_ids": [
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Observational real-world app data without controlled comparison; abstract truncated; likely self-selected users"
+    },
+    {
+      "paper_id": "10.1007/s12160-009-9130-7",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "conceptual review proposing a taxonomy",
+      "sample": "",
+      "finding": "Proposes four categories of Internet-supported therapeutic interventions (web-based interventions, online counseling/therapy, Internet-operated therapeutic software, other online activities). Provides definitions and terminology rather than efficacy data.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "No effectiveness data; definitional paper; dated (2009)"
+    },
+    {
+      "paper_id": "10.1002/wps.20610",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "narrative review",
+      "sample": "",
+      "finding": "Reviews evidence that therapist-guided ICBT is more effective than waitlist for depression and anxiety and tends to be as effective as face-to-face CBT. A significant minority experience negative effects, with deterioration rates similar to face-to-face treatment and lower than control conditions.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq6"
+      ],
+      "limitations": "Narrative review without stated systematic methods; limited focus on long-term persistence; few consistent moderators identified"
+    },
+    {
+      "paper_id": "10.2196/18100",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 19 nonrandomized pre-post studies (30 groups)",
+      "sample": "Adults treated for depression or anxiety with guided iCBT in routine care; 19 studies",
+      "finding": "Pre-post effect sizes were clinically relevant (Hedges' g=0.42-1.88; pooled 1.78 for depression), with moderate to high acceptability. Average deterioration was 2.9%.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq4",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Nonrandomized pre-post designs without controls; high heterogeneity; pooled effect likely inflated; guided iCBT only"
+    },
+    {
+      "paper_id": "10.1136/gpsych-2022-100825",
+      "relevance": 1,
+      "reliability": 1,
+      "method": "narrative review/commentary",
+      "sample": "",
+      "finding": "Describes the metaverse and NFTs and their potential application to mental health treatment via VR/AR/MR. States that studies have reported positive results but gives no specific data on depression.",
+      "sub_rq_ids": [],
+      "limitations": "Speculative; no depression-specific outcomes or methods; no quantitative evidence"
+    },
+    {
+      "paper_id": "10.1136/bmjment-2023-300670",
+      "relevance": 2,
+      "reliability": 2,
+      "method": "expert consensus development panel",
+      "sample": "International cross-disciplinary expert panel",
+      "finding": "The panel proposed a framework for digital mental health research and implementation. Key themes include transdiagnostic approaches and the need for organisational change and extended clinical roles such as digital navigators.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq6"
+      ],
+      "limitations": "Expert opinion rather than empirical data; not specific to depression efficacy or durability"
+    },
+    {
+      "paper_id": "10.1002/14651858.cd004046.pub4",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "unclear from abstract",
+      "sample": "",
+      "finding": "The abstract contains only table-of-contents fragments (quality of life outcomes for acupuncture versus control acupuncture); no findings on digital therapeutics are reported.",
+      "sub_rq_ids": [],
+      "limitations": "Abstract is uninformative; the topic is acupuncture, not digital interventions, so it is off-topic."
+    },
+    {
+      "paper_id": "10.2196/jmir.3304",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "systematic review",
+      "sample": "",
+      "finding": "The abstract states that this review examines online interventions for depression in young people, covering RCTs of intervention content and social-networking-based interventions, in order to identify features linked to treatment outcomes. The abstract is truncated before results, so no effect sizes or conclusions are available.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq6"
+      ],
+      "limitations": "Abstract is truncated, so the number of studies and the results are not stated. The population is young people only, which is adjacent to the general target population."
+    },
+    {
+      "paper_id": "10.1038/s44184-023-00033-y",
+      "relevance": 2,
+      "reliability": 1,
+      "method": "commentary",
+      "sample": "",
+      "finding": "The paper argues that digital mental health can enhance, but not replace, existing services. It describes benefits such as accessibility, a 'poly-digital' aggregation of marginal gains, and real-world data collection through digital phenotyping and ecological momentary assessment.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "This is a perspective piece with no empirical data on depressive symptom outcomes or their durability."
+    },
+    {
+      "paper_id": "10.1080/16506070903318960",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "meta-analysis of 12 studies (15 comparisons)",
+      "sample": "2446 participants; 10 of 12 studies Internet-delivered",
+      "finding": "Internet/computerized treatments outperformed controls at posttest (d = 0.41, 95% CI 0.29-0.54). Supported treatments had a larger effect (d = 0.61) than unsupported ones (d = 0.25).",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3"
+      ],
+      "limitations": "Small number of studies; authors say more studies are needed; abstract reports posttest effects only, no follow-up durability."
+    },
+    {
+      "paper_id": "10.1371/journal.pone.0119895",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of RCTs, random-effects model",
+      "sample": "13 randomized trials, 796 children and adolescents (up to age 25); 4 depression-only trials, 2 transdiagnostic",
+      "finding": "The abstract states the aim of evaluating cCBT for anxiety and depression in youth, but the overall effect size is cut off. Only 4 of the 13 trials targeted depression alone.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Youth population; anxiety and depression pooled; few depression-specific trials; abstract truncated before results."
+    },
+    {
+      "paper_id": "10.1586/ern.12.63",
+      "relevance": 3,
+      "reliability": 2,
+      "method": "narrative review",
+      "sample": "",
+      "finding": "The review reports a strong correlation between degree of clinician support and outcome in internet-delivered CBT for depression. It also covers variation in treatment content and therapist factors.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Narrative review with no stated search method or quantitative synthesis; no follow-up data in abstract."
+    },
+    {
+      "paper_id": "10.1371/journal.pone.0100674",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "meta-analysis of 24 studies (26 treatment conditions)",
+      "sample": "Adults with depression; 14 face-to-face CBT and 12 guided iCBT conditions",
+      "finding": "The abstract describes the comparison of adherence (percentage of completed sessions and completers) between guided iCBT and face-to-face CBT. The results are truncated, and no head-to-head trials met the inclusion criteria.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Indirect comparisons across trials; adherence rather than symptom outcome; community samples without somatic comorbidity or substance abuse; results truncated."
+    },
+    {
+      "paper_id": "10.1192/bjp.bp.110.090282",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "phase II RCT, n=42",
+      "sample": "42 adults with medication-refractory residual depression",
+      "finding": "Adding individual rumination-focused CBT to treatment as usual significantly improved residual symptoms and remission rates, with effects mediated by reduced rumination.",
+      "sub_rq_ids": [],
+      "limitations": "Face-to-face therapy, not digital; small sample; no attention control group."
+    },
+    {
+      "paper_id": "10.1136/bmj.h5627",
+      "relevance": 5,
+      "reliability": 5,
+      "method": "pragmatic multicentre three-arm RCT (REEACT)",
+      "sample": "Adults in primary care with PHQ-9 ≥ 10",
+      "finding": "Supported cCBT (Beating the Blues or MoodGYM) added to usual GP care gave no additional improvement in depression over usual care alone. Outcomes were assessed at 4, 12 and 24 months.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq4",
+        "rq5"
+      ],
+      "limitations": "Allocation not blinded; usual care unconstrained; abstract truncated before the numerical results."
+    },
+    {
+      "paper_id": "10.2196/jmir.7.2.e16",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "three-arm RCT",
+      "sample": "Adults with self-reported depression in a nonprofit health maintenance organization; sample size not stated in abstract",
+      "finding": "The trial tested whether reminders (postcard or telephone) would make a pure self-help internet program (ODIN) effective, since earlier unguided trials were negative. The abstract is truncated before the results.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Self-reported depression; results not shown in abstract; older program."
+    },
+    {
+      "paper_id": "10.1007/s10567-018-0271-8",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 34 RCTs",
+      "sample": "3113 children and adolescents aged 6-18 with depression and anxiety",
+      "finding": "Technology-delivered interventions showed a small-to-moderate effect versus waiting list (g = 0.45, 95% CI 0.29-0.60). CBT results are cut off in the abstract.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq6"
+      ],
+      "limitations": "Youth population; depression and anxiety pooled; mostly waitlist comparators; heterogeneous intervention types."
+    },
+    {
+      "paper_id": "10.2196/jmir.4.3.e14",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "RCT, n=299",
+      "sample": "299 depressed adults in a health maintenance organization (144 intervention, 155 no-access control); mean intake scores in the severe range",
+      "finding": "The trial evaluated the ODIN web-based cognitive therapy self-help program against no access, with CES-D assessed at 4, 8, 16 and 32 weeks. The abstract is truncated before the outcome results.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq4"
+      ],
+      "limitations": "Unguided and standalone; control group could use usual care; results not shown in abstract; older program."
+    },
+    {
+      "paper_id": "10.1192/bjp.bp.114.160101",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "three-arm RCT, n=946",
+      "sample": "946 patients with mild to moderate depression recruited in Swedish primary healthcare centres",
+      "finding": "Both exercise and internet-based CBT produced larger improvements in depressive symptoms than treatment as usual at the 3-month reassessment. Work capacity improved in all three groups with no significant differences.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Only a short follow-up (3 months, 78% response rate); unblinded behavioural trial; no long-term persistence data in abstract."
+    },
+    {
+      "paper_id": "10.2196/17831",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of RCTs (Cochrane RoB 2.0 quality assessment)",
+      "sample": "adolescents and young adults aged 12-25 with anxiety or depressive symptoms; number of trials not stated in the abstract excerpt",
+      "finding": "The review examines posttreatment and follow-up effects of computerized CBT versus active and passive controls, and explores moderators of effect. Effect sizes are not given in the available abstract text.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Abstract is truncated, so results are not visible; restricted to youth, so generalizability to adults is limited."
+    },
+    {
+      "paper_id": "10.1371/journal.pone.0028099",
+      "relevance": 5,
+      "reliability": 3,
+      "method": "RCT n=155, four arms",
+      "sample": "155 callers to a national helpline with moderate to high psychological distress",
+      "finding": "Web-based CBT, with or without telephone tracking, produced lower depression than treatment as usual at post-intervention and at 6-month follow-up. Lay telephone tracking added no benefit for symptoms or adherence.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Modest sample, single helpline setting, follow-up limited to 6 months, comparison with treatment as usual rather than attention control."
+    },
+    {
+      "paper_id": "10.1002/wps.20701",
+      "relevance": 2,
+      "reliability": 5,
+      "method": "network meta-analysis of 101 RCTs",
+      "sample": "11,910 adult patients with depression, mostly moderate to severe",
+      "finding": "Combined psychotherapy plus pharmacotherapy was more effective than either alone (RR=1.27 vs psychotherapy; RR=1.25 vs pharmacotherapy) for treatment response. Chronic/treatment-resistant depression and baseline severity were assessed as moderators.",
+      "sub_rq_ids": [
+        "rq4"
+      ],
+      "limitations": "Not about digital interventions; relevance is limited to adjunct versus standalone and moderator context."
+    },
+    {
+      "paper_id": "10.1038/s41746-019-0188-8",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of RCTs, random-effects model",
+      "sample": "19 trials, 3681 adults with heightened symptom severity; depression k=6",
+      "finding": "Standalone smartphone apps showed a small-to-moderate effect on depression (Hedges' g = 0.33, 95% CI 0.10-0.57) versus control. Evidence for other mental health outcomes was mixed or presented narratively.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Few depression trials (k=6); search dates to February 2018; follow-up durability not evident from the abstract."
+    },
+    {
+      "paper_id": "10.1136/bmj.f540",
+      "relevance": 4,
+      "reliability": 5,
+      "method": "individual patient data meta-analysis of 16 datasets",
+      "sample": "2470 patients with depression in primary care and community settings",
+      "finding": "There was a significant interaction between baseline severity and treatment effect: more severely depressed patients showed larger benefits from low intensity interventions (guided self-help, internet-delivered) versus usual care. The abstract is truncated before the magnitude of the effect is given.",
+      "sub_rq_ids": [
+        "rq4",
+        "rq3"
+      ],
+      "limitations": "Low intensity interventions are broader than digital-only; abstract truncated; effect-size interaction is small."
+    },
+    {
+      "paper_id": "10.1093/sleep/zsx019",
+      "relevance": 1,
+      "reliability": 4,
+      "method": "blinded randomized split-plot trial n=107",
+      "sample": "107 adults with major depressive disorder and insomnia (mean age 42)",
+      "finding": "All groups improved on subjective sleep efficiency and total wake time with large effects, with no significant group differences. CBT-I groups improved on objective total wake time while the antidepressant plus sleep hygiene group worsened.",
+      "sub_rq_ids": [],
+      "limitations": "Therapist-delivered 4-session CBT-I rather than digital; primary outcomes are sleep rather than depression; modest sample, two sites."
+    },
+    {
+      "paper_id": "10.1016/j.invent.2018.01.002",
+      "relevance": 2,
+      "reliability": 3,
+      "method": "semi-structured expert interviews n=5",
+      "sample": "5 therapists in the German arm of the E-Compared RCT of blended therapy for depression (N=173 patients)",
+      "finding": "The study identified therapist-perceived barriers and facilitators to implementing blended therapy (face-to-face plus internet/mobile CBT) for depression, using the theoretical domains framework. Specific findings are not visible in the truncated abstract.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Very small qualitative pilot, therapist perspective only, no clinical outcomes."
+    },
+    {
+      "paper_id": "10.1017/s0033291718000648",
+      "relevance": 4,
+      "reliability": 5,
+      "method": "individual participant data meta-analysis of 13 RCTs",
+      "sample": "3805 adults with depressive symptoms receiving self-guided iCBT or control",
+      "finding": "Clinically significant deterioration occurred in 7.2% of participants overall, with lower rates in the self-guided iCBT group (5.8%) than in controls (9.1%). Socio-demographic, clinical and study-level moderators of deterioration were tested.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4",
+        "rq6"
+      ],
+      "limitations": "Only 13 of 16 eligible trials provided data; focuses on deterioration rather than overall efficacy or durability."
+    },
+    {
+      "paper_id": "10.1016/j.smrv.2022.101646",
+      "relevance": 1,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis (PRISMA), random-effects",
+      "sample": "clinical trials of CBT-I with quality-of-life outcomes; number not stated in the abstract excerpt",
+      "finding": "The review synthesizes CBT-I effects on quality of life across populations, delivery modes and methods. Results are not shown in the truncated abstract.",
+      "sub_rq_ids": [],
+      "limitations": "Outcome is quality of life in insomnia, not depressive symptoms; abstract truncated."
+    },
+    {
+      "paper_id": "10.1017/s0033291716001562",
+      "relevance": 4,
+      "reliability": 5,
+      "method": "individual patient data meta-analysis of 18 RCTs (21 comparisons)",
+      "sample": "2079 adults with depression in Internet-based guided self-help trials",
+      "finding": "Reliable deterioration from baseline to post-treatment was less likely with the intervention than control (3.36% vs 7.60%; RR 0.47, 95% CI 0.29-0.75). Lower education was associated with higher deterioration risk.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4",
+        "rq6"
+      ],
+      "limitations": "Covers deterioration to post-treatment only; guided self-help only; abstract truncated."
+    },
+    {
+      "paper_id": "10.1016/s2665-9913(23)00122-4",
+      "relevance": 0,
+      "reliability": 4,
+      "method": "systematic review and individual participant data meta-analysis of RCTs",
+      "sample": "people with knee and/or hip osteoarthritis",
+      "finding": "The abstract describes an IPD meta-analysis of patient-level moderators of therapeutic exercise effects on pain and physical function in osteoarthritis at 12 weeks, 6 months and 12 months. It does not address depression or digital therapeutics.",
+      "sub_rq_ids": [],
+      "limitations": "Off-topic population and intervention; abstract truncated before results."
+    },
+    {
+      "paper_id": "10.1159/000507819",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "individual participant data meta-analysis of 7 RCTs",
+      "sample": "7 trials, 2,186 adults with subthreshold depression",
+      "finding": "Internet-based interventions were superior to controls on depressive symptom severity at posttreatment (g=0.39), 3-6 month follow-up (g=0.30) and 12-month follow-up (g=0.27). Response and close to symptom-free status were also more frequent in the intervention group at all time points.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq4"
+      ],
+      "limitations": "Subthreshold depression only, with few trials; the abstract is truncated before the moderator and deterioration results."
+    },
+    {
+      "paper_id": "10.2196/43727",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "systematic literature review of 94 studies (756 unique records screened)",
+      "sample": "94 clinical, feasibility and pilot studies of digital interventions in adults with depression/MDD",
+      "finding": "The review assessed how adherence and engagement with digital depression interventions are measured and reported, and whether higher adherence or engagement is linked to greater efficacy. The abstract is truncated before the results.",
+      "sub_rq_ids": [
+        "rq5",
+        "rq4",
+        "rq2"
+      ],
+      "limitations": "Results are not visible in the abstract; the included studies are heterogeneous, including pilot and feasibility studies."
+    },
+    {
+      "paper_id": "10.1038/s41746-023-00800-3",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "systematic review and meta-analysis of 22 RCTs",
+      "sample": "22 RCTs of adults with insomnia reporting depressive or anxiety symptoms",
+      "finding": "At post-treatment, digital CBT-I had a small to moderate effect on depressive symptoms (SMD=-0.42, k=21) and on anxiety (SMD=-0.29), and a large effect on sleep (SMD=-0.76). Higher-adherence groups showed larger effects on depression, anxiety and sleep than lower-adherence groups.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq4",
+        "rq5"
+      ],
+      "limitations": "Population is people with insomnia, not primarily depression, and depression is a secondary outcome; the abstract is truncated, so follow-up persistence is not shown."
+    }
+  ]
+}

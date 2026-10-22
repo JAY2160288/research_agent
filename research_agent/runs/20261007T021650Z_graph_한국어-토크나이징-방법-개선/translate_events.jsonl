@@ -1,0 +1,6 @@
+{"t": 0.0, "kind": "run_start", "topic": "20261007T021650Z_graph_한국어-토크나이징-방법-개선", "mode": "translate"}
+{"t": 71.581, "kind": "llm_call", "role": "translate", "model": "claude-sonnet-5-5", "input_tokens": 8757, "cache_read": 0, "cache_write": 0, "output_tokens": 9186, "cost_usd": 0.109374, "attempt": 1, "ok": true, "error": null}
+{"t": 71.582, "kind": "translate_check", "attempt": 1, "issues": ["gap:0:data: numbers missing from translation: ['10'] — copy every number, DOI and id verbatim"]}
+{"t": 127.022, "kind": "llm_call", "role": "translate", "model": "claude-sonnet-5-5", "input_tokens": 8833, "cache_read": 0, "cache_write": 0, "output_tokens": 9418, "cost_usd": 0.111846, "attempt": 1, "ok": true, "error": null}
+{"t": 127.024, "kind": "translate_check", "attempt": 2, "issues": []}
+{"t": 127.04, "kind": "translate_end", "items": 57, "fallback": 0, "cost_usd": 0.2212, "bytes": 99195}

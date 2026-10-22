@@ -1,0 +1,62 @@
+{
+  "gaps": [
+    {
+      "description": "No study compares episodic, semantic and hierarchical long-term memory head-to-head on multi-step task success while holding the agent loop fixed. The controlled harness reports that no substrate dominates, but its abstract shows no multiple seeds, no variation of the agent loop and no full per-design results. AriGraph and AWM each use bespoke, co-designed memory against selected baselines, so structure cannot be separated from domain tuning.",
+      "evidence_ids": [
+        "10.48550/arxiv.2608.15008",
+        "10.48550/arxiv.2407.04363",
+        "10.48550/arxiv.2409.07429"
+      ],
+      "proposed_rq": "Holding backbone and environment fixed, do episodic, semantic, hierarchical and graph memory differ in multi-step success, and does the ranking change with the agent loop (ReAct, Reflexion-style, plan-then-execute)?",
+      "method": "Pre-registered factorial experiment: 4 memory designs x 3 agent loops x 3 backbones, with at least 5 seeds per cell and success rate as the main outcome, analysed with mixed-effects models. Re-implement AriGraph-style and AWM-style memory inside the common harness to test whether their gains survive without domain-specific co-design.",
+      "data": "ALFWorld, ScienceWorld, WebArena and Mind2Web task splits with held-out evaluation tasks, using open-source harness code plus public benchmarks. Roughly 50-100 held-out tasks per suite."
+    },
+    {
+      "description": "The harness study reports only qualitatively that excessive retrieval harms sequential decision-making while broad retrieval helps long-context QA. The threshold at which retrieval turns harmful, and whether relevance quality shifts it, has not been measured. QA work finds iterative retrieval beats single-step retrieval, and step-level retrieval is claimed to reduce irrelevant context, but neither is tested as a dose-response effect on task success.",
+      "evidence_ids": [
+        "10.48550/arxiv.2608.15008",
+        "10.48550/arxiv.2412.15266",
+        "10.48550/arxiv.2403.06221"
+      ],
+      "proposed_rq": "How does task success change as the number or token budget of retrieved memory items increases, and does step-level versus trajectory-level retrieval move the point at which success starts to fall?",
+      "method": "Within-agent dose-response experiment sweeping top-k (0, 1, 3, 5, 10, 20) crossed with retrieval granularity (step vs trajectory) and oracle versus noisy relevance. Fit per-condition curves of success against retrieved tokens and estimate the inflection point with bootstrap CIs.",
+      "data": "ALFWorld and WebArena with one memory store populated from earlier episodes, using 2-3 backbones and at least 3 seeds. Matched QA tasks (LongMemEval) serve as a contrast condition."
+    },
+    {
+      "description": "No study ablates memory retrieval inside planning or task-decomposition loops on long-horizon tasks. RAP, TRAD and CAPEAM link retrieved experience to planning, but their abstracts give no numbers or no isolating ablation. The planning survey treats memory only as one category of planning enhancement, so whether memory helps at plan time, at execution time, or both is unknown.",
+      "evidence_ids": [
+        "10.48550/arxiv.2402.03610",
+        "10.48550/arxiv.2403.06221",
+        "10.48550/arxiv.2308.07241",
+        "10.48550/arxiv.2402.02716"
+      ],
+      "proposed_rq": "Does giving the planner access to retrieved memory improve long-horizon success more than giving it only to the executor, and does plan reuse from memory add gains beyond step-level hints?",
+      "method": "Controlled ablation of one plan-and-execute agent with memory access at planning only, execution only, both, or neither, plus a plan-reuse arm. The main outcome is success on tasks needing 10 or more dependent steps, with failures coded by whether the plan or the execution broke.",
+      "data": "MemoryArena-style interdependent multi-session tasks and WebArena or ALFWorld long-horizon subsets. About 200 tasks, 3 seeds, and trace logs for failure coding."
+    },
+    {
+      "description": "Controlled evidence on consolidation, forgetting and pruning is nearly absent. Forgetting and reward-based pruning gains come from self-reported or number-free preprints, while the one controlled ALFWorld study finds bounded retention indistinguishable on clean tasks and benefits only under synthetic distractor noise with TraceRetain. Whether these mechanisms help under realistic, naturally accumulating noise across many sessions is untested.",
+      "evidence_ids": [
+        "10.2478/ijanmc-2024-0029",
+        "10.48550/arxiv.2606.06787",
+        "10.48550/arxiv.2606.29178",
+        "10.48550/arxiv.2507.05257"
+      ],
+      "proposed_rq": "Across many sequential sessions with naturally accumulating, partly outdated entries, do Ebbinghaus-style forgetting, reward-based pruning and trace-aware retention improve success over FIFO and unbounded memory?",
+      "method": "Longitudinal ablation over 20+ consecutive sessions comparing unbounded, FIFO, forgetting-curve, reward-pruning and TraceRetain policies, with success measured at fixed session checkpoints. Include a selective-forgetting probe in which earlier facts become invalid.",
+      "data": "MemoryAgentBench's incremental formats and multi-session agentic tasks (MemoryArena, IFCMemoryBench), with at least 3 seeds and no synthetic noise injection."
+    },
+    {
+      "description": "Cost, latency and error propagation of long-term memory are not measured against task success. Cost and latency savings are self-reported, the harness study notes costly or brittle substrates without per-design numbers visible, and no study measures how a wrong stored memory affects later tasks. The only propagation evidence is a toxicity study in a simulated multi-agent setting, which does not address task success.",
+      "evidence_ids": [
+        "10.48550/arxiv.2608.15008",
+        "10.2478/ijanmc-2024-0029",
+        "10.48550/arxiv.2605.16746",
+        "10.48550/arxiv.2606.29178"
+      ],
+      "proposed_rq": "How do erroneous or poisoned memory entries affect later multi-step success for different memory designs, and what is success per token and per second once memory costs are included?",
+      "method": "Fault-injection experiment inserting 0%, 10% and 30% incorrect lessons or workflows into each memory design, measuring the drop in success and the number of later episodes affected. Report cost-adjusted success (success per 1k tokens and per minute) with and without memory.",
+      "data": "ALFWorld and WebArena episodes with logged token and latency counts. Faults are generated by corrupting stored reflections or workflows, using 2 backbones and at least 3 seeds."
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "round": 2,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq2",
+    "rq3"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "search rq2: longitudinal assessments of graduate dissertation or thesis chapter quality (using blind expert rubrics) correlated with AI use intensity over study duration; or comparative analysis of quality metrics (originality, rigor, literature integration) in dissertations submitted by high versus low AI users",
+    "search rq3: experimental or longitudinal studies of graduate students measuring cognitive load (via validated scales or task performance metrics), skill atrophy/development, or problem-solving approach changes as a function of AI tool use intensity during dissertation research"
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "synthesis",
+      "sub_rq_id": "rq1",
+      "problem": "RQ1 (direct effects on research productivity: output volume, completion time, efficiency metrics) is answered only by one survey of UK academics (10.1007/s42438-023-00440-6) reporting perceived workload relief, not objective productivity measures for graduate students, making the sub-question effectively unanswered despite passing the count threshold.",
+      "action": "search rq1: randomized controlled trials or longitudinal studies directly measuring objective graduate student research output (word count, task completion time, pages drafted per time period) comparing AI users to non-users over weeks to semesters"
+    },
+    {
+      "severity": "major",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "RQ2 (research quality and rigor outcomes in graduate research) cites hallucination studies (10.2196/53164) and AI article generation experiments (10.2196/47049) but lacks evidence from actual graduate dissertations or theses; the single coding study (10.3390/app14104115) is undergraduate programming only, leaving graduate-specific quality effects unmeasured.",
+      "action": "search rq2: longitudinal assessments of graduate dissertation or thesis chapter quality (using blind expert rubrics) correlated with AI use intensity over study duration; or comparative analysis of quality metrics (originality, rigor, literature integration) in dissertations submitted by high versus low AI users"
+    },
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq3",
+      "problem": "RQ3 (mechanisms: cognitive load, skill development, problem-solving) relies heavily on undergraduate samples and non-research contexts (digital storytelling, programming education); only 10.3390/app14104115 (n=32 undergraduates, 10-week duration) directly links AI reliance to academic performance, providing insufficient evidence of mechanisms in graduate research workflows.",
+      "action": "search rq3: experimental or longitudinal studies of graduate students measuring cognitive load (via validated scales or task performance metrics), skill atrophy/development, or problem-solving approach changes as a function of AI tool use intensity during dissertation research"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq4",
+      "problem": "The conflict between workflow compatibility (10.1145/3652154: software engineers) and perceived usefulness (10.1007/s10755-023-09686-1, 10.1016/j.heliyon.2024.e32220: university students) as adoption drivers is explained by population and task differences, but this hypothesis is not empirically tested in graduate populations.",
+      "action": "synthesize: revise the adoption drivers conditional claim to explicitly state that software engineers may prioritize workflow fit while students prioritize usefulness and social factors, with the note that this remains untested in graduate-specific contexts and warrants investigation across disciplines"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq5",
+      "problem": "RQ5 (academic integrity, plagiarism, dependence) is addressed through reviews, commentaries, and one hallucination rate study (10.2196/53164), but no empirical studies measure actual rates of integrity violations or plagiarism among graduate students as a function of AI use.",
+      "action": "search rq5: empirical audits or surveys of graduate student research outputs (via plagiarism detection, citation verification, or direct assessment) measuring rates of integrity violations, undetected AI-assisted plagiarism, or citation hallucinations correlated with AI tool use"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq6",
+      "problem": "RQ6 (best practices and training) is synthesized from policy analyses (10.1016/j.caeai.2024.100348) and expert commentary (10.1080/0144929x.2024.2394886) rather than experimental tests; no randomized trials of training interventions exist to support specific recommendations for graduate research workflows.",
+      "action": "search rq6: randomized controlled trials comparing training conditions (e.g., no training vs. short literacy module vs. intensive workshops with follow-up) on graduate student AI use responsibility, measuring outcomes in integrity violations or quality metrics"
+    }
+  ]
+}

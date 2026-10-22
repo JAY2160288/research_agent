@@ -1,0 +1,6 @@
+{"t": 0.0, "kind": "run_start", "topic": "20261006T030835Z_baseline_생성형-ai-활용이-대학원생의-연구-생산성과-연구-품질에-미치는-영향", "mode": "translate"}
+{"t": 24.2, "kind": "llm_call", "role": "translate", "model": "claude-sonnet-5-5", "input_tokens": 5368, "cache_read": 0, "cache_write": 0, "output_tokens": 4327, "cost_usd": 0.054006, "attempt": 1, "ok": true, "error": null}
+{"t": 24.201, "kind": "translate_check", "attempt": 1, "issues": ["gap:3:data: too short (ratio 0.32) — translate the whole text, do not summarize"]}
+{"t": 48.442, "kind": "llm_call", "role": "translate", "model": "claude-sonnet-5-5", "input_tokens": 5439, "cache_read": 0, "cache_write": 0, "output_tokens": 4340, "cost_usd": 0.054278, "attempt": 1, "ok": true, "error": null}
+{"t": 48.443, "kind": "translate_check", "attempt": 2, "issues": []}
+{"t": 48.45, "kind": "translate_end", "items": 49, "fallback": 0, "cost_usd": 0.1083, "bytes": 34889}

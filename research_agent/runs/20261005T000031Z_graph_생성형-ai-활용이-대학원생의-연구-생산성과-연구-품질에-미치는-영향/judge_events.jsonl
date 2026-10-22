@@ -1,0 +1,4 @@
+{"t": 0.0, "kind": "run_start", "topic": "20261005T000031Z_graph_생성형-ai-활용이-대학원생의-연구-생산성과-연구-품질에-미치는-영향", "mode": "judge"}
+{"t": 25.135, "kind": "llm_call", "role": "judge", "model": "claude-opus-5-5", "input_tokens": 24220, "cache_read": 0, "cache_write": 0, "output_tokens": 2333, "cost_usd": 0.14354, "attempt": 1, "ok": true, "error": null}
+{"t": 25.135, "kind": "judge_check", "attempt": 1, "issues": []}
+{"t": 25.136, "kind": "judge_end", "mean": 4.14, "flags": [], "cost_usd": 0.1435}

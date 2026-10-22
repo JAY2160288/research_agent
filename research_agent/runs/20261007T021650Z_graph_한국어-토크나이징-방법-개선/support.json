@@ -1,0 +1,203 @@
+{
+  "model": "claude-opus-5-5",
+  "claims_total": 11,
+  "pairs_total": 18,
+  "pairs_judged": 18,
+  "pairs_supported": 17,
+  "pairs_partial": 1,
+  "pairs_unsupported": 0,
+  "pairs_unverified_quote": 0,
+  "pairs_no_abstract": 0,
+  "citation_support_rate": 0.9444,
+  "citation_support_rate_lenient": 1.0,
+  "claim_support_rate": 1.0,
+  "claims": [
+    {
+      "id": "c1",
+      "statement": "Morphological pre-segmentation followed by subword learning is the strongest option on most Korean NLU and MT tasks tested, and subword units beat word- or morpheme-level units on OOV robustness; the Korean evidence is two moderate-reliability empirical studies, so the effect sizes are unknown.",
+      "supported": true
+    },
+    {
+      "id": "c2",
+      "statement": "Outside Korean, morphology-aware tokenization is competitive with or better than standard tokenizers on morphologically rich languages (Turkish) and generalizes better to OOV words (English-centric models); this is indirect support for Korean.",
+      "supported": true
+    },
+    {
+      "id": "c3",
+      "statement": "Subword tokenization does not eliminate OOV problems for Korean and other CJK languages, and OOV hurts transfer learning; Korean-specific handling such as syllable-level modeling or syllable-pattern estimation of unknown morphemes keeps tagging accuracy high under spacing errors and unknown morphemes (97-98 points).",
+      "supported": true
+    },
+    {
+      "id": "c4",
+      "statement": "The same content can need many times more tokens in some languages than in others, even with multilingual tokenizers, implying unequal API cost, latency and context capacity; the abstracts do not single out Korean.",
+      "supported": true
+    },
+    {
+      "id": "c5",
+      "statement": "Vocabulary extension of an English-centric LLM improves target-language proficiency with modest continued training. For Korean, the evidence is leaderboard proficiency from EEVE (about 2B training tokens, no efficiency numbers reported). The encoding-efficiency gain (20,000 added Chinese tokens) is shown only for Chinese LLaMA.",
+      "supported": true
+    },
+    {
+      "id": "c6",
+      "statement": "Replacing whitespace with a special symbol hurt Korean sentiment analysis in one study; whether this is task-dependent is untested because only sentiment was evaluated.",
+      "supported": true
+    },
+    {
+      "id": "c7",
+      "statement": "In Turkish, larger vocabularies helped morphological- and word-level tokenizers more than de facto tokenizers; Korean applicability is untested, so confidence for Korean is low.",
+      "supported": true
+    },
+    {
+      "id": "c8",
+      "statement": "In controlled European-language experiments, multilingual tokenizers needed roughly three times larger vocabularies than English ones, and fertility and parity did not always predict downstream performance; transfer to Korean is untested.",
+      "supported": true
+    },
+    {
+      "id": "c9",
+      "statement": "Pronunciation-based sub-character tokenization shortens sequences and resists homophone typos while staying competitive on Chinese PLMs; whether Hangul benefits is not shown.",
+      "supported": true
+    },
+    {
+      "id": "c10",
+      "statement": "Morphological segmentation used as a pre-segmenter before BPE gave the best results on Korean-English MT and four NLU tasks, though plain BPE won on KorQuAD.",
+      "supported": true
+    },
+    {
+      "id": "c11",
+      "statement": "Standalone morpheme-based tokenization lost to learned subwords: SentencePiece beat Mecab-Ko for review sentiment classification, and subword units were more OOV-robust than morpheme units in sentence-embedding sentiment analysis.",
+      "supported": true
+    }
+  ],
+  "pairs": [
+    {
+      "claim_id": "c1",
+      "paper_id": "10.3390/electronics10070845",
+      "verdict": "supported",
+      "quote": "In our work, we confirmed: the robustness of the subword unit for out-of-vocabulary (OOV) problems compared to other token units, the disadvantage of replacing whitespace with a particular symbol in the sentiment analysis task, and that the optimal vocabulary size is 16K in subword and submorpheme tokenization.",
+      "reason": "초록은 서브워드 단위가 단어·형태소 등 다른 단위보다 OOV에 강건하다고 확인하여 주장의 해당 부분을 직접 뒷받침한다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.48550/arxiv.2010.02534",
+      "verdict": "supported",
+      "quote": "Experimental results demonstrate that a hybrid approach of morphological segmentation followed by BPE works best in Korean to/from English machine translation and natural language understanding tasks such as KorNLI, KorSTS, NSMC, and PAWS-X.",
+      "reason": "초록은 형태소 분절 후 BPE가 한국어 MT와 대부분의 NLU 과제에서 최선이라고 직접 보고하며, 이는 주장의 해당 부분과 일치한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.1145/3578707",
+      "verdict": "supported",
+      "quote": "Our experiments, supported by statistical tests, reveal that the morphological-level tokenizer delivers a challenging performance with de facto tokenizers.",
+      "reason": "터키어에서 형태소 수준 토크나이저가 표준 토크나이저와 대등한 성능을 보였다고 보고한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.48550/arxiv.2404.13292",
+      "verdict": "supported",
+      "quote": "Our empirical findings show that the accuracy of UniMorph Labeller is 98%, and that, in all language models studied (including ALBERT, BERT, RoBERTa, and DeBERTa), alien tokenization leads to poorer generalizations compared to morphological tokenization for semantic compositionality of word meanings.",
+      "reason": "OOV 일반화 벤치마크에서 형태소적 토큰화가 더 나은 일반화를 보였다고 보고한다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.1145/3591206",
+      "verdict": "supported",
+      "quote": "We adopt syllable-level input and output formats, as well as a simple structure for ELECTRA and RNN-CRF models for multi-task learning, and we achieve a good performance 98.30 of F1, better than previous studies on the Sejong corpus test set.",
+      "reason": "음절 수준 모델로 띄어쓰기 오류에 강건하며 98.30 F1을 달성했다고 보고한다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.1162/089120102317341774",
+      "verdict": "supported",
+      "quote": "In a series of experiments using three different domain corpora, the system achieved a 97% tagging accuracy even though 10% of the morphemes in the test corpora were unknown.",
+      "reason": "음절 패턴 기반 미등록 형태소 추정으로 97% 태깅 정확도를 보고한다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.2197/ipsjjip.29.490",
+      "verdict": "supported",
+      "quote": "With subword tokenization, out-of-vocabulary (OOV) is generally assumed to be a solved problem. Still, in languages with a large alphabet such as Chinese, Japanese, and Korean (CJK), this assumption does not hold.",
+      "reason": "CJK 언어에서 서브워드로도 OOV가 해결되지 않으며 전이학습에 악영향을 준다고 명시한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.48550/arxiv.2305.13707",
+      "verdict": "partial",
+      "quote": "What constitutes a token, however, is training data and model dependent with a large variance in the number of tokens required to convey the same information in different languages.",
+      "reason": "언어 간 토큰 수 차이와 API 비용 불평등은 보이지만 배수 규모, 지연, 컨텍스트 용량은 언급하지 않는다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.48550/arxiv.2305.15425",
+      "verdict": "supported",
+      "quote": "The same text translated into different languages can have drastically different tokenization lengths, with differences up to 15 times in some cases. These disparities persist even for tokenizers that are intentionally trained for multilingual support.",
+      "reason": "언어 간 토큰 길이 최대 15배 차이와 다국어 토크나이저에서도 지속됨, 비용·지연·컨텍스트 불평등을 직접 보고한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.48550/arxiv.2304.08177",
+      "verdict": "supported",
+      "quote": "We achieve this by extending LLaMA's existing vocabulary with an additional 20,000 Chinese tokens, thereby improving its encoding efficiency and semantic understanding of Chinese.",
+      "reason": "중국어 토큰 2만 개 추가로 인코딩 효율이 향상되었다고 직접 서술한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.48550/arxiv.2402.14714",
+      "verdict": "supported",
+      "quote": "In contrast to previous efforts that believe new embeddings require trillions of training tokens, we show that our method can significantly boost non-English proficiency within just 2 billion tokens.",
+      "reason": "어휘 확장으로 20억 토큰만으로 한국어 능력을 높이고 리더보드 상위를 기록했다고 보고한다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.3390/electronics10070845",
+      "verdict": "supported",
+      "quote": "In our work, we confirmed: the robustness of the subword unit for out-of-vocabulary (OOV) problems compared to other token units, the disadvantage of replacing whitespace with a particular symbol in the sentiment analysis task, and that the optimal vocabulary size is 16K in subword and submorpheme tokenization.",
+      "reason": "감성분석에서 공백을 특수 기호로 대체하는 것이 불리했다고 직접 보고하며 감성분석만 평가했다."
+    },
+    {
+      "claim_id": "c7",
+      "paper_id": "10.1145/3578707",
+      "verdict": "supported",
+      "quote": "Furthermore, we find that increasing the vocabulary size improves the performance of Morphological- and Word-level tokenizers more than that of de facto tokenizers.",
+      "reason": "터키어에서 어휘 크기 증가가 형태소·단어 수준 토크나이저에 더 큰 이득을 준다고 직접 보고한다."
+    },
+    {
+      "claim_id": "c8",
+      "paper_id": "10.48550/arxiv.2310.08754",
+      "verdict": "supported",
+      "quote": "Furthermore, we show that multilingual tokenizers trained on the five most frequent European languages require vocabulary size increases of factor three in comparison to English.",
+      "reason": "유럽어 다국어 토크나이저의 3배 어휘 필요와 fertility·parity의 예측력 한계를 모두 보고한다."
+    },
+    {
+      "claim_id": "c9",
+      "paper_id": "10.1162/tacl_a_00560",
+      "verdict": "supported",
+      "quote": "2) Pronunciation-based SubChar tokenizers can encode Chinese homophones into the same transliteration sequences and produce the same tokenization output, hence being robust to homophone typos. At the same time, models trained with SubChar tokenizers perform competitively on downstream tasks.",
+      "reason": "중국어 PLM에서 발음 기반 하위문자 토큰화가 짧은 시퀀스, 동음이의 오타 강건성, 경쟁력 있는 성능을 보인다고 보고한다."
+    },
+    {
+      "claim_id": "c10",
+      "paper_id": "10.48550/arxiv.2010.02534",
+      "verdict": "supported",
+      "quote": "Experimental results demonstrate that a hybrid approach of morphological segmentation followed by BPE works best in Korean to/from English machine translation and natural language understanding tasks such as KorNLI, KorSTS, NSMC, and PAWS-X. As an exception, for KorQuAD, the Korean extension of SQuAD, BPE segmentation turns out to be the most effective.",
+      "reason": "형태소 분절+BPE가 MT와 4개 NLU 과제에서 최선이고 KorQuAD에서는 BPE가 최선이라고 정확히 보고한다."
+    },
+    {
+      "claim_id": "c11",
+      "paper_id": "10.1080/08839514.2023.2175112",
+      "verdict": "supported",
+      "quote": "The results indicated that SentencePiece performed better than Mecab-Ko.",
+      "reason": "한국어 리뷰 감성분류에서 SentencePiece가 Mecab-Ko보다 우수했다고 직접 보고한다."
+    },
+    {
+      "claim_id": "c11",
+      "paper_id": "10.3390/electronics10070845",
+      "verdict": "supported",
+      "quote": "In our work, we confirmed: the robustness of the subword unit for out-of-vocabulary (OOV) problems compared to other token units, the disadvantage of replacing whitespace with a particular symbol in the sentiment analysis task, and that the optimal vocabulary size is 16K in subword and submorpheme tokenization.",
+      "reason": "문장 임베딩 감성분석에서 서브워드가 형태소 등 다른 단위보다 OOV에 강건하다고 보고한다."
+    }
+  ],
+  "notes": [],
+  "cost_usd": 0.1172,
+  "llm_calls": 1,
+  "elapsed_sec": 31.7
+}

@@ -1,0 +1,46 @@
+{
+  "round": 2,
+  "passed": true,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [],
+  "weak_claims": [],
+  "actions": [],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq4",
+      "problem": "rq4 passes on count but is effectively unanswered: RAP (2402.03610, no numbers), TRAD (2403.06221, in-context demonstrations, no results), CAPEAM (2308.07241, embodied environment state, no memory ablation), JARVIS-1 (2311.05997 and its duplicate 10.1109/tpami.2024.3511593, no ablation) and the planning survey (2402.02716) give no isolated evidence of memory-planning interaction on success.",
+      "action": "search rq4: empirical ablations of memory access at plan time versus execution time, plan or workflow reuse from memory, and memory-augmented planners with success-rate comparisons on ALFWorld, WebArena or similar long-horizon tasks"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq6",
+      "problem": "The consensus claim that unselective memory degrades success cites 2412.15266, a QA and dialogue study that actually finds mixed memory resilient to noise. It also cites 2606.29178, which reports precision loss for FIFO and unbounded memory, not a success drop, so only 2608.15008 supports the success claim directly.",
+      "action": "synthesize: narrow the claim to what each id shows. Separate the precision degradation (2606.29178), the QA noise resilience (2412.15266) and the sequential-decision harm (2608.15008), and lower the confidence of the claim."
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq6",
+      "problem": "rq6 has no non-self-reported measurement of cost, latency or error propagation affecting task success. The cost evidence is VIMBank (2.478/ijanmc-2024-0029) and MRAgent, and the propagation evidence is the toxicity paper (2605.16746), which is tangential.",
+      "action": "search rq6: empirical studies of memory poisoning, stale or incorrect memory, error accumulation, and token or latency overhead of memory in LLM agents on task benchmarks"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq1",
+      "problem": "The reported conflict pits AriGraph and AWM, which beat selected baselines, against the harness result 2608.15008, which says no substrate dominates. Neither side claims a general structured-memory advantage, so this is a scope difference rather than a true conflict. The same pair is also used as a consensus claim, which duplicates the content.",
+      "action": "synthesize: reframe the conflict as bespoke co-designed memory versus fixed-substrate comparison, or fold it into the consensus claim as a caveat. Do not present it as contradictory findings on the same question."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "For rq2, most of the supporting evidence on retrieval and storage mechanisms comes from conversational QA (2502.05589, 2609.16053, 2606.06036, 2412.15266). The only evidence on sequential tasks is 2608.15008 and the number-free TRAD abstract, so the rq2 conclusions about multi-step success are weakly grounded.",
+      "action": "search rq2: studies that vary retrieval, indexing or summarization of memory in agent benchmarks (ALFWorld, WebArena, ScienceWorld) and report task success"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "round": 3,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq2",
+    "rq6"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "search rq2: empirical studies with blinded or objective quality ratings of thesis, manuscript or research-writing outputs by master's or doctoral students using generative AI, including experiments and comparisons with non-AI controls",
+    "search rq6: graduate or thesis-specific AI policies, doctoral supervision guidelines, and studies or reviews proposing or validating measures and rubrics of research productivity and quality for AI-assisted research"
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "No consensus or conditional claim addresses whether GenAI changes the quality of graduate research outputs, and rq2 rests on perceived quality (10.14742/ajet.8843), n=10 (10.1080/03075079.2024.2323593), and EFL/language-learner or undergraduate studies (10.1007/s44217-025-00602-7, 10.3390/educsci15020141), so the sub-question is effectively unanswered despite passing the count.",
+      "action": "search rq2: empirical studies with blinded or objective quality ratings of thesis, manuscript or research-writing outputs by master's or doctoral students using generative AI, including experiments and comparisons with non-AI controls"
+    },
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq6",
+      "problem": "The measurement half of rq6 is effectively unanswered: no paper in the table describes how productivity or quality of AI-assisted graduate research is measured, and policy evidence covers coursework, publishers or general university frameworks (10.1057/s41599-024-03526-z, 10.12688/f1000research.142411.2, 10.1186/s41239-023-00408-3) rather than graduate research or theses.",
+      "action": "search rq6: graduate or thesis-specific AI policies, doctoral supervision guidelines, and studies or reviews proposing or validating measures and rubrics of research productivity and quality for AI-assisted research"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq4",
+      "problem": "Moderators named in rq4 (AI literacy, English proficiency, discipline, supervisor guidance) are mostly covered by undergraduate or general-student papers (10.1080/14703297.2025.2600476, 10.1186/s40561-025-00384-3) or a programming sample (10.1007/s10639-025-13337-7), and the discipline moderator is only inferred from an undergraduate STEM vs non-STEM comparison.",
+      "action": "search rq4: studies of graduate students testing AI literacy, English proficiency, discipline or supervisor support as moderators of generative AI effects on research outcomes"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq5",
+      "problem": "The second conflict pairs a single qualitative study of experienced research users (10.14742/ajet.8843) against a single small English-major study (10.54855/ijaile.25212), so the conflict is thin, and the 'postgraduates show greater awareness than undergraduates' claim in the second consensus rests on one single-university perception study (10.1016/j.heliyon.2024.e26239).",
+      "action": "synthesize: qualify the postgraduate-awareness statement as a single-study finding and mark the benefits-vs-challenges conflict as weakly supported rather than a general divergence"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq3",
+      "problem": "The literature-screening and coding gap cites 10.2196/47049, 10.2196/53164, 10.2196/56537 and 10.3390/computers14020053, all of which are truncated or non-graduate, so it does not demonstrate that graduate-user evidence is truly absent, and the design does not address how task stage affects outcomes.",
+      "action": "gap: state that the absence of graduate-user evidence is based on the current search, and add a task-stage factor to the crossover design"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "gaps": [
+    {
+      "description": "No Korean study reports intrinsic tokenizer metrics (fertility, morpheme-boundary alignment, OOV rate) next to downstream scores. The correlation evidence comes only from Turkish and European languages, where the metrics predict downstream results inconsistently. Whether any metric predicts Korean downstream performance is unknown.",
+      "evidence_ids": [
+        "10.48550/arxiv.2502.07057",
+        "10.48550/arxiv.2310.08754",
+        "10.48550/arxiv.2404.13292"
+      ],
+      "proposed_rq": "Which intrinsic tokenizer metrics (fertility, morpheme-boundary F1, OOV rate, token purity) predict KLUE and KoBEST downstream scores across Korean tokenizers?",
+      "method": "Pretrain about 12 identical small RoBERTa models that differ only in tokenizer (BPE, Unigram, morpheme+BPE, jamo-level, byte-level), fine-tune on KLUE/KoBEST with 3 seeds, and compute rank correlations and mixed-effects regressions of task score on each metric. The main outcome is the correlation between each metric and downstream score, benchmarked against the Turkish %TR result.",
+      "data": "Korean corpora such as Modu or Namuwiki/CC-100 Korean (at least 10B characters) and the public KLUE and KoBEST suites. Compute is about 12 pretraining runs at small scale."
+    },
+    {
+      "description": "Korean vocabulary design (size, monolingual vs multilingual composition) is unstudied. The vocabulary-size evidence concerns Turkish morphological tokenizers and European multilingual tokenizers, and the only Korean sub-word size analysis is in ASR. Nothing links Korean vocabulary size to tokens per character and downstream accuracy.",
+      "evidence_ids": [
+        "10.1145/3578707",
+        "10.48550/arxiv.2310.08754",
+        "10.3390/app10196936"
+      ],
+      "proposed_rq": "How do vocabulary size and monolingual vs multilingual composition affect tokens per Korean character and KLUE accuracy?",
+      "method": "Run a controlled ablation with vocabulary sizes of 16k, 32k, 64k and 128k, each as a Korean-only and a Korean+English+Chinese+Japanese tokenizer, in 8 pretraining runs at fixed compute. Report tokens per character and KLUE scores, and test a size-by-composition interaction with seeds.",
+      "data": "Balanced Korean and multilingual web corpora (e.g., CC-100 or mC4 subsets) plus KLUE. The 8 runs fit a small-model compute budget."
+    },
+    {
+      "description": "The pre-segmenter vs standalone morpheme question is confounded across studies. Morpheme+BPE won on MT and NLU while plain BPE won on KorQuAD, but standalone morpheme tokenization lost on sentiment, where each study used different tasks, domains and vocabularies. Whitespace handling was tested only on sentiment.",
+      "evidence_ids": [
+        "10.48550/arxiv.2010.02534",
+        "10.3390/electronics10070845",
+        "10.1080/08839514.2023.2175112"
+      ],
+      "proposed_rq": "With vocabulary size and training data fixed, does morpheme pre-segmentation before BPE outperform both standalone morpheme tokens and plain BPE, and does whitespace handling matter outside sentiment?",
+      "method": "Pretrain 2x3 models (whitespace marker vs none; BPE, morpheme+BPE, standalone morpheme) and fine-tune on a pre-registered suite of NLI, NER, QA, sentiment and MT. Compare pairwise with paired bootstrap, and report per-task effect sizes with a task-by-tokenizer interaction. The KLUE suite serves as the evaluation set only.",
+      "data": "One shared Korean corpus, Mecab-Ko or Kiwi for morpheme segmentation, and KLUE, KorQuAD and NSMC, plus a noisy-review test set."
+    },
+    {
+      "description": "Korean vocabulary-extension evidence is leaderboard proficiency only, with no efficiency numbers. EEVE reports no tokens-per-character or latency, and the encoding-efficiency gain is shown only for Chinese LLaMA. The roles of added-vocabulary size, initialization, parameter freezing and training-token budget are not separated, and cost disparity is documented across languages without Korean figures.",
+      "evidence_ids": [
+        "10.48550/arxiv.2402.14714",
+        "10.48550/arxiv.2304.08177",
+        "10.48550/arxiv.2305.15425"
+      ],
+      "proposed_rq": "How much does each of added-vocabulary size, embedding initialization, freezing schedule and training-token budget contribute to Korean encoding efficiency and task accuracy in an English-centric LLM?",
+      "method": "Use a one-factor-at-a-time design around a baseline (10k added tokens, subword-mean initialization, staged freezing, 2B tokens), varying vocabulary size (3 levels), initialization (1 alternative), freezing (1 alternative) and budget (2 levels) for about 8 runs. Outcomes are tokens per Korean character, inference latency and KoBEST/KMMLU accuracy against the unextended model.",
+      "data": "A 7-10B open LLM, Korean continued-pretraining corpora (about 0.5-4B tokens), and parallel Korean-English text to measure token-length ratios."
+    },
+    {
+      "description": "Robustness of Korean tokenizers to noisy text and Hangul sub-character units has not been compared. The spacing- and unknown-morpheme-robust taggers are intrinsic tagging studies, not tokenizer comparisons, and the review-text evidence compares only Mecab-Ko with SentencePiece. Pronunciation-based sub-character tokenization is shown only for Chinese.",
+      "evidence_ids": [
+        "10.1145/3591206",
+        "10.1162/tacl_a_00560",
+        "10.1080/08839514.2023.2175112"
+      ],
+      "proposed_rq": "Do jamo-level or syllable-pattern-aware tokenizers hold up better than BPE and morpheme+BPE under spacing errors, typos and slang in Korean user-generated text?",
+      "method": "Fine-tune matched PLMs with BPE, morpheme+BPE, syllable-level and jamo-level tokenizers on sentiment and NER, and evaluate on clean text and on test sets with synthetic spacing and typo noise at 10/20/30% rates. Compare accuracy degradation curves between tokenizers.",
+      "data": "NSMC, KLUE-NER and a newly collected annotated set of about 3,000 community or review posts, with noise injected programmatically."
+    }
+  ]
+}

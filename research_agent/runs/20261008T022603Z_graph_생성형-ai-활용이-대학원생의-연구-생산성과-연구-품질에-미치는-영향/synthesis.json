@@ -1,0 +1,162 @@
+{
+  "consensus": [
+    {
+      "statement": "Students report using GenAI mainly for writing and brainstorming support, information retrieval, paraphrasing and concept explanation, but the prevalence figures come from general or mixed student populations rather than graduate-specific samples.",
+      "evidence_ids": [
+        "10.1057/s41599-023-02304-7",
+        "10.1186/s41239-024-00453-6",
+        "10.1186/s41239-023-00411-8"
+      ],
+      "sub_rq_ids": [
+        "rq3"
+      ]
+    },
+    {
+      "statement": "Graduate and postgraduate students perceive GenAI as useful for research and thesis writing, including faster progress, but these are self-reported perceptions from small samples and none of these studies measures time saved, writing speed or publication output.",
+      "evidence_ids": [
+        "10.14742/ajet.8843",
+        "10.3991/ijep.v14i3.48395",
+        "10.46303/jcsr.2024.4",
+        "10.1007/s40593-024-00454-6"
+      ],
+      "sub_rq_ids": [
+        "rq1",
+        "rq2"
+      ]
+    },
+    {
+      "statement": "LLM-generated references are unreliable: a substantial share are fabricated or inaccurate, and DOI accuracy is especially poor. These tests used LLM outputs, not graduate-student samples, and mostly older models.",
+      "evidence_ids": [
+        "10.2196/52935",
+        "10.2196/53164",
+        "10.2196/80371"
+      ],
+      "sub_rq_ids": [
+        "rq5"
+      ]
+    },
+    {
+      "statement": "Surveys, reviews and commentaries raise concerns about accuracy, hallucination, integrity and overreliance, and recommend keeping human judgment central; this rests largely on low-reliability narrative reviews and perception data.",
+      "evidence_ids": [
+        "10.4103/ijo.ijo_718_23",
+        "10.3348/kjr.2023.0773",
+        "10.1177/27538699241231862",
+        "10.1186/s41239-023-00411-8",
+        "10.54855/ijaile.25212"
+      ],
+      "sub_rq_ids": [
+        "rq5"
+      ]
+    },
+    {
+      "statement": "Cautiously, AI-augmented text may read better yet lack research depth: reviewers rated it higher on readability and informativeness but found it short on research detail and reflective insight, and AI reviews were rated slightly below peer reviews. The samples are small (17 HCI reviewers; an unspecified graduate course) and not specific to graduate research writing.",
+      "evidence_ids": [
+        "10.1016/j.chbah.2024.100095",
+        "10.35542/osf.io/x3dct"
+      ],
+      "sub_rq_ids": [
+        "rq2"
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "claim": "Whether critical appraisal of AI output helps or hurts outcomes",
+      "side_a": {
+        "statement": "Critical appraisal of AI had a significant negative effect on AI self-efficacy and on AI output quality among university students.",
+        "evidence_ids": [
+          "10.1186/s40561-025-00384-3"
+        ],
+        "sub_rq_ids": [
+          "rq2",
+          "rq4"
+        ]
+      },
+      "side_b": {
+        "statement": "Qualitative studies of graduate students describe critical evaluation and feedback-seeking as central to responsible, beneficial use and to better writing.",
+        "evidence_ids": [
+          "10.1007/s40593-024-00454-6",
+          "10.1093/applin/amaf022",
+          "10.14742/ajet.8843"
+        ],
+        "sub_rq_ids": [
+          "rq2",
+          "rq4"
+        ]
+      },
+      "hypothesis_for_conflict": "The survey measures perceived output quality and self-efficacy, which may fall when students scrutinize outputs, whereas the qualitative work concerns rated or reflected writing quality and responsible use. The samples also differ: general Austrian university students in a cross-sectional SEM versus graduate or doctoral students reflecting on research writing."
+    },
+    {
+      "claim": "Whether benefits of ChatGPT in academic writing outweigh the challenges",
+      "side_a": {
+        "statement": "Research students with sustained ChatGPT use reported accelerated progress, higher quality and greater confidence.",
+        "evidence_ids": [
+          "10.14742/ajet.8843"
+        ],
+        "sub_rq_ids": [
+          "rq1",
+          "rq2"
+        ]
+      },
+      "side_b": {
+        "statement": "Postgraduate English-major students reported that the challenges, including overreliance and writing difficulties, outweigh the benefits.",
+        "evidence_ids": [
+          "10.54855/ijaile.25212"
+        ],
+        "sub_rq_ids": [
+          "rq2",
+          "rq5"
+        ]
+      },
+      "hypothesis_for_conflict": "The first group had at least four months of research use and were self-selected as experienced users, while the second were English majors writing in their own discipline, where language-quality gains matter less. Both rely on small self-reported samples, and the second has lower reliability."
+    }
+  ],
+  "conditional": [
+    {
+      "statement": "Better writing performance with GenAI is associated with iterative, highly interactive, collaborative use, and with high AI literacy and critical engagement; these are small, single-task studies and association rather than causation.",
+      "evidence_ids": [
+        "10.1080/03075079.2024.2323593",
+        "10.1007/s12528-025-09444-6",
+        "10.1093/applin/amaf022",
+        "10.1111/ejed.12824"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq4"
+      ]
+    },
+    {
+      "statement": "Randomized trials show writing gains from AI feedback or ChatGPT-assisted instruction only for EFL learners in structured instruction, and one used a Grammarly-based tool; the outcome is writing proficiency, not research output.",
+      "evidence_ids": [
+        "10.1007/s44217-025-00602-7",
+        "10.3389/fpsyg.2023.1260843"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq4",
+        "rq6"
+      ]
+    },
+    {
+      "statement": "LLMs are said to lower the barrier to English academic writing for non-native researchers when used for editing and refining with disclosure, not for generating large portions of text; this is a commentary without empirical data.",
+      "evidence_ids": [
+        "10.3348/kjr.2023.0773"
+      ],
+      "sub_rq_ids": [
+        "rq4",
+        "rq5"
+      ]
+    },
+    {
+      "statement": "Citation accuracy of ChatGPT depends on discipline: DOI accuracy was much lower in the humanities (8.5%) than in the natural sciences (32.7%), though only GPT-3.5 on 10 topics was tested.",
+      "evidence_ids": [
+        "10.2196/52935"
+      ],
+      "sub_rq_ids": [
+        "rq4",
+        "rq5"
+      ]
+    }
+  ],
+  "coverage_note": "rq1 (productivity) is effectively unanswered: no paper in the table measures writing speed, time-on-task or publication output, and the evidence is self-reported perceptions plus one n=1 undergraduate autoethnography, so productivity claims should be treated as unverified. rq3 prevalence rests on large but general-student surveys, with graduate-specific evidence limited to small qualitative studies, and no paper addresses coding, statistical analysis or data-analysis use, so that gap reflects absence from the table rather than evidence of non-use. rq2 and rq4 have moderate but small-sample evidence, mostly qualitative or single-task behavioral studies, with two small RCTs in EFL settings. rq5 is strongest for citation hallucination, via LLM-output tests not involving students, and thinner for integrity violations and skill erosion. For rq6, measurement is mostly perception or single-task rated writing. Missing are controlled or log-based studies of graduate students that measure time, output volume, publications and expert-rated quality over time, and surveys or experiments on coding and data analysis."
+}

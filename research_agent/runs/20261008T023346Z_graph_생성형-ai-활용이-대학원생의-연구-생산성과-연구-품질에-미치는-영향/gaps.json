@@ -1,0 +1,56 @@
+{
+  "gaps": [
+    {
+      "description": "Direct measurement of graduate student research productivity (word count, draft completion time, pages per week) has never been compared between AI users and non-users in randomized or longitudinal designs. The sole evidence (10.1007/s42438-023-00440-6) reports perceived workload relief among UK academics via survey, not objective output metrics for graduate dissertation progress. No study tracks dissertation advancement velocity or research output volume over weeks to semesters as a function of AI tool adoption intensity.",
+      "evidence_ids": [
+        "10.1007/s42438-023-00440-6",
+        "10.1186/s41239-024-00453-6"
+      ],
+      "proposed_rq": "Does sustained generative AI tool use accelerate or decelerate objective measures of graduate student research output (pages drafted per week, task completion time, dissertation chapter completion rate) compared to non-use over a full semester or academic year?",
+      "method": "Prospective longitudinal study or cluster-randomized trial with graduate students (n≈150–200) tracked over 16 weeks, measuring weekly word count, chapter completion rate, and time-to-submission; comparison between cohorts matched on baseline writing speed and discipline. Primary outcome: pages or words of original research text produced per week.",
+      "data": "Real-time writing analytics (e.g., automated keystroke logging via learning management system or voluntary tracking apps) combined with institutional dissertation milestones; recruitment from 3–5 universities across disciplines (STEM, humanities, social sciences) to ensure generalizability."
+    },
+    {
+      "description": "Graduate dissertation and thesis quality—operationalized as originality, methodological rigor, literature synthesis depth, and conceptual novelty—has never been systematically assessed as a function of AI tool use intensity. Existing evidence relies on hallucination rates in reference generation (10.2196/53164), expert review of 4 AI-generated articles (10.2196/47049), and one 10-week undergraduate coding study (10.3390/app14104115, n=32), leaving actual graduate research quality impacts unmeasured.",
+      "evidence_ids": [
+        "10.2196/53164",
+        "10.2196/47049",
+        "10.3390/app14104115"
+      ],
+      "proposed_rq": "Are graduate dissertations submitted by high AI tool users rated lower on originality, methodological rigor, and integration of literature compared to those submitted by low or non-users when evaluated blind by expert raters?",
+      "method": "Comparative analysis of 60–80 recently submitted dissertations (across 2–3 disciplines) stratified by self-reported AI use intensity (high, moderate, none); evaluation by 4–6 disciplinary experts using pre-registered rubrics assessing originality, rigor, evidence integration, and novelty on 0–10 scales. Raters blinded to AI use status.",
+      "data": "Access to full dissertations from university dissertation repositories or direct author recruitment; complementary survey on AI tool use frequency, type, and research stage (literature review, methods, analysis); outcome data: blind expert ratings and citation accuracy verification (spot-check 10–15 citations per dissertation)."
+    },
+    {
+      "description": "Mechanisms linking AI tool use to cognitive load, skill development, and problem-solving strategy changes remain untested in graduate research contexts. Evidence derives primarily from undergraduate non-research tasks (digital storytelling, programming education); the only study measuring performance correlation with AI reliance (10.3390/app14104115) tracked 32 undergraduates over 10 weeks, providing insufficient mechanistic evidence for graduate dissertation workflows.",
+      "evidence_ids": [
+        "10.3390/app14104115",
+        "10.1186/s41239-025-00526-0"
+      ],
+      "proposed_rq": "Does increasing reliance on generative AI for critical research tasks (literature synthesis, analysis interpretation) lead to measurable increases in cognitive load and decreases in independent problem-solving capability among graduate students?",
+      "method": "Experimental or quasi-experimental design with graduate students (n≈60–80) randomly assigned to high-support (AI-assisted) versus low-support (minimal AI) conditions during a 6–8 week research project; measure cognitive load via validated scale (NASA Task Load Index), problem-solving quality via independent coding of research decisions, and skill transfer via a post-task novel research challenge completed without AI.",
+      "data": "Cognitive load assessments administered weekly; process recordings or think-aloud protocols during research tasks; post-intervention problem-solving task scored by blind raters; demographics and baseline research competence measured via GRE/standardized tests and prior coursework grades."
+    },
+    {
+      "description": "Academic integrity violations (plagiarism, citation hallucinations, undetected AI-assisted dishonesty) have not been empirically audited in graduate student research outputs as a function of AI use. Evidence comprises hallucination rates in isolated tasks (10.2196/53164: legal research, 17–33%), review essays and commentaries (10.3390/info16040296), and policy analyses (10.1080/00987913.2025.2581429), but no direct measurement of actual violation prevalence or detection among graduate students.",
+      "evidence_ids": [
+        "10.2196/53164",
+        "10.3390/info16040296",
+        "10.1080/00987913.2025.2581429"
+      ],
+      "proposed_rq": "What is the prevalence of AI-assisted plagiarism, citation inaccuracies, and integrity violations in graduate dissertations, and does it correlate with self-reported intensity of generative AI tool use?",
+      "method": "Retrospective audit of 100–150 submitted dissertations across institutions using combination of plagiarism detection software (configured for AI-generated text), structured citation verification (spot-check 20 citations per dissertation for accuracy), and AI detection tools; correlate audit findings with brief graduate survey on AI use frequency, type, and research stage.",
+      "data": "Full dissertations from university repositories (anonymized); plagiarism software reports and citation accuracy data; voluntary survey of authors on AI tool use (estimated 50% response rate, n≈50–75); institutional research ethics approval for retrospective document review."
+    },
+    {
+      "description": "Training interventions for graduate students on responsible AI use in research have never been tested in randomized trials to measure efficacy on integrity, quality, or appropriate tool use outcomes. Evidence derives solely from institutional policy reviews (10.1016/j.caeai.2024.100348, 40 universities), expert recommendations (10.1080/0144929x.2024.2394886), and commentary (10.37074/jalt.2023.6.1.29); no experimental comparison of no training versus structured literacy modules or workshops exists.",
+      "evidence_ids": [
+        "10.1016/j.caeai.2024.100348",
+        "10.1080/0144929x.2024.2394886"
+      ],
+      "proposed_rq": "Does a targeted AI literacy training module delivered to graduate students reduce integrity violations and inappropriate AI use while maintaining research productivity gains compared to standard institutional guidance?",
+      "method": "Cluster-randomized controlled trial across 4–6 graduate programs (n≈200 students); three arms: (1) control (standard policy email), (2) brief literacy module (90-min recorded session on risks, benefits, attribution), (3) intensive workshop (2 half-day sessions + monthly follow-up reflections). Primary outcomes: integrity violations (via audit of submitted work), appropriate vs. inappropriate AI use (via survey + spot-check of research outputs), quality metrics (blind expert rubric on subset of dissertations).",
+      "data": "Graduate students recruited from participating programs; randomization at cohort level; outcome measurement via anonymous survey on AI use practices, institutional integrity audit of submitted dissertations over 12 months, and expert quality ratings; baseline characteristics (prior writing experience, research stage, discipline) collected at enrollment."
+    }
+  ]
+}

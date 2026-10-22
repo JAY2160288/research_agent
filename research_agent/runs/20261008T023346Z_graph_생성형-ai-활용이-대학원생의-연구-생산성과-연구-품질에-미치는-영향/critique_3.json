@@ -1,0 +1,58 @@
+{
+  "round": 3,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq5"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "synthesize: clarify that the conflict evidence derives from non-graduate or discipline-specific contexts; specify that active, human-led problem formulation with AI support appears beneficial whereas primary reliance for cognitive tasks correlates with skill atrophy, but direct evidence in graduate research remains absent",
+    "search rq5: empirical audits of plagiarism and citation accuracy in graduate dissertations; prevalence studies of AI-assisted integrity violations among graduate student research outputs"
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "synthesis",
+      "sub_rq_id": "rq1",
+      "problem": "RQ1 on direct productivity effects relies entirely on one survey of UK academics (10.1007/s42438-023-00440-6) reporting perceived workload relief, not objective graduate student output metrics; no randomized trials or longitudinal studies measuring actual dissertation progress, pages drafted, or completion time exist, leaving this sub-question effectively unanswered despite passing count thresholds.",
+      "action": "search rq1: longitudinal tracking studies of graduate dissertation progress, completion time, and output volume in AI tool users versus non-users; randomized trials measuring weekly word count or chapter advancement"
+    },
+    {
+      "severity": "major",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "RQ2 on research quality and rigor in graduate research relies on hallucination rates from isolated tasks (reference generation in systematic reviews, legal research tools) and expert review of 4 AI-generated articles, but provides zero evidence of quality assessment in actual graduate dissertations or theses; the single undergraduate study linking tool reliance to performance (10.3390/app14104115, n=32, 10 weeks, programming only) does not generalize to graduate research contexts.",
+      "action": "search rq2: comparative quality assessment of graduate dissertations from high AI tool users versus non-users using blind expert rubrics on originality, methodological rigor, and literature integration; empirical measurement of citation accuracy in graduate research outputs"
+    },
+    {
+      "severity": "major",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "The conflict between performance improvement (10.1287/orsc.2023.18430, 10.1186/s41239-025-00526-0) and performance decline (10.3390/app14104115) is presented with a hypothesis but without sufficient evidence to distinguish when each pathway occurs in graduate research specifically; mechanisms operate in undergraduate programming (10 weeks), business problem-solving (crowdsourcing), and digital storytelling contexts, not graduate dissertation workflows.",
+      "action": "synthesize: clarify that the conflict evidence derives from non-graduate or discipline-specific contexts; specify that active, human-led problem formulation with AI support appears beneficial whereas primary reliance for cognitive tasks correlates with skill atrophy, but direct evidence in graduate research remains absent"
+    },
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq5",
+      "problem": "RQ5 on academic integrity violations relies on hallucination rates and policy reviews rather than empirical audits of actual plagiarism, citation inaccuracies, or undetected violations in graduate student work; no measurement of integrity violation prevalence or correlation with AI use intensity exists among graduate students.",
+      "action": "search rq5: empirical audits of plagiarism and citation accuracy in graduate dissertations; prevalence studies of AI-assisted integrity violations among graduate student research outputs"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq4",
+      "problem": "The conditional statement on gender and disciplinary differences (10.1007/s10755-024-09774-w) identifies that male STEM students differ from female non-STEM students in adoption patterns, but the study was conducted at a single U.S. institution in Fall 2023 and provides no explicit causal mechanism linking field-specific epistemologies or prior technical experience to AI integration outcomes.",
+      "action": "synthesize: reframe the conditional finding to acknowledge it as descriptive (gender and discipline correlate with adoption) rather than mechanistically explanatory; note that the hypothesized mechanism (field-specific epistemologies) is inferred rather than tested"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq6",
+      "problem": "Gap 5 proposes testing training interventions for graduate students, but the current evidence base includes only policy reviews and expert commentary; no pilot studies or early-stage evidence on intervention feasibility, preferred training modality, or effect size benchmarks exist to guide the proposed RCT design.",
+      "action": "search rq6: pilot studies or feasibility trials of AI literacy training for graduate students; qualitative evidence on graduate preferences for training modality and content; preliminary effect estimates for sample size planning"
+    }
+  ]
+}

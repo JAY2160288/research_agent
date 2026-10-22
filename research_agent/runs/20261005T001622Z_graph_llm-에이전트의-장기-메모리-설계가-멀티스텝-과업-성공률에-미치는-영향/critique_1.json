@@ -1,0 +1,72 @@
+{
+  "round": 1,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq4"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "synthesize: restrict this claim to decision-task evidence (AriGraph 10.48550/arxiv.2407.04363, AWM 10.48550/arxiv.2409.07429), move the conversational-QA results into a separate, clearly scoped statement, and state that the harness study contradicts a general structured-memory advantage.",
+    "search rq4: empirical studies that ablate memory retrieval inside planning/decomposition loops (memory-conditioned planners, plan reuse, ReAct/Reflexion-style agents with and without memory) on long-horizon tasks; then revise the coverage note to rate rq4 as thin."
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "synthesis",
+      "sub_rq_id": "rq1",
+      "problem": "The consensus that structured memory (graphs, workflows) 'tends to outperform raw history, summarization or plain retrieval, mainly by reducing irrelevant context' leans on 10.48550/arxiv.2609.16053 and 10.48550/arxiv.2606.06036 (LoCoMo/LongMemEval conversational QA, not multi-step tasks) and 10.48550/arxiv.2603.03296 (no numbers). It also ignores 10.48550/arxiv.2608.15008 and 10.48550/arxiv.2412.15266, which find no dominant substrate and task-dependent structure; the context-reduction mechanism is only asserted in abstracts.",
+      "action": "synthesize: restrict this claim to decision-task evidence (AriGraph 10.48550/arxiv.2407.04363, AWM 10.48550/arxiv.2409.07429), move the conversational-QA results into a separate, clearly scoped statement, and state that the harness study contradicts a general structured-memory advantage."
+    },
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq4",
+      "problem": "No claim addresses how memory interacts with planning or reasoning modules: consensus 1 and 4 just show that memory or reflection helps. The only planning-memory links are 10.48550/arxiv.2402.03610 (RAP, no numbers), the planning survey 10.48550/arxiv.2402.02716, and JARVIS-1 (no ablation), so the coverage note overstates rq4 as 'strongest'.",
+      "action": "search rq4: empirical studies that ablate memory retrieval inside planning/decomposition loops (memory-conditioned planners, plan reuse, ReAct/Reflexion-style agents with and without memory) on long-horizon tasks; then revise the coverage note to rate rq4 as thin."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "Consensus 4 says pruning and forgetting contribute to gains, citing self-reported or no-number sources (10.2478/ijanmc-2024-0029, 10.48550/arxiv.2606.06787). 10.48550/arxiv.2606.29178 finds bounded retention indistinguishable from other policies on clean ALFWorld, and 'reflection is often the stronger component' generalizes from one ScienceWorld ablation (10.48550/arxiv.2609.19128).",
+      "action": "search rq3: controlled ablations of consolidation, forgetting or pruning on multi-session or repeated-task agent benchmarks; meanwhile synthesize: downgrade the forgetting claim to low-confidence and note the tension with 10.48550/arxiv.2606.29178."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "The first conditional claim says 'bounded or trace-aware retention preserves task success' under noise, but 10.48550/arxiv.2606.29178 reports that FIFO (also bounded) degrades under 75% distractor writes and only TraceRetain holds 97/100.",
+      "action": "synthesize: restate as 'only the trace-aware policy (TraceRetain) preserved success under heavy distractor writes; plain bounded retention (FIFO) degraded'."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The conflict pairs 'bounded retention indistinguishable from unbounded' (10.48550/arxiv.2606.29178) as evidence that broader retrieval hurts, which is a retention result and not a retrieval-breadth one. The hypothesis also puts AriGraph (10.48550/arxiv.2407.04363, a sequential text-game study) on the 'recall-dominated' side.",
+      "action": "synthesize: restrict side B to 10.48550/arxiv.2608.15008, treat the retention finding as a separate conditional claim, and revise the hypothesis so it does not label AriGraph as recall-only."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq6",
+      "problem": "Consensus 5 asserts cost and error-propagation harms, but none of the cited ids quantify cost or latency and no cited paper measures error propagation in task success; the toxicity paper 10.48550/arxiv.2605.16746 is tangential.",
+      "action": "search rq6: papers measuring token cost, latency, memory poisoning or error propagation of long-term memory in agent task success; otherwise synthesize: soften the cost and error-propagation wording."
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq1",
+      "problem": "The count for rq1 and rq4 is inflated by duplicates (10.48550/arxiv.2311.05997 and 10.1109/tpami.2024.3511593; 10.48550/arxiv.2308.11432 and 10.1007/s11704-024-40231-1), and no paper compares episodic, semantic and hierarchical memory head-to-head on task success.",
+      "action": "search rq1: ablation studies directly comparing episodic vs semantic vs hierarchical memory types in LLM agents on multi-step benchmarks."
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq1",
+      "problem": "Gap 1 says no study varies models and environments, yet 10.48550/arxiv.2608.15008 (three backbones, four benchmark suites, 26 metrics) already does a controlled multi-model comparison, so the gap is partly filled; gap 2 likewise overlaps with its finding on broad retrieval for QA vs sequential decisions.",
+      "action": "gap: narrow gap 1 to what 10.48550/arxiv.2608.15008 lacks (multiple seeds, agent-loop variation, full per-design results), and reframe gap 2 as testing the dose-response threshold that the harness study only reports qualitatively."
+    }
+  ]
+}

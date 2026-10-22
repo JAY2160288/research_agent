@@ -1,0 +1,9 @@
+{
+  "topic_id": "T4",
+  "lang": "ko",
+  "condition": "D",
+  "model": "claude-sonnet-5-5",
+  "max_replans": 2,
+  "plan_from": null,
+  "topic": "디지털 치료제의 우울증 증상 완화 효과와 지속성"
+}

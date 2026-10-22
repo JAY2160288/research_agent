@@ -1,0 +1,339 @@
+{
+  "model": "claude-opus-5-5",
+  "claims_total": 13,
+  "pairs_total": 36,
+  "pairs_judged": 36,
+  "pairs_supported": 30,
+  "pairs_partial": 6,
+  "pairs_unsupported": 0,
+  "pairs_unverified_quote": 0,
+  "pairs_no_abstract": 0,
+  "citation_support_rate": 0.8333,
+  "citation_support_rate_lenient": 1.0,
+  "claim_support_rate": 0.8462,
+  "claims": [
+    {
+      "id": "c1",
+      "statement": "In adults with depression, internet CBT beat mostly waitlist, usual-care or no-access controls at post-treatment, with small-to-moderate effects (d=0.41; g=0.39 in subthreshold depression; d=0.66 for unguided CBT vs waitlist in one small trial; superior to TAU at 3 months in primary care). Standalone apps show g=0.33 (k=6), and a transdiagnostic app meta-analysis gives g=0.28 that stayed robust after adjusting for control type and risk of bias, but that one is indirect for clinical depression.",
+      "supported": true
+    },
+    {
+      "id": "c2",
+      "statement": "Effects in youth (d=0.33 vs no intervention; g=0.45 for pooled depression and anxiety vs mostly waitlist) are similar in size. Estimates from the 2006 mixed anxiety/depression meta-analysis (d=0.27-0.32), the stress-management review (d=0.34, depression secondary) and the insomnia review (SMD=-0.42) are indirect for clinical depression.",
+      "supported": true
+    },
+    {
+      "id": "c3",
+      "statement": "Gains persisted at follow-up in the studies with numerical data: g=0.30 at 3-6 months and g=0.27 at 12 months in subthreshold depression, and lower depression than TAU at 6 months in helpline callers. This is a modest shrinkage, not a loss, but the numbers come mainly from one IPD analysis of subthreshold depression and one modest-sized trial.",
+      "supported": true
+    },
+    {
+      "id": "c4",
+      "statement": "Reliable deterioration was less frequent with internet interventions than with control conditions in IPD meta-analyses (3.4% vs 7.6%; 5.8% vs 9.1%). A narrative review agrees, and an uncontrolled pre-post synthesis reports 2.9% deterioration, which is not comparable because it has no control.",
+      "supported": true
+    },
+    {
+      "id": "c5",
+      "statement": "Supported or guided formats tend to outperform unguided ones. Evidence comes from broad mental-health meta-analyses (SMD=-0.27 for symptom severity; d=0.61 vs 0.25), not depression-specific direct comparisons. Low-reliability narrative reviews support clinician support only as an engagement mechanism, and the stress guided advantage (d=0.64) is excluded as evidence for depression severity.",
+      "supported": true
+    },
+    {
+      "id": "c6",
+      "statement": "Higher engagement or adherence is associated with larger benefit (r=0.24; g=0.40 in broad mental health; larger depression effects in higher-adherence insomnia groups), but the link is correlational. Attrition is substantial (weighted mean dropout 31%, up to 50-83%).",
+      "supported": true
+    },
+    {
+      "id": "c7",
+      "statement": "Baseline severity moderates benefit: more severely depressed patients gained more from low-intensity interventions (guided self-help, internet) than from usual care. The effect interaction is small and the category is broader than digital-only.",
+      "supported": true
+    },
+    {
+      "id": "c8",
+      "statement": "Lower education raised deterioration risk, and male sex, lower education and comorbid anxiety predicted dropout from self-guided web interventions.",
+      "supported": true
+    },
+    {
+      "id": "c9",
+      "statement": "Very large pre-post effects (pooled g=1.78 for depression) hold only as uncontrolled estimates for guided iCBT in routine care and are likely inflated, so they should not be compared with RCT effects.",
+      "supported": false
+    },
+    {
+      "id": "c10",
+      "statement": "Supported cCBT added to usual GP care gave no additional improvement over usual care at 4, 12 and 24 months.",
+      "supported": true
+    },
+    {
+      "id": "c11",
+      "statement": "Internet CBT beat treatment as usual in primary care at 3 months and in helpline callers at 6 months.",
+      "supported": true
+    },
+    {
+      "id": "c12",
+      "statement": "Lay telephone tracking added no benefit for symptoms or adherence.",
+      "supported": true
+    },
+    {
+      "id": "c13",
+      "statement": "Guided interventions outperformed unguided ones for symptom severity and completion across mental-health conditions.",
+      "supported": false
+    }
+  ],
+  "pairs": [
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1002/wps.20673",
+      "verdict": "partial",
+      "quote": "Smartphone interventions significantly outperformed control conditions in improving depressive (g=0.28, n=54) and generalized anxiety (g=0.30, n=39) symptoms, stress levels (g=0.35, n=27), quality of life (g=0.35, n=43), general psychiatric distress (g=0.40, n=12), social anxiety symptoms (g=0.58, n=6), and positive affect (g=0.44, n=6), with most effects being robust even after adjusting for various possible biasing factors (type of control condition, risk of bias rating).",
+      "reason": "g=0.28은 보고되나 초록은 '대부분의 효과'가 견고하다고만 하여 우울 효과 자체의 견고성은 명시하지 않는다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1038/s41746-019-0188-8",
+      "verdict": "supported",
+      "quote": "Effects on depression (Hedges’ g = 0.33, 95%CI 0.10–0.57, P = 0.005, NNT = 5.43, I 2 = 59%) and on smoking behavior ( g = 0.39, 95%CI 0.21–0.57, NNT = 4.59, P ≤ 0.001, I 2 = 0%) were significant.",
+      "reason": "단독 앱의 우울증 효과 g=0.33(k=6)을 직접 보고한다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1080/16506070903318960",
+      "verdict": "supported",
+      "quote": "The mean effect size of the 15 comparisons between Internet-based and other computerized psychological treatments vs. control groups at posttest was d = 0.41 (95% confidence interval [CI]: 0.29-0.54).",
+      "reason": "초록이 우울증 인터넷/컴퓨터 치료의 사후 효과크기 d=0.41을 직접 보고한다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1080/16506073.2011.616531",
+      "verdict": "supported",
+      "quote": "At posttreatment, between-group effect sizes on the BDI-II were d = .66 for unguided self-help versus waiting-list and d = 1.14 for guided self-help versus waiting-list controls.",
+      "reason": "소규모 시험에서 비안내 자조 대 대기자 d=0.66을 직접 보고한다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1159/000507819",
+      "verdict": "supported",
+      "quote": "The IG was superior in DSS at all measurement points (posttreatment: 6-12 weeks; Hedges' g = 0.39 [95% CI: 0.25-0.53]; follow-up 1: 3-6 months; g = 0.30 [95% CI: 0.15-0.45]; follow-up 2: 12 months, g = 0.27 [95% CI: 0.07-0.47], compared with the CG.",
+      "reason": "역치하 우울증에서 사후 g=0.39를 직접 보고한다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1192/bjp.bp.114.160101",
+      "verdict": "supported",
+      "quote": "Exercise and ICBT were more effective than TAU by a general medical practitioner, and both represent promising non-stigmatising treatment alternatives for patients with mild to moderate depression.",
+      "reason": "1차 진료에서 3개월 시점 ICBT의 TAU 대비 우월성을 직접 보고한다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1371/journal.pone.0028099",
+      "verdict": "partial",
+      "quote": "Depression was lower in participants in the web intervention conditions both with and without telephone tracking compared to the treatment as usual condition both at post intervention and at 6 month follow-up.",
+      "reason": "TAU 대비 우월성은 보여주나 대상이 우울증 진단 성인이 아닌 고통 수준이 높은 헬프라인 이용자이다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.1007/s10567-018-0271-8",
+      "verdict": "supported",
+      "quote": "Our results demonstrated a small effect in favor of technology delivered interventions compared to a waiting list control group: g = 0.45 [95% CI 0.29, 0.60] p < 0.001.",
+      "reason": "아동·청소년 우울·불안에 대한 대기자 대비 g=0.45를 직접 보고한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.1017/s0033291706008944",
+      "verdict": "supported",
+      "quote": "Analyses on the type of symptoms revealed that interventions for symptoms of depression had a small mean effect size (FEA d=0.27, MEA d=0.32) and significant heterogeneity.",
+      "reason": "우울 증상 개입에서 d=0.27-0.32를 직접 보고한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.1038/s41746-023-00800-3",
+      "verdict": "supported",
+      "quote": "At the post-treatment assessment, the dCBT-I group had a small to moderate effect in alleviating depressive (standardized mean difference (SMD) = -0.42; 95% CI: -0.56, -0.28; p < 0.001; k = 21) and anxiety symptoms (SMD = -0.29; 95% CI: -0.40, -0.19; p < 0.001; k = 18), but had a large effect on sleep outcome measures (SMD = -0.76; 95% CI: -0.95, -0.57; p < 0.001; k = 22).",
+      "reason": "불면증 dCBT-I의 우울 SMD=-0.42를 직접 보고한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.2196/jmir.5774",
+      "verdict": "supported",
+      "quote": "Significant, small effects were found for depression (Cohen d=0.34, 95% CI 0.21-0.48) and anxiety (Cohen d=0.32, 95% CI 0.17-0.47).",
+      "reason": "스트레스 관리 개입의 이차 결과로 우울 d=0.34를 직접 보고한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.3389/fpsyt.2019.00759",
+      "verdict": "supported",
+      "quote": "The pooled effect size of digital mental health interventions on depression in comparison to a no-intervention control was moderate (Cohen’s d = 0.33, 95% CI 0.11 to 0.55), while the pooled effect size of studies comparing an intervention group to an active control was low (Cohen’s d = 0.14, 95% CI -.04 to 0.31).",
+      "reason": "청소년에서 무개입 대비 d=0.33을 직접 보고한다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.1080/16506073.2011.616531",
+      "verdict": "partial",
+      "quote": "In both groups, treatment gains were maintained at 6-month follow-up.",
+      "reason": "6개월 효과 유지를 보고하지만 대조군 대비 추적 수치는 제시하지 않는다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.1159/000507819",
+      "verdict": "supported",
+      "quote": "The IG was superior in DSS at all measurement points (posttreatment: 6-12 weeks; Hedges' g = 0.39 [95% CI: 0.25-0.53]; follow-up 1: 3-6 months; g = 0.30 [95% CI: 0.15-0.45]; follow-up 2: 12 months, g = 0.27 [95% CI: 0.07-0.47], compared with the CG.",
+      "reason": "3-6개월 g=0.30, 12개월 g=0.27을 직접 보고한다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.1371/journal.pone.0028099",
+      "verdict": "supported",
+      "quote": "Depression was lower in participants in the web intervention conditions both with and without telephone tracking compared to the treatment as usual condition both at post intervention and at 6 month follow-up.",
+      "reason": "헬프라인 이용자에서 6개월 시점 TAU 대비 낮은 우울을 직접 보고한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.1002/wps.20610",
+      "verdict": "supported",
+      "quote": "Studies on the possible harmful effects of ICBT are also reviewed: a significant minority of people do experience negative effects, although rates of deterioration appear similar to those reported for face-to-face treatments and lower than for control conditions.",
+      "reason": "서술적 리뷰가 대조 조건보다 낮은 악화율을 언급한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.1017/s0033291716001562",
+      "verdict": "supported",
+      "quote": "The risk for a reliable deterioration from baseline to post-treatment was significantly lower in the intervention v. control conditions (3.36 v. 7.60; relative risk 0.47, 95% confidence interval 0.29-0.75).",
+      "reason": "IPD 메타분석에서 3.36% 대 7.60% 악화율을 직접 보고한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.1017/s0033291718000648",
+      "verdict": "supported",
+      "quote": "Of the 3805 participants analysed, 7.2% showed clinically significant deterioration (5.8% and 9.1% of participants in the intervention and control groups, respectively).",
+      "reason": "IPD 메타분석에서 5.8% 대 9.1% 악화율을 직접 보고한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.2196/18100",
+      "verdict": "supported",
+      "quote": "The average deterioration across studies was 2.9%.",
+      "reason": "비대조 사전-사후 연구 종합에서 2.9% 악화율을 직접 보고한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.1007/s40501-023-00297-3",
+      "verdict": "supported",
+      "quote": "At the intervention-level, integrating human support, gamification, financial incentives and persuasive technology features may improve engagement.",
+      "reason": "인간 지원이 참여를 개선할 수 있다는 점을 언급해 참여 기제로서의 지원 주장을 뒷받침한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.1016/j.invent.2014.08.003",
+      "verdict": "supported",
+      "quote": "Guided interventions were significantly superior to unguided interventions ((symptom severity: standardized mean difference (SMD) = − .27 [95% CI: − .45; − .10]), n = 8; completed modules: SMD = .52 [.37; .67], n = 7; completer rate: OR = 2.76 [1.68; 4.53], n = 6).",
+      "reason": "안내형이 비안내형보다 증상 심각도에서 SMD=-0.27로 우월함을 직접 보고한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.1080/16506070903318960",
+      "verdict": "supported",
+      "quote": "However, this estimate was moderated by a significant difference between supported (d = 0.61; 95% CI: 0.45-0.77) and unsupported (d = 0.25; 95% CI: 0.14-0.35) treatments.",
+      "reason": "지원형 d=0.61 대 비지원형 d=0.25를 직접 보고한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.1586/ern.12.63",
+      "verdict": "partial",
+      "quote": "In this review, the authors have found an evidence for a strong correlation between the degree of support and outcome.",
+      "reason": "지원과 결과의 상관을 보고해 방향은 같지만, 지원을 참여 기제로만 뒷받침한다는 주장과는 달리 결과와의 연관을 말한다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.1038/s41746-023-00800-3",
+      "verdict": "supported",
+      "quote": "When considering treatment adherence, the treatment effects of those in the high adherent groups identified a more robust outcome, showing greater effect sizes than those in the low adherent groups for depression, anxiety, and sleep outcomes.",
+      "reason": "불면증 dCBT-I에서 고순응 집단의 우울 효과가 더 크다는 결과를 직접 보고한다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.1348/014466509x472138",
+      "verdict": "supported",
+      "quote": "Dropout ranged from 2 to 83% and a weighted average of 31% of the participants dropped out of treatment.",
+      "reason": "가중 평균 탈락률 31%와 최대 83%를 직접 보고한다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.2196/jmir.1194",
+      "verdict": "supported",
+      "quote": "Relative to reported rates of dropout from open access sites, the present study found that the rates of attrition in randomized controlled trials were lower, ranging from approximately 1 - 50%.",
+      "reason": "RCT에서 탈락률이 최대 약 50%임을 보고하여 주장의 탈락 범위를 뒷받침한다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.3389/fdgth.2021.764079",
+      "verdict": "supported",
+      "quote": "Random-effects meta-analyses indicated that greater engagement was significantly associated with post-intervention mental health improvements, regardless of whether this relationship was explored using correlational [ r = 0.24, 95% CI (0.17, 0.32), Z = 6.29, p < 0.001] or between-groups designs [Hedges' g = 0.40, 95% CI (0.097, 0.705), p = 0.010].",
+      "reason": "초록이 참여도와 개선 간의 연관성(r=0.24, g=0.40)을 직접 보고하여 주장의 해당 부분을 뒷받침한다."
+    },
+    {
+      "claim_id": "c7",
+      "paper_id": "10.1136/bmj.f540",
+      "verdict": "supported",
+      "quote": "We found a significant interaction between baseline severity and treatment effect (coefficient -0.1 (95% CI -0.19 to -0.002)), suggesting that patients who are more severely depressed at baseline demonstrate larger treatment effects than those who are less severely depressed. However, the magnitude of the interaction (equivalent to an additional drop of around one point on the Beck Depression Inventory for a one standard deviation increase in initial severity) was small and may not be clinically significant.",
+      "reason": "저강도 개입 대비 일반치료에서 기저 중증도가 클수록 효과가 크나 상호작용은 작다는 점을 직접 보고한다."
+    },
+    {
+      "claim_id": "c8",
+      "paper_id": "10.1017/s0033291715000665",
+      "verdict": "supported",
+      "quote": "The multivariate analysis indicated that male gender [relative risk (RR) 1.08], lower educational level (primary education, RR 1.26) and co-morbid anxiety symptoms (RR 1.18) significantly increased the risk of dropping out, while for every additional 4 years of age, the risk of dropping out significantly decreased (RR 0.94).",
+      "reason": "자가 안내형 웹 개입에서 남성, 낮은 교육, 공존 불안이 탈락을 예측함을 직접 보고한다."
+    },
+    {
+      "claim_id": "c8",
+      "paper_id": "10.1017/s0033291716001562",
+      "verdict": "supported",
+      "quote": "Education moderated effects on deterioration, with patients with low education displaying a higher risk for deterioration than patients with higher education.",
+      "reason": "낮은 교육 수준이 증상 악화 위험을 높인다는 결과를 직접 보고한다."
+    },
+    {
+      "claim_id": "c9",
+      "paper_id": "10.2196/18100",
+      "verdict": "partial",
+      "quote": "Despite high heterogeneity, individual effect sizes of investigated studies indicate clinically relevant changes, with effect sizes ranging from Hedges' g=0.42-1.88, with a pooled effect of 1.78 for depression and 0.94 for anxiety studies.",
+      "reason": "비무작위 전후 설계의 통합 효과 1.78은 보고되지만 효과가 과대추정되었다거나 RCT와 비교해선 안 된다는 해석은 초록에 없다."
+    },
+    {
+      "claim_id": "c10",
+      "paper_id": "10.1136/bmj.h5627",
+      "verdict": "supported",
+      "quote": "There was no evidence of an overall difference between either programme compared with usual GP care (0.99 (0.57 to 1.70) and 0.68 (0.42 to 1.10), respectively) at any time point.",
+      "reason": "지원형 cCBT가 4, 12, 24개월 모든 시점에서 일반 GP 진료 대비 추가 이점이 없음을 보고한다."
+    },
+    {
+      "claim_id": "c11",
+      "paper_id": "10.1192/bjp.bp.114.160101",
+      "verdict": "supported",
+      "quote": "Exercise and ICBT were more effective than TAU by a general medical practitioner, and both represent promising non-stigmatising treatment alternatives for patients with mild to moderate depression.",
+      "reason": "1차 의료에서 3개월 시점 ICBT가 TAU보다 효과적임을 보고한다."
+    },
+    {
+      "claim_id": "c11",
+      "paper_id": "10.1371/journal.pone.0028099",
+      "verdict": "supported",
+      "quote": "Depression was lower in participants in the web intervention conditions both with and without telephone tracking compared to the treatment as usual condition both at post intervention and at 6 month follow-up.",
+      "reason": "헬프라인 이용자에서 6개월 추적 시 인터넷 CBT가 TAU보다 우수함을 보고한다."
+    },
+    {
+      "claim_id": "c12",
+      "paper_id": "10.1371/journal.pone.0028099",
+      "verdict": "supported",
+      "quote": "Telephone tracking provided by a lay telephone counsellor did not confer any additional advantage in terms of symptom reduction or adherence.",
+      "reason": "비전문가 전화 추적이 증상과 순응에 추가 이점이 없었음을 직접 보고한다."
+    },
+    {
+      "claim_id": "c13",
+      "paper_id": "10.1016/j.invent.2014.08.003",
+      "verdict": "partial",
+      "quote": "Overall, the number of studies was small and mainly limited to depression and social phobia restricting the generalizability of the findings.",
+      "reason": "안내형이 비안내형보다 우수하다는 결과는 있으나 연구가 주로 우울과 사회공포증에 국한되어 '여러 정신건강 상태 전반'으로 일반화하는 것은 초록을 넘어선다."
+    }
+  ],
+  "notes": [],
+  "cost_usd": 0.2589,
+  "llm_calls": 2,
+  "elapsed_sec": 62.6
+}

@@ -1,0 +1,38 @@
+{
+  "original_topic": "디지털 치료제의 우울증 증상 완화 효과와 지속성",
+  "topic_en": "The effectiveness and durability of digital therapeutics in alleviating depressive symptoms",
+  "domain": "digital health",
+  "concepts": [
+    "digital therapeutics",
+    "depressive symptoms",
+    "treatment effectiveness",
+    "durability of treatment effects",
+    "long-term follow-up",
+    "major depressive disorder",
+    "symptom reduction"
+  ],
+  "variables": {
+    "independent": [
+      "digital therapeutics (software-based therapeutic interventions for depression)"
+    ],
+    "dependent": [
+      "depressive symptom severity (alleviation)",
+      "persistence/durability of symptom improvement over time"
+    ],
+    "population": "individuals with depression or depressive symptoms",
+    "context": "digital health interventions for mental health treatment, including short-term effects and post-treatment follow-up"
+  },
+  "synonyms_en": [
+    "digital therapeutics",
+    "prescription digital therapeutics",
+    "internet-delivered cognitive behavioral therapy",
+    "computerized CBT",
+    "mobile app-based intervention",
+    "smartphone-based intervention",
+    "digital mental health intervention",
+    "eHealth intervention for depression",
+    "sustained effect",
+    "long-term outcomes"
+  ],
+  "research_question": "How effective are digital therapeutics at reducing depressive symptoms, and how long do these improvements persist after treatment?"
+}

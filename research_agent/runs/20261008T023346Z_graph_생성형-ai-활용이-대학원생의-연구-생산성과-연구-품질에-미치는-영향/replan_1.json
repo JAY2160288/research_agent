@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq1",
+      "reason": "Zero relevant papers found despite 74 candidates; need more precise queries targeting empirical productivity measures and comparative study designs",
+      "queries": [
+        "generative AI research output quantitative measurement graduate",
+        "ChatGPT writing speed dissertation completion empirical study",
+        "large language models research efficiency randomized controlled trial"
+      ]
+    }
+  ],
+  "rationale": "RQ1 has a severe precision problem: 74 candidates but 0 relevant evaluated papers suggests the prior queries were too broad or used terminology (e.g., 'academic output', 'scholarly productivity measures') that retrieves non-empirical or non-graduate-focused literature. The new queries pivot to: (1) explicit quantitative/measurement language ('quantitative measurement', 'writing speed'), (2) concrete proxies for productivity rather than abstract terms, and (3) study design indicators ('randomized controlled trial', 'empirical study') to filter for direct empirical evidence rather than opinion pieces or tools reviews."
+}

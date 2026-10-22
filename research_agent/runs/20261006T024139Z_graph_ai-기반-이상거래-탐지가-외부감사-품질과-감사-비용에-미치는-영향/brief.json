@@ -1,0 +1,1249 @@
+{
+  "topic_frame": {
+    "original_topic": "AI 기반 이상거래 탐지가 외부감사 품질과 감사 비용에 미치는 영향",
+    "topic_en": "The impact of AI-based anomaly (fraudulent transaction) detection on external audit quality and audit costs",
+    "domain": "accounting",
+    "concepts": [
+      "AI-based anomaly detection",
+      "fraudulent transaction detection",
+      "external audit quality",
+      "audit fees",
+      "audit efficiency",
+      "machine learning in auditing",
+      "continuous auditing",
+      "audit analytics"
+    ],
+    "variables": {
+      "independent": [
+        "AI-based anomaly detection adoption in external audits"
+      ],
+      "dependent": [
+        "external audit quality",
+        "audit costs (audit fees)"
+      ],
+      "population": "External auditors and audit firms (and their audit engagements/clients)",
+      "context": "External financial statement audits; use of AI/machine learning tools for detecting anomalous or fraudulent transactions"
+    },
+    "synonyms_en": [
+      "machine learning fraud detection in auditing",
+      "audit data analytics",
+      "artificial intelligence in auditing",
+      "journal entry testing with machine learning",
+      "audit fee and audit effort",
+      "financial statement fraud detection",
+      "technology-enabled auditing",
+      "big data analytics in audit"
+    ],
+    "research_question": "How does the adoption of AI-based anomaly (fraudulent transaction) detection in external audits affect audit quality and audit costs?"
+  },
+  "plan": {
+    "sub_rqs": [
+      {
+        "id": "rq1",
+        "question": "How does the adoption of AI and machine learning anomaly detection by auditors affect external audit quality, such as misstatement and fraud detection, restatements, and discretionary accruals?",
+        "rationale": "This is the core dependent variable of the topic: the direct effect of AI-based detection on audit quality.",
+        "queries": [
+          "artificial intelligence adoption audit quality",
+          "audit data analytics audit quality restatements",
+          "machine learning auditing misstatement detection",
+          "technology-enabled auditing fraud detection effectiveness"
+        ],
+        "source_pref": "openalex"
+      },
+      {
+        "id": "rq2",
+        "question": "How does the use of AI and audit analytics affect audit fees, audit hours and effort, and audit efficiency?",
+        "rationale": "This addresses the second dependent variable, audit costs, and whether efficiency gains are passed on to clients.",
+        "queries": [
+          "audit analytics audit fees effect",
+          "artificial intelligence audit efficiency audit hours",
+          "big data analytics audit cost reduction",
+          "audit fee audit effort technology investment"
+        ],
+        "source_pref": "openalex"
+      },
+      {
+        "id": "rq3",
+        "question": "How accurate and effective are machine learning and anomaly detection techniques at identifying fraudulent transactions and anomalous journal entries in audit settings?",
+        "rationale": "The technical performance of the tools underlies any quality effect and must be understood before interpreting the audit outcomes.",
+        "queries": [
+          "journal entry testing machine learning anomaly detection",
+          "financial statement fraud detection machine learning",
+          "unsupervised anomaly detection accounting transactions audit",
+          "deep learning fraudulent journal entries autoencoder",
+          "journal entry fraud detection precision recall real ledger data",
+          "AAER labelled misstatement prediction ensemble learning out-of-sample",
+          "isolation forest outlier detection general ledger audit false positive rate"
+        ],
+        "source_pref": "both"
+      },
+      {
+        "id": "rq4",
+        "question": "Through which mechanisms and under which conditions (auditor judgment, skepticism, client complexity, firm size, regulation) does AI-based detection change audit outcomes?",
+        "rationale": "Mechanisms and moderators explain why effects on quality and cost vary across engagements and firms.",
+        "queries": [
+          "auditor judgment reliance on AI tools",
+          "professional skepticism audit data analytics",
+          "audit firm size technology adoption audit outcomes",
+          "algorithm aversion auditors decision support",
+          "experimental auditors data analytics professional skepticism evidence evaluation",
+          "Big 4 versus non-Big 4 artificial intelligence audit quality",
+          "client complexity moderates audit analytics effect on audit outcomes"
+        ],
+        "source_pref": "openalex"
+      },
+      {
+        "id": "rq5",
+        "question": "What are the adoption drivers, implementation barriers, and risks (false positives, explainability, data quality, liability, regulatory concerns) of AI in external auditing?",
+        "rationale": "Adoption conditions and unintended effects determine whether quality and cost benefits are realized in practice.",
+        "queries": [
+          "barriers to artificial intelligence adoption in auditing",
+          "explainable AI audit risks false positives",
+          "continuous auditing machine learning implementation challenges",
+          "regulatory standards AI audit evidence PCAOB"
+        ],
+        "source_pref": "both"
+      }
+    ],
+    "search_strategy": "Cover roughly 2010 to the present, with emphasis on 2016 onward when audit analytics and machine learning adoption accelerated. Prefer archival and empirical studies, experiments, field studies, and systematic reviews in accounting, auditing, and information systems, plus technical fraud detection papers from arXiv for rq3. Exclude papers on internal fraud detection in banking or payments with no audit link, and purely opinion or vendor pieces. The thinnest literature is expected for rq2 (causal evidence on audit fees and costs from AI specifically) and for direct archival evidence on AI and audit quality in rq1."
+  },
+  "evidence": {
+    "items": [
+      {
+        "paper_id": "10.1214/ss/1042727940",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "narrative review of statistical and machine learning fraud detection tools",
+        "sample": "",
+        "finding": "Statistics and machine learning provide effective technologies for fraud detection, applied to money laundering, credit card fraud, telecommunications fraud and computer intrusion. The paper describes available tools and the areas where they are most used.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "General fraud domains, not external audit; 2002 review; abstract gives no review method or accuracy figures"
+      },
+      {
+        "paper_id": "10.1017/s0022109011000457",
+        "relevance": 1,
+        "reliability": 4,
+        "method": "archival empirical study of lobbying expenses and fraud detection (hazard model)",
+        "sample": "Large frauds detected 1998-2004; corporate lobbying data",
+        "finding": "Lobbying firms have a significantly lower hazard of fraud detection, evade detection 117 days longer, and are 38% less likely to be detected by regulators. Fraudulent firms spend 77% more on lobbying than nonfraudulent firms.",
+        "sub_rq_ids": [],
+        "limitations": "Not about AI or auditing technology; concerns regulator detection and political influence"
+      },
+      {
+        "paper_id": "10.1007/s11142-022-09697-x",
+        "relevance": 5,
+        "reliability": 4,
+        "method": "archival analysis of resume data on AI workers plus interviews with 17 audit partners",
+        "sample": "310,000+ resumes for 36 largest audit firms; 17 audit partners",
+        "finding": "Greater AI investment by audit firms is associated with improved audit quality, lower fees, and displacement of human auditors. A one-SD increase in AI investment is linked to a 5.0% lower restatement likelihood, 0.9% lower audit fees, and 3.6% (three years) to 7.1% (four years) fewer accounting employees.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq2",
+          "rq5"
+        ],
+        "limitations": "AI investment proxied by AI hiring; observational, so causal inference is limited; abstract truncated"
+      },
+      {
+        "paper_id": "10.1111/1911-3846.12517",
+        "relevance": 1,
+        "reliability": 4,
+        "method": "archival empirical study",
+        "sample": "Clients with internal control audits; restatements used as a proxy for material weaknesses",
+        "finding": "Greater audit committee accounting expertise is associated with more adverse internal control opinions among clients with likely weaknesses. It is also associated with a lower likelihood of auditor dismissal after adverse opinions.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Not about AI; concerns audit committee governance and auditor reporting"
+      },
+      {
+        "paper_id": "10.1506/f024-686l-7233-n62j",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "archival empirical study of auditor appointments",
+        "sample": "",
+        "finding": "Companies appoint officers' former audit firms more often than alternatives, but less often when audit committees are more independent. This suggests independent audit committees strengthen audit quality by deterring auditor-officer affiliations.",
+        "sub_rq_ids": [],
+        "limitations": "Not about AI; audit quality inferred indirectly from governance; sample not stated in abstract"
+      },
+      {
+        "paper_id": "10.1016/j.jfds.2022.05.002",
+        "relevance": 3,
+        "reliability": 2,
+        "method": "conceptual paper proposing an approach",
+        "sample": "",
+        "finding": "The paper presents an approach for applying audit data analytics and machine learning to full population testing instead of sampling, and discusses related challenges.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq5",
+          "rq3"
+        ],
+        "limitations": "No empirical evaluation stated in abstract; no quantified effects on quality or cost"
+      },
+      {
+        "paper_id": "10.17261/pressacademia.2020.1337",
+        "relevance": 3,
+        "reliability": 2,
+        "method": "content analysis of Big Four machine learning tools",
+        "sample": "Machine learning tools and platforms of the Big Four firms",
+        "finding": "Big Four firms have developed ML tools for audit coordination, automated audits in limited areas such as cash, data analysis, risk assessment and document extraction. The paper flags ethical, security and privacy-regulation risks.",
+        "sub_rq_ids": [
+          "rq5",
+          "rq1"
+        ],
+        "limitations": "Descriptive; relies on public information about firm tools; no outcome measures"
+      },
+      {
+        "paper_id": "10.1108/ara-03-2024-0085",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "panel regression (OLS) with propensity score robustness checks",
+        "sample": "2,912 non-financial firm-year observations, GCC listed firms, 2010-2023",
+        "finding": "The study examines whether firm AI adoption improves integrated financial reporting, with audit quality (fees, industry specialization, restatement) as a moderator. The abstract is truncated before results.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq4"
+        ],
+        "limitations": "Concerns client AI adoption and integrated reporting, not auditor AI use; results not visible in the abstract; GCC only"
+      },
+      {
+        "paper_id": "10.1108/maj-03-2023-3846",
+        "relevance": 5,
+        "reliability": 4,
+        "method": "archival study with propensity score matching and two-stage OLS",
+        "sample": "Chinese firms, 2011-2020",
+        "finding": "When audit firms and clients use AI separately, audit report lag increases. When they use AI together, report lag falls, improving efficiency. AI use is also associated with a lower likelihood of restatement, and the quality link is driven by audit effort lag.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq2",
+          "rq4"
+        ],
+        "limitations": "Proxies (report lag, restatement) are indirect; single country; observational"
+      },
+      {
+        "paper_id": "10.1111/1911-3846.12894",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "two experiments with experienced external reviewers",
+        "sample": "Experienced external reviewers (size not stated in abstract)",
+        "finding": "Reviewers rate data and analytics audit procedures as lower quality than traditional ones because they perceive them as less effortful, even at equal assurance. A theory-based intervention reduces reliance on this effort heuristic.",
+        "sub_rq_ids": [
+          "rq4",
+          "rq5",
+          "rq1"
+        ],
+        "limitations": "Experimental vignettes; about D&A rather than AI anomaly detection; sample size not given in abstract"
+      },
+      {
+        "paper_id": "10.2308/jiar-18-053",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "archival empirical study (regression analysis of audit fees, audit hours and audit quality proxies)",
+        "sample": "public firms in the Korean audit market",
+        "finding": "Abnormally low audit fees are associated with larger discretionary accruals and a higher likelihood of meeting or beating analyst forecasts. No significant association was found for abnormally high fees, and the low-fee effect persists regardless of audit hours.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq2"
+        ],
+        "limitations": "Does not examine AI or analytics; relevant only as an adjacent link between fees, effort and audit quality; single-country setting."
+      },
+      {
+        "paper_id": "10.1080/07366981.2024.2312025",
+        "relevance": 3,
+        "reliability": 2,
+        "method": "theoretical framework / conceptual paper drawing on extant literature",
+        "sample": "",
+        "finding": "Proposes a framework for applying ML and data analytics across the internal audit lifecycle, from planning to reporting. It argues auditors need a continuous innovation mindset and effective guardrails.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq4",
+          "rq5"
+        ],
+        "limitations": "Conceptual, no empirical test; concerns internal rather than external audit; abstract truncated."
+      },
+      {
+        "paper_id": "10.1016/j.jbusres.2016.08.001",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "state-of-the-art literature review of big data challenges and analytics methods",
+        "sample": "",
+        "finding": "Reviews big data challenges and analytics methods that organizations use to support investment decisions. It is general to business and not specific to auditing.",
+        "sub_rq_ids": [],
+        "limitations": "Not audit-specific; no audit quality or cost outcomes."
+      },
+      {
+        "paper_id": "10.1016/j.acclit.2017.05.003",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "literature review of big data techniques in auditing, accounting and finance research",
+        "sample": "",
+        "finding": "Finds that big data techniques are less widespread in auditing than in related fields such as financial fraud modelling. The authors refute the argument that auditors lag because clients use less advanced techniques, and they outline future opportunities.",
+        "sub_rq_ids": [
+          "rq5",
+          "rq3"
+        ],
+        "limitations": "Review method and scope not detailed in the abstract; does not directly measure audit quality or cost effects."
+      },
+      {
+        "paper_id": "10.1108/ijaim-08-2020-0128",
+        "relevance": 2,
+        "reliability": 2,
+        "method": "desk study / theoretical discussion",
+        "sample": "",
+        "finding": "Argues that COVID-19 social distancing could affect audit fees, effort, procedures and audit quality. It recommends that audit firms invest in digital programs, including AI.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq5"
+        ],
+        "limitations": "Theoretical and speculative; no empirical data; AI mentioned only as a recommendation."
+      },
+      {
+        "paper_id": "10.1080/00014788.2018.1459458",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "semi-structured interviews n=22 plus document analysis",
+        "sample": "22 individuals experienced in developing, implementing or assessing big data analytics in auditing",
+        "finding": "Provides an overview of how big data and analytics change audit practice, covering auditor-client relationships, engagement conduct and challenges in embedding BDA. It sets out a research agenda.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq4",
+          "rq5"
+        ],
+        "limitations": "Qualitative with a small sample; no quantified effects on audit quality or fees; abstract gives no specific results."
+      },
+      {
+        "paper_id": "10.1109/access.2020.3041178",
+        "relevance": 0,
+        "reliability": 2,
+        "method": "survey / literature review of smart grid big data technologies",
+        "sample": "",
+        "finding": "Surveys big data analytics technologies and challenges in smart grids. It is unrelated to auditing.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic domain (energy)."
+      },
+      {
+        "paper_id": "10.12691/acis-3-1-3",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "narrative review of heterogeneous data and big data analytics methods",
+        "sample": "",
+        "finding": "Introduces data processing methods, tools and ML/deep learning approaches for heterogeneous big data. It does not address auditing.",
+        "sub_rq_ids": [],
+        "limitations": "Generic technical overview; no audit context; no stated review method."
+      },
+      {
+        "paper_id": "10.2308/atax-10184",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "archival regression study of audit fees and book-tax differences",
+        "sample": "",
+        "finding": "Book-tax differences are positively associated with audit fees, and the association is larger for firms that appear to have managed earnings. This is consistent with fees reflecting auditor risk assessment and effort.",
+        "sub_rq_ids": [
+          "rq2"
+        ],
+        "limitations": "Does not involve AI or analytics; sample details not given in the abstract; useful only as background on fee determinants."
+      },
+      {
+        "paper_id": "10.1111/acfi.12248",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "archival cross-sectional regression",
+        "sample": "624 Australian companies, 2011",
+        "finding": "Female audit committee representation is positively associated with audit fees, and it moderates the effects of firm size, risk and complexity on fees. It does not address AI.",
+        "sub_rq_ids": [
+          "rq2"
+        ],
+        "limitations": "Single year, single country; unrelated to AI adoption; audit fees treated as a quality proxy."
+      },
+      {
+        "paper_id": "10.1111/j.1467-629x.2012.00490.x",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "archival regression study (details unclear from abstract)",
+        "sample": "",
+        "finding": "Audit fees are negatively associated with the proportion of long-tenure directors on independent audit committees, consistent with lower audit effort. The study does not examine AI or analytics.",
+        "sub_rq_ids": [],
+        "limitations": "Not about AI or analytics; sample not stated in abstract; association only."
+      },
+      {
+        "paper_id": "10.1016/j.compind.2020.103368",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "ISM-DEMATEL-Fuzzy MICMAC barrier modeling",
+        "sample": "Indian manufacturing supply chains; twelve barriers",
+        "finding": "Lack of top management support, financial support, skills, and techniques/procedures are the most significant barriers to big data analytics implementation in Indian manufacturing supply chains.",
+        "sub_rq_ids": [],
+        "limitations": "Supply chain context, not auditing; expert-judgment-based modeling; sample size not stated in abstract."
+      },
+      {
+        "paper_id": "10.1007/s13347-017-0278-y",
+        "relevance": 0,
+        "reliability": 2,
+        "method": "conceptual/ethical discussion paper",
+        "sample": "",
+        "finding": "Discusses ethical impacts of big data analytics in infectious disease contexts, including algorithmic reliance, informed consent complexity, and profiling.",
+        "sub_rq_ids": [],
+        "limitations": "Healthcare domain, off-topic for auditing; no empirical data."
+      },
+      {
+        "paper_id": "10.1371/journal.pone.0152173",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "comparative empirical evaluation of 19 unsupervised anomaly detection algorithms on 10 datasets",
+        "sample": "10 datasets from multiple application domains",
+        "finding": "Evaluates strengths and weaknesses of 19 unsupervised anomaly detection algorithms across datasets, including performance and computational effort. Fraud detection is mentioned only as one application area.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Generic multivariate benchmarks, not audit or journal-entry data."
+      },
+      {
+        "paper_id": "10.1109/access.2021.3056614",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "benchmarking of 10 supervised and unsupervised ML algorithms on the CICIDS2017 dataset, plus literature review",
+        "sample": "CICIDS2017 network intrusion dataset",
+        "finding": "Benchmarks ML algorithms for anomaly-based intrusion detection to identify suitable algorithms, parameters, and testing criteria.",
+        "sub_rq_ids": [],
+        "limitations": "Network intrusion domain, not financial or audit transactions."
+      },
+      {
+        "paper_id": "10.3390/app12199637",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "systematic literature review (Kitchenham) of 93 articles",
+        "sample": "93 articles",
+        "finding": "Synthesizes ML techniques, fraud types, and evaluation metrics in ML-based financial fraud detection, noting that conventional manual methods are imprecise, costly, and time consuming.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Broad financial fraud (not specifically external audit); review of detection methods, with no measurement of audit quality or costs."
+      },
+      {
+        "paper_id": "10.2308/ajpt-50009",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "empirical comparison of six statistical and ML models for financial statement fraud detection",
+        "sample": "fraud and nonfraud firms; 42 predictors examined (sample size not stated)",
+        "finding": "Logistic regression and support vector machines perform well relative to ANN, bagging, C4.5, and stacking at detecting financial statement fraud. Only six of 42 predictors, including discretionary accruals and auditor turnover, are consistently selected.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq1"
+        ],
+        "limitations": "Firm-level fraud prediction rather than auditor adoption of AI; sample size not stated in abstract."
+      },
+      {
+        "paper_id": "10.1109/access.2021.3071269",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "review of deep learning in smart grids with bibliometric analysis",
+        "sample": "",
+        "finding": "Reviews deep learning advances and enabling technologies in smart grid systems.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic energy domain."
+      },
+      {
+        "paper_id": "10.1109/access.2021.3096799",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "systematic literature review (Kitchenham) of 47 articles",
+        "sample": "47 articles",
+        "finding": "Reviews ML and data mining methods and datasets for detecting fraudulent financial statements, noting that supervised algorithms are used more than unsupervised ones. Identifies gaps and limitations and suggests future research.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq5"
+        ],
+        "limitations": "Focus on financial statement fraud detection methods, not auditor adoption or audit outcomes."
+      },
+      {
+        "paper_id": "10.3390/systems10050130",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "empirical ML experiment: 7 supervised and 2 unsupervised models (isolation forest, autoencoders) on a real-life general ledger dataset",
+        "sample": "one real-life general ledger dataset (size not stated in abstract)",
+        "finding": "The best supervised and unsupervised models show high potential for detecting predefined anomalies in general ledger journal entries, addressing sampling risk and audit inefficiency.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq2"
+        ],
+        "limitations": "Single dataset; detection of predefined anomalies rather than real-world audit outcomes; no measurement of costs or quality."
+      },
+      {
+        "paper_id": "10.4192/1577-8517-v11_4",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "applied case study using cluster analysis on insurance claims data",
+        "sample": "group life insurance claims (size not stated in abstract)",
+        "finding": "Cluster analysis grouped similar claims and flagged small-population clusters for further investigation, helping auditors focus effort. Flagged clusters were characterized by large beneficiary payments, large interest payments and long lag between submission and payment.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Single insurance claims setting; no reported detection accuracy or validation against known fraud; not external audit financial statement data"
+      },
+      {
+        "paper_id": "10.1109/access.2022.3153478",
+        "relevance": 4,
+        "reliability": 4,
+        "method": "deep learning model development combining numerical and textual (MD&A) features",
+        "sample": "5130 Chinese listed companies' annual reports",
+        "finding": "Develops a deep learning fraud detection system using financial and non-financial indices plus text features from MD&A to address class imbalance in financial statement fraud. Abstract is truncated and performance results are not shown.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Abstract truncated so results unclear; Chinese listed firms only; not tested in actual audit engagements"
+      },
+      {
+        "paper_id": "10.1109/access.2019.2905101",
+        "relevance": 0,
+        "reliability": 2,
+        "method": "narrative survey / taxonomy of deep learning for social media analytics",
+        "sample": "",
+        "finding": "Summarizes deep learning architectures for social media analytics and highlights challenges such as scalability, heterogeneity and multimodality. Not related to auditing or fraud detection.",
+        "sub_rq_ids": [],
+        "limitations": "Off-topic; no stated review methodology"
+      },
+      {
+        "paper_id": "10.1109/access.2023.3321800",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "survey of machine learning methods for video anomaly detection",
+        "sample": "",
+        "finding": "Provides a critical review of recent learning algorithms for anomaly detection in surveillance video, including strengths, weaknesses and anomaly type classifications. Domain is video surveillance, not financial transactions.",
+        "sub_rq_ids": [],
+        "limitations": "Different domain (video); review methodology not described in abstract"
+      },
+      {
+        "paper_id": "10.1109/access.2023.3325929",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "machine learning classifier comparison on benchmark dataset",
+        "sample": "UNSW BoT-IoT dataset",
+        "finding": "Proposes a machine learning-based anomaly detection approach for IoT smart home traffic using four classifiers. Not related to auditing or financial fraud.",
+        "sub_rq_ids": [],
+        "limitations": "Network security domain; results truncated in abstract; benchmark dataset only"
+      },
+      {
+        "paper_id": "10.2308/aud.2009.28.2.1",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "literature review with conceptual model",
+        "sample": "",
+        "finding": "Defines professional skepticism as judgments reflecting heightened assessment of the risk that an assertion is incorrect, and presents a model of how audit evidence combines with auditor knowledge and traits. Notes that excessive skepticism can make audits inefficient and expensive.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Pre-AI (2009) and does not address technology; conceptual rather than empirical"
+      },
+      {
+        "paper_id": "10.1111/puar.13483",
+        "relevance": 1,
+        "reliability": 4,
+        "method": "survey experiment with two scenarios",
+        "sample": "citizens (sample size not stated in abstract)",
+        "finding": "Explainability affects trust in algorithmic decisions more than accessibility, and the effect partly extends to trust in the human decision-maker. Effects are not robust across decision contexts.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "Public administration setting with citizens, not auditors; hypothetical scenarios"
+      },
+      {
+        "paper_id": "10.1111/1911-3846.12847",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "two surveys plus interviews with auditors and chief audit executives",
+        "sample": "internal auditors and CAEs (sizes not stated in abstract)",
+        "finding": "Greater use of technology-based audit techniques is associated with more audits completed, more risk factors found, more recommendations and fewer audit days, but also with larger internal audit function size. Interviews indicate benefits are hard to quantify and skilled staff hard to hire.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq4",
+          "rq5"
+        ],
+        "limitations": "Internal rather than external audit; perception-based self-report; general audit technology rather than AI specifically"
+      },
+      {
+        "paper_id": "10.5171/2012.876814",
+        "relevance": 2,
+        "reliability": 2,
+        "method": "conceptual framework development (I-TOE) combining UTAUT2 and TOE",
+        "sample": "",
+        "finding": "Proposes an Individual-Technology-Organization-Environment framework to explain adoption of computer-assisted audit techniques by audit firms. The abstract does not report empirical results.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "Appears conceptual with no empirical results in abstract; CAATTs rather than AI; dated (2012)"
+      },
+      {
+        "paper_id": "10.1111/1911-3846.12901",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "qualitative study, 44 in-depth interviews",
+        "sample": "44 auditors, regulators and AI software providers",
+        "finding": "Automating seemingly low-level audit tasks may erode deliberation, sensemaking and reflexivity important for socializing junior auditors, while higher-level audit aspects may be augmented by technology. New technology also creates new areas of indeterminacy.",
+        "sub_rq_ids": [
+          "rq4",
+          "rq5"
+        ],
+        "limitations": "Qualitative with perception-based data; does not measure audit quality or costs"
+      },
+      {
+        "paper_id": "10.5296/wjbm.v3i1.11321",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "cross-sectional questionnaire survey with SEM-PLS (WarpPLS)",
+        "sample": "91 analyzable questionnaires from auditors in Public Accountant Offices and Ministry of Finance, South Sulawesi, Indonesia",
+        "finding": "Emotional intelligence raises work enthusiasm, spiritual intelligence directly improves auditor performance, and work enthusiasm positively affects auditor performance. The paper does not address AI or anomaly detection.",
+        "sub_rq_ids": [],
+        "limitations": "Small sample, self-report, single region, no AI/technology component"
+      },
+      {
+        "paper_id": "10.1371/journal.pone.0278751",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "framing experiment",
+        "sample": "",
+        "finding": "Algorithm aversion becomes more frequent as the consequences of a decision become more serious, which lowers the probability of success in important decisions.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "General decision-making context, not auditing; sample size not stated in abstract"
+      },
+      {
+        "paper_id": "10.13189/ujaf.2021.090527",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "structured questionnaire survey with correlation analysis",
+        "sample": "169 respondents across sectors in Oman",
+        "finding": "Examines auditors' perceptions of how AI/ML affect professional skepticism and judgment and thereby audit efficiency, including influencing factors and challenges. The abstract is truncated and does not state the results.",
+        "sub_rq_ids": [
+          "rq4",
+          "rq5",
+          "rq2"
+        ],
+        "limitations": "Perception-based self-report, single country, focus on internal auditors, correlation only, truncated abstract"
+      },
+      {
+        "paper_id": "10.1016/j.caeai.2021.100028",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "behavioral and questionnaire study",
+        "sample": "in-service and pre-service teachers (size not stated in abstract)",
+        "finding": "Both in-service and pre-service teachers prefer advice from a human counselor over an expert model, and acceptance depends on task difficulty.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Education domain, not auditing; sample size not given in abstract"
+      },
+      {
+        "paper_id": "10.1007/s00187-021-00326-3",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "online experiment (forecasting task)",
+        "sample": "1,840 participants",
+        "finding": "Time pressure mitigates algorithm aversion, apparently because forecasters lose confidence in their own forecasts. No support was found for the 'do your best' goals hypothesis, and the abstract is truncated on data input decision rights.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Forecasting/management accounting context rather than external audit; participants likely not auditors"
+      },
+      {
+        "paper_id": "10.1016/j.jrt.2021.100014",
+        "relevance": 2,
+        "reliability": 2,
+        "method": "conceptual overview with guidelines and a digital tool",
+        "sample": "",
+        "finding": "Gives an overview of issues around algorithmic decision support, responsibility and organisational decision-making. It identifies research gaps and proposes guidelines and a tool for mapping responsibility.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "Conceptual, no empirical test, not audit-specific"
+      },
+      {
+        "paper_id": "10.15611/pn.2017.474.03",
+        "relevance": 2,
+        "reliability": 2,
+        "method": "narrative literature synthesis",
+        "sample": "",
+        "finding": "Synthesizes research on auditor professional skepticism into six attributes (questioning mind, suspension of judgment, search for knowledge, interpersonal understanding, self-esteem, autonomy). It notes that how skepticism is defined and measured remains unclear.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "No stated review method; no AI link"
+      },
+      {
+        "paper_id": "10.1145/3561048",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "survey/taxonomy of XAI techniques",
+        "sample": "",
+        "finding": "Surveys and classifies XAI techniques and programming frameworks across the machine learning development process.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "General AI, not audit-specific; no stated review protocol"
+      },
+      {
+        "paper_id": "10.1016/j.giq.2021.101666",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "illustrative multiple case studies (3 cases)",
+        "sample": "three government algorithmic decision-making cases",
+        "finding": "Explainable, data-driven decisions are often not perceived as objective by the public and can provoke distrust and resistance. The paper proposes decision-specific strategies to gain acceptance.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "Government/public-sector context, not auditing; few illustrative cases"
+      },
+      {
+        "paper_id": "10.3389/frai.2020.00026",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "empirical modelling with Shapley-value explainable AI",
+        "sample": "15,000 SMEs seeking peer-to-peer lending credit",
+        "finding": "A Shapley-value explainable AI model groups risky and non-risky borrowers by similar financial characteristics, which helps explain credit scores and predict future behavior.",
+        "sub_rq_ids": [
+          "rq5",
+          "rq3"
+        ],
+        "limitations": "Credit risk in fintech lending, not audit or fraud detection; no performance metrics in abstract"
+      },
+      {
+        "paper_id": "10.1080/01605682.2021.1922098",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "framework development with real-world case study",
+        "sample": "",
+        "finding": "The paper proposes a framework and overview of techniques to make black-box ML credit scoring models transparent, auditable and explainable. A real-world case study shows comparable interpretability to scorecards can be achieved while retaining predictive power.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "Credit scoring context, not external financial statement audit; 'auditable' refers to regulatory model transparency; single case study."
+      },
+      {
+        "paper_id": "10.35944/jofrp.2020.9.1.007",
+        "relevance": 3,
+        "reliability": 2,
+        "method": "conceptual overview of RPA ecosystem and challenges (unclear from abstract)",
+        "sample": "",
+        "finding": "The study summarizes the evolving RPA ecosystem and identifies challenges critical for successfully implementing smart (AI-augmented) RPA in accounting and auditing. It notes theoretical frameworks for such deployments are still insufficient.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "No empirical method or sample stated in abstract; focuses on RPA rather than anomaly detection; no audit quality or cost outcomes."
+      },
+      {
+        "paper_id": "10.1007/s44206-023-00074-y",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "narrative review/editorial",
+        "sample": "",
+        "finding": "The review argues that AI auditing can learn from historical audit practices in financial accounting, safety engineering and the social sciences. It distinguishes among technology-oriented and other approaches to auditing AI systems.",
+        "sub_rq_ids": [],
+        "limitations": "Concerns auditing of AI systems, not use of AI in external financial audits; editorial without stated review method."
+      },
+      {
+        "paper_id": "10.3389/frai.2022.779799",
+        "relevance": 2,
+        "reliability": 2,
+        "method": "perspective paper based on round-table sessions",
+        "sample": "",
+        "finding": "The paper discusses model risk management for AI/ML models in banks and financial institutions and expects more complex models in anti-money laundering, fraud detection and transaction monitoring. It emphasizes explainable, trustworthy and responsible AI.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "Perspective/opinion paper; focus on bank model risk, not external audit; no empirical evidence."
+      },
+      {
+        "paper_id": "10.3390/jrfm17010027",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "cross-sectional survey n=143 (technology acceptance model-based)",
+        "sample": "143 accountants and auditors in companies in Vietnam",
+        "finding": "Technology readiness positively relates to AI adoption among accounting and auditing professionals, with perceived usefulness and perceived ease of use mediating the relationship.",
+        "sub_rq_ids": [
+          "rq5"
+        ],
+        "limitations": "Small sample, single country, self-reported adoption; mixes accountants and auditors; no audit quality or cost outcomes."
+      },
+      {
+        "paper_id": "10.1007/s11229-022-03485-5",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "philosophical/conceptual analysis",
+        "sample": "",
+        "finding": "The article identifies three conceptual challenges for interpretable ML: ambiguity of target, disregard for error rates and severe testing, and emphasis on product over process. It argues these can produce misleading explanations.",
+        "sub_rq_ids": [],
+        "limitations": "General ML interpretability theory; no audit context and no empirical data."
+      },
+      {
+        "paper_id": "10.1108/aaaj-09-2020-4934",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "narrative (semi-systematic) literature review, 2015-2020, interpretive/hermeneutic",
+        "sample": "",
+        "finding": "Identifies five major ethical challenges of AI-based decision-making in accounting: objectivity, privacy, transparency, accountability and trustworthiness, structured using Rest's four-component model.",
+        "sub_rq_ids": [
+          "rq4",
+          "rq5"
+        ],
+        "limitations": "Narrative review with no effect measurement; focused on accounting broadly rather than external audit outcomes; abstract truncated."
+      },
+      {
+        "paper_id": "10.1016/j.respol.2023.104828",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "in-depth qualitative case study",
+        "sample": "Big Four audit firms in Japan, 2010s",
+        "finding": "Shows how newly created service R&D organizations advanced AI adoption in external audit services and builds a three-phase model of the process. Addresses organizational adoption rather than audit quality or cost outcomes.",
+        "sub_rq_ids": [
+          "rq5",
+          "rq4"
+        ],
+        "limitations": "Single-country case study of Big Four firms; no quantitative outcomes on quality or costs."
+      },
+      {
+        "paper_id": "10.4236/jss.2021.99004",
+        "relevance": 2,
+        "reliability": 2,
+        "method": "narrative review/commentary (method unclear from abstract)",
+        "sample": "",
+        "finding": "Reports that audit firms are keen to use machine learning tools to read contracts, analyze journal entries and assist in fraud detection, and anticipates accelerating adoption.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq5"
+        ],
+        "limitations": "No stated method or empirical evidence; descriptive and prospective claims only."
+      },
+      {
+        "paper_id": "10.14254/2071-789x.2017/10-4/17",
+        "relevance": 2,
+        "reliability": 4,
+        "method": "field experiment with multiple regression, n=248",
+        "sample": "248 auditors from Big4 and non-Big4 firms in Malaysia",
+        "finding": "Professional skepticism and experience positively affect risk-of-misstatement assessment while time budget pressure negatively affects it. Experience strengthens and time pressure weakens the skepticism effect.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Does not involve AI; single-country sample; risk assessment as outcome rather than actual detection."
+      },
+      {
+        "paper_id": "10.20525/ijrbs.v10i4.1214",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "cross-sectional survey with PLS, n=173",
+        "sample": "173 internal auditors at Indonesia's Inspectorate General of the Ministry of Education and Culture",
+        "finding": "Auditor experience and professional skepticism positively affect fraud detection, while competence, independence and time pressure have no direct effect. Skepticism mediates these relationships.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "Public-sector internal auditors, not external audit; no AI component; self-reported survey from a single institution."
+      },
+      {
+        "paper_id": "10.20525/ijrbs.v12i9.2737",
+        "relevance": 4,
+        "reliability": 2,
+        "method": "qualitative critical review of ongoing debates",
+        "sample": "",
+        "finding": "Explores the role of AI in external auditing and assesses debates, with proponents citing better sampling, efficiency and audit quality and opponents citing ethical concerns, bias, job loss and human-machine coordination challenges.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq2",
+          "rq4",
+          "rq5"
+        ],
+        "limitations": "Review without clear systematic method in the abstract; no empirical measurement of effects; abstract truncated."
+      },
+      {
+        "paper_id": "10.15611/pn.2022.4.06",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "online questionnaire survey with principal axis factor analysis, n=206",
+        "sample": "206 auditing and accounting practitioners and students in Poland",
+        "finding": "Respondents perceive that AI adoption increases audit efficiency, enhances client communication and service, and automates routine tasks. Three factors explain 62.2% of variance.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq5"
+        ],
+        "limitations": "Perception-based survey; Poland only; mixes practitioners and students."
+      },
+      {
+        "paper_id": "10.22624/aims/humanities/v11n1p4",
+        "relevance": 4,
+        "reliability": 3,
+        "method": "cross-sectional survey with OLS regression, n=125",
+        "sample": "125 accounting firms in Nigeria applying AI (purposive sample from population of 178)",
+        "finding": "Expert systems, machine learning and intelligent agents showed significant positive relationships with audit quality in Nigeria.",
+        "sub_rq_ids": [
+          "rq1",
+          "rq4"
+        ],
+        "limitations": "Purposive sampling; self-reported questionnaire; single country; audit quality measured by perception rather than objective outcomes."
+      },
+      {
+        "paper_id": "10.1080/09638180.2023.2298433",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "archival regression analysis of audit fees",
+        "sample": "listed U.S. companies, 2016-2021",
+        "finding": "Documents a statistically and economically significant audit fee premium for audit partners with digitalization expertise, strongest in highly digitalized industries and diminishing over time in less digitalized industries.",
+        "sub_rq_ids": [
+          "rq2",
+          "rq4"
+        ],
+        "limitations": "Measures partner digitalization expertise, not AI anomaly detection directly; U.S. listed firms only."
+      },
+      {
+        "paper_id": "10.21744/irjmis.v7n6.997",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "survey with moderated regression analysis",
+        "sample": "auditors at public accounting firms in Bali Province, Indonesia, purposive sample",
+        "finding": "Time budget pressure has a negative but statistically non-significant effect on audit quality; audit structure, independence and supervision were examined as moderators.",
+        "sub_rq_ids": [
+          "rq4"
+        ],
+        "limitations": "No AI component; regional sample; perception-based audit quality measure; abstract truncated."
+      },
+      {
+        "paper_id": "10.2308/tar-2022-0249",
+        "relevance": 1,
+        "reliability": 4,
+        "method": "archival empirical study using novel office-level audit-employee turnover data",
+        "sample": "",
+        "finding": "Audit-employee turnover within accounting firm offices is associated with costlier, less timely, less thorough and lower-quality audits, and leads to greater auditor switching. The effect is stronger when other strains exist in the auditor-client relationship and varies by employee rank and timing.",
+        "sub_rq_ids": [],
+        "limitations": "Does not examine AI or analytics adoption; only indirectly relevant as context on audit cost and quality drivers. Sample size not stated in the abstract."
+      },
+      {
+        "paper_id": "10.5117/mab.96.78525",
+        "relevance": 3,
+        "reliability": 2,
+        "method": "narrative literature review / discussion paper",
+        "sample": "",
+        "finding": "Reviews audit research to identify behavioral challenges to professional skepticism when using audit data analytics, from five perspectives: attitudes toward ADA, data characteristics, anomalies identified by ADA, auditor mindsets, and social contexts. It argues that ADA offers benefits but also threatens appropriate skepticism and ultimately audit quality.",
+        "sub_rq_ids": [
+          "rq4",
+          "rq5"
+        ],
+        "limitations": "No empirical test or systematic review method stated; conceptual discussion focused on ADA broadly rather than AI/ML anomaly detection."
+      },
+      {
+        "paper_id": "10.1109/access.2020.2983300",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "framework development with ML model comparison (XGBoost vs other algorithms)",
+        "sample": "",
+        "finding": "Proposes a blockchain-based automated insurance framework that uses XGBoost to detect fraudulent claims and assess risk, and compares it with other state-of-the-art algorithms.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Insurance claims setting, not external audit; abstract gives no sample or quantitative results."
+      },
+      {
+        "paper_id": "10.1057/s41599-024-03606-0",
+        "relevance": 3,
+        "reliability": 4,
+        "method": "systematic literature review (PRISMA and Kitchenham) of 104 articles, 2012-2023",
+        "sample": "104 articles",
+        "finding": "Reviews ML techniques for financial fraud detection and notes a trend toward real datasets. Credit card fraud models are the most common application.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Not specific to external audit; abstract is truncated; summarizes the literature without evaluating audit quality or cost."
+      },
+      {
+        "paper_id": "10.6339/jds.201607_14(3).0010",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "literature review of 65 articles on data mining for financial fraud, 2004-2015",
+        "sample": "65 articles (58 journal, 7 conference)",
+        "finding": "Identifies 41 data mining techniques used across financial fraud applications such as health insurance and credit card. Logistic regression appeared to be the leading tool.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Older literature (2004-2015); not audit-specific; narrative synthesis; abstract truncated."
+      },
+      {
+        "paper_id": "10.2308/tar-2020-0068",
+        "relevance": 5,
+        "reliability": 4,
+        "method": "empirical comparison of seven fraud prediction models using a cost-based measure",
+        "sample": "firm-level fraud and restatement samples (size not stated in abstract)",
+        "finding": "Even the best models trade off false to true positives at rates above 100:1. The resulting false positives make all seven models too costly for auditors to implement, though M-Score and F-Score give net benefits to investors and several models are viable for regulators.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq5",
+          "rq2"
+        ],
+        "limitations": "Tests traditional fraud prediction models rather than modern AI/ML tools; depends on assumptions about cost parameters."
+      },
+      {
+        "paper_id": "10.2991/ijcis.d.210203.007",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "empirical comparison of seven ML classifiers with SMOTE and undersampling",
+        "sample": "341 Turkish SMEs, 2013-2017; 1384 non-fraud and 321 fraud cases",
+        "finding": "Evaluates seven ML classifiers for detecting financial accounting fraud in SME financial statements, using sampling methods to handle class imbalance.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Single country, bank-sourced data of SMEs; highly imbalanced classes; results truncated in abstract; not an audit setting."
+      },
+      {
+        "paper_id": "10.18280/ria.350102",
+        "relevance": 0,
+        "reliability": 3,
+        "method": "supervised ML experiments on the BoT-IoT dataset",
+        "sample": "BoT-IoT dataset",
+        "finding": "Develops an IoT intrusion detection system using a seven-feature set that detects DDoS, DoS, reconnaissance and information theft attacks with supervised ML.",
+        "sub_rq_ids": [],
+        "limitations": "Network security domain, unrelated to auditing or financial fraud."
+      },
+      {
+        "paper_id": "10.48084/etasr.6641",
+        "relevance": 2,
+        "reliability": 3,
+        "method": "ML ensemble modeling with explainable AI on cryptocurrency transactions",
+        "sample": "Ethereum transaction data (size not stated)",
+        "finding": "A hard voting ensemble reached 99% accuracy in detecting fraudulent Ethereum transactions. The authors stress XAI for transparency and trust.",
+        "sub_rq_ids": [
+          "rq3",
+          "rq5"
+        ],
+        "limitations": "Cryptocurrency context, not external audit; high accuracy may reflect class balance or data issues; no audit outcomes."
+      },
+      {
+        "paper_id": "10.46338/ijetae1122_15",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "literature survey of 101 articles on ML anomaly detection, 2015-2022",
+        "sample": "101 articles",
+        "finding": "Surveys ML anomaly detection across system log, network, cloud and medical domains. Most researchers use real-life datasets and unsupervised learning.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Security and IT focus; no financial audit content."
+      },
+      {
+        "paper_id": "10.3390/ai5040143",
+        "relevance": 1,
+        "reliability": 3,
+        "method": "ML system development and evaluation for network anomaly detection (unsupervised and supervised, with SHAP)",
+        "sample": "network traffic data (size not stated)",
+        "finding": "Random Forest reached 94.3% accuracy in classifying network anomalies. SHAP was used for interpretability.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Network traffic domain, not financial transactions or audit."
+      },
+      {
+        "paper_id": "10.47760/ijcsmc.2020.v09i10.012",
+        "relevance": 0,
+        "reliability": 2,
+        "method": "comparison of ML algorithms (RF, NB, SVM, decision tree) for IoT anomaly detection",
+        "sample": "",
+        "finding": "Random Forest performed best, with 99.5% accuracy in detecting anomalies in IoT network data.",
+        "sub_rq_ids": [],
+        "limitations": "IoT security domain, unrelated to auditing; limited methodological detail in abstract."
+      },
+      {
+        "paper_id": "10.1111/acfi.13159",
+        "relevance": 3,
+        "reliability": 3,
+        "method": "comparative empirical study of five bagging- and boosting-based ensemble learning models",
+        "sample": "Chinese A-share listed companies, 2012-2022",
+        "finding": "Bagging outperforms boosting across various evaluation indicators in detecting financial statement fraud. Profitability and asset quality are positively associated with financial fraud.",
+        "sub_rq_ids": [
+          "rq3"
+        ],
+        "limitations": "Abstract gives no sample size or metric values. It does not address audit settings, auditor adoption, audit quality or costs. Single-country data."
+      },
+      {
+        "paper_id": "10.3390/app12073234",
+        "relevance": 1,
+        "reliability": 2,
+        "method": "unclear from abstract (autoencoder and deep dense neural network detection model)",
+        "sample": "",
+        "finding": "The paper proposes an approach using autoencoders and deep dense neural networks to detect cryptojacking web threats. The abstract is truncated and gives no results.",
+        "sub_rq_ids": [],
+        "limitations": "Cybersecurity topic, not financial fraud or auditing. Abstract is truncated and reports no performance results."
+      }
+    ]
+  },
+  "synthesis": {
+    "consensus": [
+      {
+        "statement": "Greater AI use by audit firms is associated with a lower likelihood of client restatements in two archival studies (about 5.0% lower per SD of AI investment in one). This is only an indirect quality proxy, since fewer restatements could reflect fewer errors or weaker detection, and the Nigerian perception survey adds only self-reported quality.",
+        "evidence_ids": [
+          "10.1007/s11142-022-09697-x",
+          "10.1108/maj-03-2023-3846",
+          "10.22624/aims/humanities/v11n1p4"
+        ],
+        "sub_rq_ids": [
+          "rq1"
+        ]
+      },
+      {
+        "statement": "Evidence on efficiency gains from AI or audit technology is perception-based or comes from internal audit, with self-reported efficiency gains and fewer audit days. No study measures external-audit hours or effort, so efficiency gains are unmeasured in external audit.",
+        "evidence_ids": [
+          "10.15611/pn.2022.4.06",
+          "10.1111/1911-3846.12847",
+          "10.1108/maj-03-2023-3846"
+        ],
+        "sub_rq_ids": [
+          "rq2"
+        ]
+      },
+      {
+        "statement": "The ML fraud-detection literature is dominated by firm-level financial-statement and other non-audit fraud applications, with supervised methods more common than unsupervised ones. The reviews give no audit-specific, transaction-level accuracy benchmark, so no cross-paper consensus on journal-entry accuracy exists.",
+        "evidence_ids": [
+          "10.1109/access.2021.3096799",
+          "10.1057/s41599-024-03606-0",
+          "10.3390/app12199637",
+          "10.6339/jds.201607_14(3).0010"
+        ],
+        "sub_rq_ids": [
+          "rq3"
+        ]
+      },
+      {
+        "statement": "Conceptual and qualitative work, largely about audit data analytics generally and not AI anomaly detection specifically, raises concerns that analytics could weaken professional skepticism and erode junior auditors' sensemaking.",
+        "evidence_ids": [
+          "10.5117/mab.96.78525",
+          "10.1111/1911-3846.12901"
+        ],
+        "sub_rq_ids": [
+          "rq4",
+          "rq5"
+        ]
+      },
+      {
+        "statement": "Reviews, interviews and tool descriptions identify ethical concerns, difficulty hiring skilled staff, and the difficulty of quantifying benefits as barriers and risks. Technology readiness and perceived usefulness drive adoption in one small survey. This evidence is mostly descriptive and low to moderate reliability.",
+        "evidence_ids": [
+          "10.1108/aaaj-09-2020-4934",
+          "10.17261/pressacademia.2020.1337",
+          "10.1111/1911-3846.12847",
+          "10.3390/jrfm17010027",
+          "10.1016/j.respol.2023.104828",
+          "10.20525/ijrbs.v12i9.2737"
+        ],
+        "sub_rq_ids": [
+          "rq5"
+        ]
+      }
+    ],
+    "conflicts": [],
+    "conditional": [
+      {
+        "statement": "In one Chinese archival study, audit report lag falls only when audit firms and clients use AI together; separate use increases lag. This is a within-study moderation by joint versus separate use, not a conflict, and report lag is not audit hours.",
+        "evidence_ids": [
+          "10.1108/maj-03-2023-3846"
+        ],
+        "sub_rq_ids": [
+          "rq2",
+          "rq4"
+        ]
+      },
+      {
+        "statement": "Experienced reviewers rate data-and-analytics procedures as lower quality because of an effort heuristic, even at equal assurance, and a theory-based intervention reduces this bias. This is reviewer perception, not evidence of eroded auditor judgment, and it concerns D&A generally.",
+        "evidence_ids": [
+          "10.1111/1911-3846.12894"
+        ],
+        "sub_rq_ids": [
+          "rq4",
+          "rq5"
+        ]
+      },
+      {
+        "statement": "The practical value of fraud-prediction models depends on whose costs are counted. At false-to-true-positive ratios above 100:1, all seven tested models were too costly for auditors, while some gave net benefits to investors or regulators. This tests traditional models, not modern AI.",
+        "evidence_ids": [
+          "10.2308/tar-2020-0068"
+        ],
+        "sub_rq_ids": [
+          "rq3",
+          "rq5"
+        ]
+      },
+      {
+        "statement": "Model rankings are dataset-specific single-study results at firm level: logistic regression and SVM did well against ANN, bagging and stacking in a 2011 study, and bagging beat boosting among ensembles in Chinese A-share data. Neither addresses transaction-level or journal-entry detection.",
+        "evidence_ids": [
+          "10.2308/ajpt-50009",
+          "10.1111/acfi.13159"
+        ],
+        "sub_rq_ids": [
+          "rq3"
+        ]
+      }
+    ],
+    "coverage_note": "No new papers were added to the table, so the critic's requested searches are still outstanding. rq3 is effectively unanswered for transaction-level accuracy: the only journal-entry study (10.3390/systems10050130) uses predefined anomalies on a single ledger, the insurance-claims study (10.4192/1577-8517-v11_4) has no validation, and 10.1109/access.2022.3153478 shows no results. The rest is firm-level or non-audit work. Studies on AAER-labelled or confirmed-misstatement data reporting precision, recall or false-positive rates are missing. rq1 rests on restatement likelihood in two archival studies; no study covers discretionary accruals, detection of misstatement or fraud, AAERs or going-concern outcomes. rq2 separates fees (a price: 0.9% lower per SD in 10.1007/s11142-022-09697-x; a partner digital-expertise premium in 10.1080/09638180.2023.2298433, a different construct from firm AI investment) from hours and effort, which are unmeasured in external audit. Efficiency evidence is limited to report lag, perception surveys and internal audit. rq4 moderators (client complexity, firm size, regulation) are untested; evidence is generic D&A experiments, interviews and one effort-lag mechanism, and no study examines auditors' use of AI flags. rq5 risks are covered descriptively; false positives, explainability, data quality, liability and PCAOB/IAASB guidance are not directly covered. The most useful missing studies are archival or experimental work on auditor AI use with objective outcomes, and audit-hours data.}</br>Correction: the JSON above must be a single object; see below.</br>{"
+  },
+  "gaps": {
+    "gaps": [
+      {
+        "description": "No study reports precision, recall or false-positive rates for AI anomaly detection on labelled journal-entry or transaction data from real audits. The only journal-entry study tests predefined anomalies on one ledger, and the insurance-claims study has no validation. The cost-based evidence covers only traditional firm-level models, where false positives above 100:1 made all seven too costly for auditors.",
+        "evidence_ids": [
+          "10.3390/systems10050130",
+          "10.4192/1577-8517-v11_4",
+          "10.2308/tar-2020-0068"
+        ],
+        "proposed_rq": "How accurate are supervised and unsupervised anomaly detectors on journal entries with confirmed misstatements, and what is the audit-cost burden of their false positives?",
+        "method": "Benchmark isolation forest, autoencoders and supervised classifiers on labelled entries using time-split validation. Report precision, recall and false positives per 1,000 entries, and convert follow-up effort into hours using a cost model like the one in 10.2308/tar-2020-0068.",
+        "data": "Journal-entry populations with confirmed misstatements or AAER-linked cases, obtained through a partnership with one or more audit firms or from forensic-case archives. Synthetic injected-fraud data would serve only as a secondary check."
+      },
+      {
+        "description": "External-audit hours and effort have not been measured in relation to AI adoption. Fees are a price, report lag is a timing proxy, and the efficiency evidence otherwise comes from internal audit or perception surveys. Whether cost savings exist, and who captures them, is therefore unknown.",
+        "evidence_ids": [
+          "10.1007/s11142-022-09697-x",
+          "10.1108/maj-03-2023-3846",
+          "10.1111/1911-3846.12847"
+        ],
+        "proposed_rq": "Does staged adoption of AI anomaly detection reduce external-audit hours per engagement, and how much of the saving reaches clients as lower fees?",
+        "method": "Difference-in-differences with staggered adoption, comparing engagements before and after tool rollout against not-yet-adopting offices. The main outcomes are total and staff-level hours, fees and realization rates.",
+        "data": "Engagement-level time-and-billing records from one or more firms, covering about three years before and after rollout. Where access fails, use audit-hours disclosures in jurisdictions that publish them."
+      },
+      {
+        "description": "Audit quality is measured only by restatement likelihood and by perceived quality in a Nigerian survey. Fewer restatements could mean fewer errors or weaker detection. No study links auditor AI use to discretionary accruals, detected misstatements, AAERs or going-concern outcomes.",
+        "evidence_ids": [
+          "10.1007/s11142-022-09697-x",
+          "10.1108/maj-03-2023-3846",
+          "10.22624/aims/humanities/v11n1p4"
+        ],
+        "proposed_rq": "Is auditor AI investment associated with lower abnormal accruals and a higher rate of audit-adjusted misstatements and going-concern modifications, once restatements are controlled for?",
+        "method": "Panel regressions with client and auditor fixed effects, instrumenting AI investment with the firm's pre-period digital hiring. Outcomes are absolute discretionary accruals, audit adjustments, AAER incidence and going-concern opinion accuracy for distressed clients.",
+        "data": "AI-hiring measures built from resume data like those in 10.1007/s11142-022-09697-x, merged with Audit Analytics and Compustat for U.S. listed clients."
+      },
+      {
+        "description": "No study examines how auditors act on AI anomaly flags, or whether the effect varies with client complexity, auditor firm size or regulatory regime. The skepticism and sensemaking concerns come from conceptual work, interviews and a reviewer-perception experiment, all about audit data analytics in general. The reviewer finding concerns perceived procedure quality, not auditor judgment.",
+        "evidence_ids": [
+          "10.1111/1911-3846.12894",
+          "10.1111/1911-3846.12901",
+          "10.5117/mab.96.78525"
+        ],
+        "proposed_rq": "Do auditors investigate AI-generated flags less thoroughly when the flags are numerous or the tool is opaque, and does this differ by client complexity and auditor experience?",
+        "method": "Pre-registered 2×2×2 experiment manipulating flag volume, explanation availability and client complexity, with experienced auditors. The outcomes are the proportion of true anomalies investigated and the time spent on each flag.",
+        "data": "About 150 senior auditors recruited through firms or professional bodies. Add a Big 4 versus non-Big 4 comparison in the sample."
+      },
+      {
+        "description": "Risks of AI anomaly detection in external audit rest on descriptive ethics reviews and public Big Four tool descriptions. Explainability, data quality, auditor liability and the PCAOB/IAASB guidance have not been studied empirically. Without these, cost and quality gains cannot be set against implementation risk.",
+        "evidence_ids": [
+          "10.1108/aaaj-09-2020-4934",
+          "10.17261/pressacademia.2020.1337",
+          "10.1016/j.respol.2023.104828"
+        ],
+        "proposed_rq": "How do explainability limits, data-quality problems and liability and standard-setter expectations constrain the use of AI anomaly detection as audit evidence?",
+        "method": "Mixed methods: document analysis of PCAOB and IAASB guidance and inspection findings, plus a survey (n≈200) and 20 interviews with auditors, regulators and tool vendors. The comparison is across firm tiers and jurisdictions, and the outcome is the share of AI output accepted as sufficient evidence.",
+        "data": "Public regulatory documents and inspection reports, plus survey and interview participants from Big Four, mid-tier firms and regulators in at least two jurisdictions."
+      }
+    ]
+  },
+  "limitations": [
+    "Sub-question 3 (accuracy on audit journal entries and transactions) is effectively unanswered: the only journal-entry study uses predefined anomalies on a single ledger, the insurance-claims study has no validation, and one paper shows no results; the rest are firm-level or non-audit fraud models.",
+    "Audit-quality evidence rests on restatement likelihood in two archival studies plus a Nigerian perception survey; no study covers discretionary accruals, detected misstatements, AAERs or going-concern outcomes, and fewer restatements could reflect weaker detection.",
+    "Cost evidence is thin and mixed in construct: fees (a firm-level AI discount versus a partner digital-expertise premium) and report lag are proxies, external-audit hours are unmeasured, and the efficiency evidence comes mainly from perception surveys and internal audit.",
+    "Much of the skepticism, sensemaking, ethics and adoption-barrier evidence comes from reviews, interviews, conceptual work, small surveys and vendor tool descriptions about audit data analytics generally, so reliability is low to moderate and it does not isolate AI anomaly detection; moderators (client complexity, firm size, regulation) and risks such as explainability, liability and PCAOB/IAASB guidance are untested.",
+    "Only abstracts and metadata were read, with no full texts, and the search covered OpenAlex and arXiv only (80 of 403 candidates evaluated), so relevant work in other databases or practitioner and regulator sources may be missed.",
+    "The final quality gate flagged rq3 as a major unresolved gap, and the requested follow-up searches for labelled-misstatement accuracy studies and for auditor-response or moderation studies were not completed.",
+    "[auto] critic: major issue(s) persist after re-search, recorded as limitation: rq3: rq3 asks about accuracy at identifying fraudulent transactions and journal entries in audit settings. The only audit-relevant papers are 10.3390/systems10050130"
+  ],
+  "executive_summary": "후보 403편 중 80편을 평가했으며, 실증 아카이벌 연구 2편, 설문·인터뷰, 문헌 리뷰, 개념 연구, 도구 설명이 섞여 있다. 합의된 점은 감사법인의 AI 투자가 늘수록 고객사 재무제표 재작성(restatement) 가능성이 낮아진다는 것인데(한 연구에서 AI 투자 1 SD당 약 5.0% 감소), 이는 오류 감소와 탐지력 약화를 구분하지 못하는 간접 지표다. 감사 비용 측면에서는 감사보수가 AI 투자 1 SD당 0.9% 낮아졌다는 결과가 있으나, 보수는 가격일 뿐 외부감사 시간·노력은 어떤 연구도 측정하지 않았다. 효율성 증거는 설문, 내부감사 연구, 보고 지연(report lag)에 한정된다. 조건부 결과로는 중국 연구에서 감사인과 고객사가 AI를 함께 쓸 때만 보고 지연이 줄고 따로 쓰면 오히려 늘어난다. 사기 예측 모델은 오탐 대 진탐 비율이 100:1을 넘으면 감사인에게는 비용이 과도하지만 투자자나 규제기관에는 순편익이 있을 수 있다. 다만 이는 전통적 모델 대상이다. 가장 큰 공백은 실제 감사의 분개·거래 수준에서 정밀도·재현율·오탐률을 보고한 연구가 없다는 점과, 외부감사 시간 및 감사인이 AI 경고에 대응하는 방식에 대한 증거가 없다는 점이다. 직업적 회의주의 약화와 윤리·인력·설명가능성 위험은 주로 일반 감사 데이터 분석에 대한 개념·기술(descriptive) 연구에 근거한다."
+}

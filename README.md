@@ -11,15 +11,18 @@
 
 ```bash
 cd research_agent
-uv sync
+uv sync                       # uv 가 없으면: curl -LsSf https://astral.sh/uv/install.sh | sh  (Python 3.12 도 받아줍니다)
 cp .env.example .env          # ANTHROPIC_API_KEY 입력 — 필요한 키는 이것 하나
 uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산성과 연구 품질에 미치는 영향"
 # → runs/<타임스탬프>_graph_<주제>/report.md   (1회 ≈ $0.7 · 6~8분, claude-sonnet-5-5)
 ```
 
-바로 볼 수 있는 실행 결과는 `research_agent/runs/` 에 있습니다 (클린룸 2개 = `cleanroom.json` 포함 폴더, ablation 20개 = `ablation.json` 포함 폴더).
+**실행 결과 바로 보기** — `research_agent/runs/` 에 대표 실행 8개를 넣어 두었습니다 (클린룸 2개 = `cleanroom.json` 포함, 주제 5개의 최종 구조 실행 = `ablation.json` 포함, 베이스라인 1개). 예시 주제의 클린룸 리포트:
+[`runs/20261008T022603Z_graph_…/report.md`](research_agent/runs/20261008T022603Z_graph_생성형-ai-활용이-대학원생의-연구-생산성과-연구-품질에-미치는-영향/report.md) (한국어본, 영어 원문은 같은 폴더의 `report.en.md`).
+각 폴더에는 `report.md`·`brief.json`·`events.jsonl`(단계 전이·LLM/도구 호출 로그)·`cost.json`(비용·결정적 지표)·노드별 중간 산출물이 있습니다.
+제출 zip 에는 ablation 20회·반복 실행을 포함한 전체 55개 실행이 들어 있습니다.
 
-소스는 GitHub 에도 공개되어 있습니다: https://github.com/JAY2160288/research_agent — `runs/` 는 용량 때문에 저장소에는 없고 제출 zip 에만 들어 있습니다.
+GitHub: https://github.com/JAY2160288/research_agent · 웹 버전(초대 계정 전용, 같은 에이전트를 그대로 실행): https://research-brief-web.vercel.app
 
 ## 저장소 구조
 
@@ -29,7 +32,7 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 | [`research_agent/docs/design.md`](research_agent/docs/design.md) | 설계 문서 — 아키텍처, 설계 의도("달라지는 것/아닌 것"), ablation 전체 매트릭스, 반복 실행 편차, 클린룸, 한계 |
 | [`goals.md`](goals.md) | 목표 체계 — 평가 기준에서 도출한 Objective O1~O7, 성공 지표, non-goal |
 | [`plan.md`](plan.md) | 구현 계획 — 아키텍처, 설계 결정 기록(ADR-1~14), 주차별 작업 분해, 변경 로그 |
-| [`research_agent/`](research_agent/) | 소스 코드(`src/`), 프롬프트, 설정, 테스트, 평가 세트, 실행 결과(`runs/`) |
+| [`research_agent/`](research_agent/) | 소스 코드(`src/`), 프롬프트, 설정, 테스트 98개, 평가 세트, 실행 결과(`runs/`, GitHub 에는 대표 8개) |
 
 ## 설계 요점
 
@@ -47,4 +50,4 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 | W2 | 역할 분리 그래프(Planner·Searcher·Evaluator·Synthesizer·Critic·Writer) | 완료 |
 | W3 | Reflection·Replanning 루프, 같은 주제 반복 실행 안정성 | 완료 |
 | W4 | 베이스라인 vs 최종 구조 ablation(20회), LLM-judge, 주장-근거 지지율·정답 회수율, 클린룸 재현, 누출 검사 | 완료 (2026-10-08) |
-| 마무리 | `docs/design.md` 전 섹션, 리포트 렌더러 개편, 한국어 번역 단계(ADR-11) | 완료. 남은 것: 제출 직전 재점검 |
+| 마무리 | `docs/design.md` 전 섹션, 리포트 렌더러 개편, 한국어 번역 단계(ADR-11), 제출 직전 재점검(누출 검사·클린 clone 재설치·zip 검증) | 완료 (2026-10-23) |

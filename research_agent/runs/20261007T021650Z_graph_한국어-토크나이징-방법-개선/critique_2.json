@@ -1,0 +1,80 @@
+{
+  "round": 2,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq3",
+    "rq4"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "search rq4: Korean studies reporting fertility, morpheme-boundary alignment, compression or OOV-rate metrics alongside downstream scores for Korean tokenizers or PLMs (e.g., KLUE/KoBEST ablations, Korean LLM tokenizer evaluations)",
+    "search rq3: Korean tokenizer or PLM studies that vary vocabulary size or compare monolingual and multilingual Korean vocabularies, reporting sequence length or tokens per character and downstream accuracy"
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq4",
+      "problem": "No Korean paper evaluates intrinsic tokenization metrics against downstream performance: the correlation evidence is Turkish (10.48550/arxiv.2502.07057), European (10.48550/arxiv.2310.08754) and English (10.48550/arxiv.2404.13292), and 10.48550/arxiv.2105.09680 (KLUE) and 10.1587/transinf.2017edp7085 (Sejong) never link tokenization metrics to downstream results.",
+      "action": "search rq4: Korean studies reporting fertility, morpheme-boundary alignment, compression or OOV-rate metrics alongside downstream scores for Korean tokenizers or PLMs (e.g., KLUE/KoBEST ablations, Korean LLM tokenizer evaluations)"
+    },
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq3",
+      "problem": "Korean-specific vocabulary design (size, composition, monolingual vs multilingual) is effectively unanswered: the conditional vocabulary claim rests on Turkish (10.1145/3578707) and European (10.48550/arxiv.2310.08754) studies, and the Korean items are an ASR corpus (10.3390/app10196936), a multi-language OOV paper (10.2197/ipsjjip.29.490) and a report that gives no efficiency numbers (10.48550/arxiv.2402.14714).",
+      "action": "search rq3: Korean tokenizer or PLM studies that vary vocabulary size or compare monolingual and multilingual Korean vocabularies, reporting sequence length or tokens per character and downstream accuracy"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The conditional claim that whitespace handling is 'task-dependent' rests on a single sentiment-only study (10.3390/electronics10070845), which cannot show task dependence.",
+      "action": "synthesize: reword to say whitespace replacement hurt sentiment analysis in one study and that task dependence is untested; drop the 'task-dependent' conclusion or add a second task"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "The vocabulary-size conditional merges two unrelated findings (larger vocabularies help morphological tokenizers in Turkish, and multilingual tokenizers need about 3x vocabulary for European languages) into one moderator statement, and neither involves Korean.",
+      "action": "synthesize: split into two claims with explicit language scope, mark Korean applicability as untested and lower the confidence wording"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq5",
+      "problem": "The EEVE/Chinese-LLaMA consensus claim implies encoding-efficiency gains for Korean, but the EEVE abstract (10.48550/arxiv.2402.14714) reports no efficiency numbers, and it compares '2B tokens' of data with '20,000 tokens' of vocabulary as if they were the same quantity.",
+      "action": "synthesize: attribute the encoding-efficiency gain to the Chinese study only, state that Korean evidence covers leaderboard proficiency, and separate training-data budget from vocabulary size"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "The cross-language cost-disparity consensus cites 10.48550/arxiv.2310.08754, which studies tokenizer effects on training cost and performance in European languages and does not show API cost, latency or context loss for under-served languages.",
+      "action": "synthesize: restrict the cost, latency and context-capacity claim to 10.48550/arxiv.2305.15425 and 10.48550/arxiv.2305.13707, and cite 10.48550/arxiv.2310.08754 only for the multilingual vocabulary-size point"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq1",
+      "problem": "The morpheme-vs-subword conflict compares different contrasts (morpheme+BPE vs BPE in 10.48550/arxiv.2010.02534, standalone Mecab-Ko vs SentencePiece in 10.1080/08839514.2023.2175112) and omits 10.3390/electronics10070845, which also found subword units more robust than morpheme units.",
+      "action": "synthesize: reframe the conflict as pre-segmenter vs standalone morpheme tokenization, and add 10.3390/electronics10070845 to side_b"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq5",
+      "problem": "The first gap's factorial design (4 vocabulary sizes × 2 initializations × 2 freezing schedules × 3 budgets = 48 runs) does not match its stated compute of about 20 runs.",
+      "action": "gap: use a fractional or staged design (e.g., one-factor-at-a-time around a baseline) or correct the compute estimate to match the number of runs"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq1",
+      "problem": "The morpheme-vs-subword gap cites the KLUE benchmark paper (10.48550/arxiv.2105.09680) as evidence, but it contains no tokenization comparison.",
+      "action": "gap: remove 10.48550/arxiv.2105.09680 from the evidence_ids for this gap, or cite it only as the planned evaluation suite"
+    }
+  ]
+}

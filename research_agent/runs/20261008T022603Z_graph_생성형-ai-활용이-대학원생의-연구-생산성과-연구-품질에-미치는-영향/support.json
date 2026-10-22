@@ -1,0 +1,304 @@
+{
+  "model": "claude-opus-5-5",
+  "claims_total": 13,
+  "pairs_total": 31,
+  "pairs_judged": 31,
+  "pairs_supported": 22,
+  "pairs_partial": 7,
+  "pairs_unsupported": 2,
+  "pairs_unverified_quote": 0,
+  "pairs_no_abstract": 0,
+  "citation_support_rate": 0.7097,
+  "citation_support_rate_lenient": 0.9355,
+  "claim_support_rate": 1.0,
+  "claims": [
+    {
+      "id": "c1",
+      "statement": "Students report using GenAI mainly for writing and brainstorming support, information retrieval, paraphrasing and concept explanation, but the prevalence figures come from general or mixed student populations rather than graduate-specific samples.",
+      "supported": true
+    },
+    {
+      "id": "c2",
+      "statement": "Graduate and postgraduate students perceive GenAI as useful for research and thesis writing, including faster progress, but these are self-reported perceptions from small samples and none of these studies measures time saved, writing speed or publication output.",
+      "supported": true
+    },
+    {
+      "id": "c3",
+      "statement": "LLM-generated references are unreliable: a substantial share are fabricated or inaccurate, and DOI accuracy is especially poor. These tests used LLM outputs, not graduate-student samples, and mostly older models.",
+      "supported": true
+    },
+    {
+      "id": "c4",
+      "statement": "Surveys, reviews and commentaries raise concerns about accuracy, hallucination, integrity and overreliance, and recommend keeping human judgment central; this rests largely on low-reliability narrative reviews and perception data.",
+      "supported": true
+    },
+    {
+      "id": "c5",
+      "statement": "Cautiously, AI-augmented text may read better yet lack research depth: reviewers rated it higher on readability and informativeness but found it short on research detail and reflective insight, and AI reviews were rated slightly below peer reviews. The samples are small (17 HCI reviewers; an unspecified graduate course) and not specific to graduate research writing.",
+      "supported": true
+    },
+    {
+      "id": "c6",
+      "statement": "Better writing performance with GenAI is associated with iterative, highly interactive, collaborative use, and with high AI literacy and critical engagement; these are small, single-task studies and association rather than causation.",
+      "supported": true
+    },
+    {
+      "id": "c7",
+      "statement": "Randomized trials show writing gains from AI feedback or ChatGPT-assisted instruction only for EFL learners in structured instruction, and one used a Grammarly-based tool; the outcome is writing proficiency, not research output.",
+      "supported": true
+    },
+    {
+      "id": "c8",
+      "statement": "LLMs are said to lower the barrier to English academic writing for non-native researchers when used for editing and refining with disclosure, not for generating large portions of text; this is a commentary without empirical data.",
+      "supported": true
+    },
+    {
+      "id": "c9",
+      "statement": "Citation accuracy of ChatGPT depends on discipline: DOI accuracy was much lower in the humanities (8.5%) than in the natural sciences (32.7%), though only GPT-3.5 on 10 topics was tested.",
+      "supported": true
+    },
+    {
+      "id": "c10",
+      "statement": "Critical appraisal of AI had a significant negative effect on AI self-efficacy and on AI output quality among university students.",
+      "supported": true
+    },
+    {
+      "id": "c11",
+      "statement": "Qualitative studies of graduate students describe critical evaluation and feedback-seeking as central to responsible, beneficial use and to better writing.",
+      "supported": true
+    },
+    {
+      "id": "c12",
+      "statement": "Research students with sustained ChatGPT use reported accelerated progress, higher quality and greater confidence.",
+      "supported": true
+    },
+    {
+      "id": "c13",
+      "statement": "Postgraduate English-major students reported that the challenges, including overreliance and writing difficulties, outweigh the benefits.",
+      "supported": true
+    }
+  ],
+  "pairs": [
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1057/s41599-023-02304-7",
+      "verdict": "supported",
+      "quote": "Clarifying questions of understanding and explaining subject-specific concepts are the most relevant reasons for use in this context.",
+      "reason": "독일 전국 학생 표본에서 개념 설명이 주요 사용 목적이라고 보고해 주장의 해당 부분을 직접 뒷받침한다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1186/s41239-023-00411-8",
+      "verdict": "partial",
+      "quote": "Students recognized the potential for personalized learning support, writing and brainstorming assistance, and research and analysis capabilities.",
+      "reason": "글쓰기·브레인스토밍 지원은 실제 사용 빈도가 아니라 잠재적 이점에 대한 인식으로만 보고된다."
+    },
+    {
+      "claim_id": "c1",
+      "paper_id": "10.1186/s41239-024-00453-6",
+      "verdict": "supported",
+      "quote": "A significant portion had prior experience and expressed the intention to continue using these tools, primarily for information retrieval and text paraphrasing.",
+      "reason": "혼합 표본에서 정보 검색과 패러프레이징이 주된 사용 용도라고 직접 보고한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.1007/s40593-024-00454-6",
+      "verdict": "partial",
+      "quote": "many came to view COREI as a collaborative tool that, when used responsibly, could enhance their research without infringing upon their scholarly ethics.",
+      "reason": "연구 향상 인식은 있으나 초점은 학문 윤리이며 빠른 진척이나 논문 작성 자체는 언급되지 않는다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.14742/ajet.8843",
+      "verdict": "supported",
+      "quote": "The study revealed several areas of impact, including accelerated research progress, enhanced research quality, improved scholarly development and professional skills, enhanced critical thinking, increased student confidence and autonomy, and a deeper supervisory relationship.",
+      "reason": "대학원 연구생 20명의 질적 자료에서 연구 진척 가속을 포함한 유용성 인식을 직접 보고한다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.3991/ijep.v14i3.48395",
+      "verdict": "partial",
+      "quote": "This study analyzes the perspectives of 80 male and female postgraduate students in various academic fields at Jadara University regarding the use of ChatGPT in writing their theses.",
+      "reason": "학위논문 작성에서의 인식을 조사했다고만 밝히고 유용하다고 인식했다는 결과는 초록에 제시되지 않는다."
+    },
+    {
+      "claim_id": "c2",
+      "paper_id": "10.46303/jcsr.2024.4",
+      "verdict": "supported",
+      "quote": "The study found that ChatGPT proves beneficial for postgraduate students, with some utilising the AI tool to refine their research topics before submission to their supervisors.",
+      "reason": "석사생 10명의 인터뷰에서 연구와 글쓰기에 유익하다는 인식을 보고한다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.2196/52935",
+      "verdict": "supported",
+      "quote": "There were significant disparities found in DOI presence in the natural sciences (39/55, 70.9%) and the humanities (18/47, 38.3%), along with significant differences in accuracy between the two disciplines (18/55, 32.7% vs 4/47, 8.5%).",
+      "reason": "GPT-3.5 생성 인용의 상당수가 존재하지 않고 DOI 정확도가 매우 낮음을 직접 보여준다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.2196/53164",
+      "verdict": "supported",
+      "quote": "Hallucination rates stood at 39.6% (55/139) for GPT-3.5, 28.6% (34/119) for GPT-4, and 91.4% (95/104) for Bard (P<.001).",
+      "reason": "구형 LLM이 생성한 참고문헌의 상당 비율이 환각임을 직접 보고한다."
+    },
+    {
+      "claim_id": "c3",
+      "paper_id": "10.2196/80371",
+      "verdict": "supported",
+      "quote": "Among the 141 real citations, 64 (45.4%) contained errors, most frequently incorrect or invalid digital object identifiers.",
+      "reason": "GPT-4o 인용의 조작·오류가 흔하고 DOI 오류가 가장 빈번하다고 직접 보고한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.1177/27538699241231862",
+      "verdict": "partial",
+      "quote": "While the academic world aims to foster critical thinking and produce reliable research, the use of chatbots has elicited resistance from some academics due to fears of inaccuracies.",
+      "reason": "부정확성 우려와 책임 있는 사용 지침은 다루나 인간 판단 중심이나 과의존은 명시하지 않는다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.1186/s41239-023-00411-8",
+      "verdict": "supported",
+      "quote": "However, concerns about accuracy, privacy, ethical issues, and the impact on personal development, career prospects, and societal values were also expressed.",
+      "reason": "학생 인식 설문에서 정확성 및 윤리 우려가 보고되어 주장과 일치한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.3348/kjr.2023.0773",
+      "verdict": "supported",
+      "quote": "However, using LLMs to generate text for research manuscripts entails concerns such as hallucination, plagiarism, and privacy issues; to mitigate these risks, authors should verify the accuracy of generated content, employ text similarity detectors, and avoid inputting sensitive information into their prompts.",
+      "reason": "환각·표절 우려와 저자의 검증 필요성을 논평으로 제시한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.4103/ijo.ijo_718_23",
+      "verdict": "supported",
+      "quote": "The review highlights the importance of maintaining human judgment in the writing process and using ChatGPT as a complementary tool rather than a replacement for human effort.",
+      "reason": "신뢰성 우려와 인간 판단 유지 권고를 서술형 리뷰로 직접 제시한다."
+    },
+    {
+      "claim_id": "c4",
+      "paper_id": "10.54855/ijaile.25212",
+      "verdict": "supported",
+      "quote": "Due to ChatGPT’s benefits, users tend to become overly reliant on using it in their learning process.",
+      "reason": "대학원생 대상 소규모 인식 연구에서 과의존 우려를 직접 언급한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.1016/j.chbah.2024.100095",
+      "verdict": "supported",
+      "quote": "Our findings indicate that while AI-augmented writing improves readability, language diversity, and informativeness, it often lacks research details and reflective insights from authors.",
+      "reason": "HCI 심사자 17명이 가독성·정보성은 높지만 연구 세부와 성찰이 부족하다고 평가한 결과를 직접 보고한다."
+    },
+    {
+      "claim_id": "c5",
+      "paper_id": "10.35542/osf.io/x3dct",
+      "verdict": "supported",
+      "quote": "Findings indicate that peer reviews were consistently perceived slightly higher across all three dimensions compared to AI reviews, with thematic analysis revealing the unique strengths and limitations of each review type.",
+      "reason": "대학원 수업에서 AI 리뷰가 동료 리뷰보다 약간 낮게 평가되었음을 직접 보고한다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.1007/s12528-025-09444-6",
+      "verdict": "partial",
+      "quote": "The study found that students with a high level of AI literacy exhibited a collaborative approach to SAI, actively accepting GenAI’s suggestions and engaging GenAI in meta-cognitive-related activities such as planning, whereas students with a low level of AI literacy demonstrated much less interaction with GenAI in completing their writing tasks, instead choosing to ideate and evaluate independently.",
+      "reason": "높은 AI 리터러시와 협력적 사용은 보고하나 성과 차이의 방향은 초록에 명시되지 않는다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.1080/03075079.2024.2323593",
+      "verdict": "supported",
+      "quote": "Findings indicate that doctoral students engaging in iterative, highly interactive processes with the GAI-powered assisting tool generally achieve better performance in the writing task.",
+      "reason": "박사과정생 10명에서 반복적·상호작용적 사용이 더 나은 글쓰기 성과와 연관됨을 직접 보고한다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.1093/applin/amaf022",
+      "verdict": "partial",
+      "quote": "Through textual analysis of students’ reflections and interactions with AI, findings reveal that while these tools can enhance certain aspects of writing, their effective use requires critical engagement.",
+      "reason": "비판적 참여의 필요성은 언급하나 글쓰기 성과를 측정해 연관성을 보이지는 않는다."
+    },
+    {
+      "claim_id": "c6",
+      "paper_id": "10.1111/ejed.12824",
+      "verdict": "unsupported",
+      "quote": "",
+      "reason": "메타인지 전략만 기술하며 글쓰기 성과와의 연관성은 보고하지 않는다."
+    },
+    {
+      "claim_id": "c7",
+      "paper_id": "10.1007/s44217-025-00602-7",
+      "verdict": "supported",
+      "quote": "Sixty postgraduate EFL students were randomly assigned to either an experimental group using Grammarly as an AI-enhanced feedback system or a control group receiving traditional instruction.",
+      "reason": "EFL 대학원생 무작위 배정 연구에서 Grammarly 기반 피드백이 글쓰기 능력을 향상시켰다고 보고한다."
+    },
+    {
+      "claim_id": "c7",
+      "paper_id": "10.3389/fpsyg.2023.1260843",
+      "verdict": "supported",
+      "quote": "Quantitative analysis reveals significant improvements in both writing skills and motivation among students who received AI-assisted instruction compared to the control group.",
+      "reason": "EFL 학생 무작위 배정에서 ChatGPT 보조 수업이 글쓰기 능력을 향상시켰음을 보고한다."
+    },
+    {
+      "claim_id": "c8",
+      "paper_id": "10.3348/kjr.2023.0773",
+      "verdict": "supported",
+      "quote": "Consequently, it may be more prudent to utilize LLMs for editing and refining text rather than generating large portions of text. Journal policies concerning the use of LLMs vary, but transparency in disclosing artificial intelligence tool usage is emphasized.",
+      "reason": "비원어민 연구자의 영어 글쓰기 장벽 완화와 편집 용도·공개 권고를 논평으로 직접 제시한다."
+    },
+    {
+      "claim_id": "c9",
+      "paper_id": "10.2196/52935",
+      "verdict": "supported",
+      "quote": "There were significant disparities found in DOI presence in the natural sciences (39/55, 70.9%) and the humanities (18/47, 38.3%), along with significant differences in accuracy between the two disciplines (18/55, 32.7% vs 4/47, 8.5%).",
+      "reason": "초록이 GPT-3.5, 10개 주제에서 인문학 8.5%, 자연과학 32.7%의 DOI 정확도 차이를 직접 보고한다."
+    },
+    {
+      "claim_id": "c10",
+      "paper_id": "10.1186/s40561-025-00384-3",
+      "verdict": "supported",
+      "quote": "AI critical appraisal significantly and negatively impacted AI self-efficacy and AI output quality, whereas AI technical understanding, critical appraisal, practical application, self-efficacy, and output quality had an insignificant effect on students’ academic performance.",
+      "reason": "초록은 대학생에서 AI 비판적 평가가 자기효능감과 산출물 품질에 유의한 부적 영향을 미쳤다고 명시한다."
+    },
+    {
+      "claim_id": "c11",
+      "paper_id": "10.1007/s40593-024-00454-6",
+      "verdict": "partial",
+      "quote": "Participants emphasized the importance of human agency and decision-making in the AI-assisted research process, and the need for critical evaluation and personalization of AI-generated content to maintain authorship.",
+      "reason": "초록은 비판적 평가의 중요성을 다루지만, 피드백 추구나 더 나은 글쓰기는 언급하지 않는다."
+    },
+    {
+      "claim_id": "c11",
+      "paper_id": "10.1093/applin/amaf022",
+      "verdict": "supported",
+      "quote": "Through textual analysis of students’ reflections and interactions with AI, findings reveal that while these tools can enhance certain aspects of writing, their effective use requires critical engagement. Feedback-seeking emerged as a key skill, shaping how writers negotiate AI’s role in their writing process—determining when input from AI tools, which operate outside the students’ disciplinary boundaries, strengthens their writing and when disciplinary expertise remains essential.",
+      "reason": "박사과정생 대상 연구에서 비판적 참여와 피드백 추구가 효과적 사용과 글쓰기 향상의 핵심이라고 보고한다."
+    },
+    {
+      "claim_id": "c11",
+      "paper_id": "10.14742/ajet.8843",
+      "verdict": "unsupported",
+      "quote": "",
+      "reason": "초록은 비판적 사고 향상을 사용의 결과로 보고할 뿐이며, 비판적 평가나 피드백 추구가 책임 있는 사용의 중심이라는 내용은 없다."
+    },
+    {
+      "claim_id": "c12",
+      "paper_id": "10.14742/ajet.8843",
+      "verdict": "supported",
+      "quote": "The study revealed several areas of impact, including accelerated research progress, enhanced research quality, improved scholarly development and professional skills, enhanced critical thinking, increased student confidence and autonomy, and a deeper supervisory relationship.",
+      "reason": "4개월 이상 ChatGPT를 사용한 연구생들이 진척 가속, 품질 향상, 자신감 증가를 보고했다고 초록이 직접 밝힌다."
+    },
+    {
+      "claim_id": "c13",
+      "paper_id": "10.54855/ijaile.25212",
+      "verdict": "supported",
+      "quote": "This study's findings indicate that ChatGPT's challenges outweigh the benefits it brings that enhance the efficacy of writing skills of postgraduate students majoring in English at the Industrial University of Ho Chi Minh City.",
+      "reason": "영어 전공 대학원생에게서 ChatGPT의 어려움이 이점보다 크다는 결과를 초록이 직접 보고한다."
+    }
+  ],
+  "notes": [],
+  "cost_usd": 0.2214,
+  "llm_calls": 2,
+  "elapsed_sec": 65.1
+}

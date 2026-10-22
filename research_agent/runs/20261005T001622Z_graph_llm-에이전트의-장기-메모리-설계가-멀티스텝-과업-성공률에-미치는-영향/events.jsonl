@@ -1,0 +1,110 @@
+{"t": 0.0, "kind": "run_start", "topic": "LLM 에이전트의 장기 메모리 설계가 멀티스텝 과업 성공률에 미치는 영향", "mode": "graph"}
+{"t": 0.003, "kind": "node_start", "node": "understand", "round": 0}
+{"t": 4.229, "kind": "llm_call", "role": "understand", "model": "claude-sonnet-5-5", "input_tokens": 1911, "cache_read": 0, "cache_write": 0, "output_tokens": 389, "cost_usd": 0.007712, "attempt": 1, "ok": true, "error": null}
+{"t": 4.229, "kind": "node_check", "node": "understand", "attempt": 1, "issues": []}
+{"t": 4.23, "kind": "node_end", "node": "understand", "round": 0}
+{"t": 4.23, "kind": "node_start", "node": "plan", "round": 0}
+{"t": 15.17, "kind": "llm_call", "role": "plan", "model": "claude-sonnet-5-5", "input_tokens": 2216, "cache_read": 0, "cache_write": 0, "output_tokens": 1358, "cost_usd": 0.018012, "attempt": 1, "ok": true, "error": null}
+{"t": 15.171, "kind": "node_check", "node": "plan", "attempt": 1, "issues": []}
+{"t": 15.171, "kind": "node_end", "node": "plan", "round": 0}
+{"t": 15.171, "kind": "node_start", "node": "search", "round": 0}
+{"t": 16.403, "kind": "tool_call", "name": "search_openalex", "args": {"query": "memory-augmented language agents long-horizon tasks", "per_page": 15}, "n_results": 13, "cached": false}
+{"t": 16.435, "kind": "tool_call", "name": "search_openalex", "args": {"query": "episodic memory LLM agents multi-step performance", "per_page": 15}, "n_results": 13, "cached": false}
+{"t": 16.459, "kind": "tool_call", "name": "search_openalex", "args": {"query": "LLM agent long-term memory architecture task success", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 16.731, "kind": "tool_call", "name": "search_openalex", "args": {"query": "hierarchical graph memory autonomous language agents", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 17.615, "kind": "tool_call", "name": "search_openalex", "args": {"query": "retrieval-augmented memory LLM agents sequential decision-making", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 17.659, "kind": "tool_call", "name": "search_openalex", "args": {"query": "memory write summarization compression LLM agents", "per_page": 15}, "n_results": 14, "cached": false}
+{"t": 17.767, "kind": "tool_call", "name": "search_openalex", "args": {"query": "external memory retrieval strategy agent task completion", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 18.143, "kind": "tool_call", "name": "search_openalex", "args": {"query": "embedding-based memory retrieval agent benchmark", "per_page": 15}, "n_results": 14, "cached": false}
+{"t": 18.667, "kind": "tool_call", "name": "search_openalex", "args": {"query": "reflection experience learning language agents memory", "per_page": 15}, "n_results": 13, "cached": false}
+{"t": 18.968, "kind": "tool_call", "name": "search_openalex", "args": {"query": "memory update forgetting mechanism LLM agents", "per_page": 15}, "n_results": 13, "cached": false}
+{"t": 19.236, "kind": "tool_call", "name": "search_openalex", "args": {"query": "memory consolidation long-term agent self-improvement", "per_page": 15}, "n_results": 12, "cached": false}
+{"t": 19.401, "kind": "tool_call", "name": "search_openalex", "args": {"query": "lifelong learning LLM agent experience memory", "per_page": 15}, "n_results": 13, "cached": false}
+{"t": 19.644, "kind": "tool_call", "name": "search_openalex", "args": {"query": "agent planning memory integration long-horizon tasks", "per_page": 15}, "n_results": 14, "cached": false}
+{"t": 19.803, "kind": "tool_call", "name": "search_openalex", "args": {"query": "LLM agent planning with memory-augmented reasoning", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 20.426, "kind": "tool_call", "name": "search_openalex", "args": {"query": "benchmark evaluating LLM agent memory long-horizon", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 20.539, "kind": "tool_call", "name": "search_openalex", "args": {"query": "autonomous language agents memory and task decomposition", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 20.698, "kind": "tool_call", "name": "search_openalex", "args": {"query": "tool-using agents memory planning success rate", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 20.914, "kind": "tool_call", "name": "search_openalex", "args": {"query": "ablation study memory module agent success rate", "per_page": 15}, "n_results": 14, "cached": false}
+{"t": 21.489, "kind": "tool_call", "name": "search_openalex", "args": {"query": "agent benchmark task completion rate memory comparison", "per_page": 15}, "n_results": 14, "cached": false}
+{"t": 21.66, "kind": "tool_call", "name": "search_openalex", "args": {"query": "long-term memory evaluation conversational agents benchmark", "per_page": 15}, "n_results": 13, "cached": false}
+{"t": 21.677, "kind": "tool_call", "name": "search_openalex", "args": {"query": "irrelevant memory retrieval degrades agent performance", "per_page": 15}, "n_results": 12, "cached": false}
+{"t": 21.866, "kind": "tool_call", "name": "search_openalex", "args": {"query": "memory errors propagation LLM agents failure analysis", "per_page": 15}, "n_results": 13, "cached": false}
+{"t": 22.831, "kind": "tool_call", "name": "search_openalex", "args": {"query": "long-term memory latency cost trade-off language agents", "per_page": 15}, "n_results": 14, "cached": false}
+{"t": 22.905, "kind": "tool_call", "name": "search_openalex", "args": {"query": "hallucination stale memory autonomous agents", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 48.652, "kind": "tool_error", "name": "search_arxiv", "query": "LLM agent long-term memory architecture task success", "error": "The read operation timed out"}
+{"t": 77.049, "kind": "tool_error", "name": "search_arxiv", "query": "memory-augmented language agents long-horizon tasks", "error": "The read operation timed out"}
+{"t": 77.049, "kind": "arxiv_disabled", "after_failures": 2, "skipped_queries": 10}
+{"t": 77.05, "kind": "node_check", "node": "search", "attempt": 1, "issues": [], "counts": {"rq1": 53, "rq2": 56, "rq3": 48, "rq4": 57, "rq5": 56, "rq6": 53}, "replan_queries": null}
+{"t": 77.05, "kind": "node_end", "node": "search", "round": 0}
+{"t": 77.05, "kind": "node_start", "node": "evaluate", "round": 0}
+{"t": 89.913, "kind": "llm_call", "role": "evaluate", "model": "claude-sonnet-5-5", "input_tokens": 6667, "cache_read": 0, "cache_write": 0, "output_tokens": 2106, "cost_usd": 0.034394, "attempt": 1, "ok": true, "error": null}
+{"t": 89.913, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": []}
+{"t": 102.315, "kind": "llm_call", "role": "evaluate", "model": "claude-sonnet-5-5", "input_tokens": 6682, "cache_read": 0, "cache_write": 0, "output_tokens": 2015, "cost_usd": 0.033514, "attempt": 1, "ok": true, "error": null}
+{"t": 102.315, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": []}
+{"t": 115.766, "kind": "llm_call", "role": "evaluate", "model": "claude-sonnet-5-5", "input_tokens": 7033, "cache_read": 0, "cache_write": 0, "output_tokens": 2195, "cost_usd": 0.036016, "attempt": 1, "ok": true, "error": null}
+{"t": 115.767, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": []}
+{"t": 127.607, "kind": "llm_call", "role": "evaluate", "model": "claude-sonnet-5-5", "input_tokens": 6399, "cache_read": 0, "cache_write": 0, "output_tokens": 1811, "cost_usd": 0.030908, "attempt": 1, "ok": true, "error": null}
+{"t": 127.607, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": []}
+{"t": 141.701, "kind": "llm_call", "role": "evaluate", "model": "claude-sonnet-5-5", "input_tokens": 6844, "cache_read": 0, "cache_write": 0, "output_tokens": 2199, "cost_usd": 0.035678, "attempt": 1, "ok": true, "error": null}
+{"t": 141.702, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": []}
+{"t": 154.553, "kind": "llm_call", "role": "evaluate", "model": "claude-sonnet-5-5", "input_tokens": 6941, "cache_read": 0, "cache_write": 0, "output_tokens": 2079, "cost_usd": 0.034672, "attempt": 1, "ok": true, "error": null}
+{"t": 154.553, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": []}
+{"t": 158.232, "kind": "llm_call", "role": "evaluate", "model": "claude-sonnet-5-5", "input_tokens": 2777, "cache_read": 0, "cache_write": 0, "output_tokens": 337, "cost_usd": 0.008924, "attempt": 1, "ok": true, "error": null}
+{"t": 158.232, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": []}
+{"t": 158.233, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": [], "candidates": 61, "prior": 61, "evaluated": 61, "only_sub_rqs": []}
+{"t": 158.233, "kind": "node_end", "node": "evaluate", "round": 0}
+{"t": 158.233, "kind": "node_start", "node": "synthesize", "round": 0}
+{"t": 173.214, "kind": "llm_call", "role": "synthesize", "model": "claude-sonnet-5-5", "input_tokens": 9152, "cache_read": 0, "cache_write": 0, "output_tokens": 2262, "cost_usd": 0.040924, "attempt": 1, "ok": true, "error": null}
+{"t": 173.214, "kind": "node_check", "node": "synthesize", "attempt": 1, "issues": []}
+{"t": 173.215, "kind": "node_end", "node": "synthesize", "round": 0}
+{"t": 173.215, "kind": "node_start", "node": "gap", "round": 0}
+{"t": 189.15, "kind": "llm_call", "role": "gap", "model": "claude-sonnet-5-5", "input_tokens": 10849, "cache_read": 0, "cache_write": 0, "output_tokens": 2035, "cost_usd": 0.042048, "attempt": 1, "ok": true, "error": null}
+{"t": 189.15, "kind": "node_check", "node": "gap", "attempt": 1, "issues": []}
+{"t": 189.151, "kind": "node_end", "node": "gap", "round": 0}
+{"t": 189.151, "kind": "node_start", "node": "critic", "round": 0}
+{"t": 222.381, "kind": "llm_call", "role": "critic", "model": "claude-sonnet-5-5", "input_tokens": 14086, "cache_read": 0, "cache_write": 0, "output_tokens": 4566, "cost_usd": 0.073832, "attempt": 1, "ok": true, "error": null}
+{"t": 222.384, "kind": "node_check", "node": "critic", "attempt": 1, "issues": []}
+{"t": 222.384, "kind": "critique", "round": 1, "passed": false, "issues": [], "llm_ran": true, "llm_major": ["The consensus that structured memory (graphs, workflows) 'tends to outperform raw history, summarization or plain retrieval, mainly by reducing irrelevant context' leans on 10.48550/arxiv.2609.16053 and 10.48550/arxiv.2606.06036 (LoCoMo/LongMemEval conversational QA, not multi-step tasks) and 10.48550/arxiv.2603.03296 (no numbers). It also ignores 10.48550/arxiv.2608.15008 and 10.48550/arxiv.2412.15266, which find no dominant substrate and task-dependent structure; the context-reduction mechanism is only asserted in abstracts.", "No claim addresses how memory interacts with planning or reasoning modules: consensus 1 and 4 just show that memory or reflection helps. The only planning-memory links are 10.48550/arxiv.2402.03610 (RAP, no numbers), the planning survey 10.48550/arxiv.2402.02716, and JARVIS-1 (no ablation), so the coverage note overstates rq4 as 'strongest'."], "llm_minor": ["Consensus 4 says pruning and forgetting contribute to gains, citing self-reported or no-number sources (10.2478/ijanmc-2024-0029, 10.48550/arxiv.2606.06787). 10.48550/arxiv.2606.29178 finds bounded retention indistinguishable from other policies on clean ALFWorld, and 'reflection is often the stronger component' generalizes from one ScienceWorld ablation (10.48550/arxiv.2609.19128).", "The first conditional claim says 'bounded or trace-aware retention preserves task success' under noise, but 10.48550/arxiv.2606.29178 reports that FIFO (also bounded) degrades under 75% distractor writes and only TraceRetain holds 97/100.", "The conflict pairs 'bounded retention indistinguishable from unbounded' (10.48550/arxiv.2606.29178) as evidence that broader retrieval hurts, which is a retention result and not a retrieval-breadth one. The hypothesis also puts AriGraph (10.48550/arxiv.2407.04363, a sequential text-game study) on the 'recall-dominated' side.", "Consensus 5 asserts cost and error-propagation harms, but none of the cited ids quantify cost or latency and no cited paper measures error propagation in task success; the toxicity paper 10.48550/arxiv.2605.16746 is tangential.", "The count for rq1 and rq4 is inflated by duplicates (10.48550/arxiv.2311.05997 and 10.1109/tpami.2024.3511593; 10.48550/arxiv.2308.11432 and 10.1007/s11704-024-40231-1), and no paper compares episodic, semantic and hierarchical memory head-to-head on task success.", "Gap 1 says no study varies models and environments, yet 10.48550/arxiv.2608.15008 (three backbones, four benchmark suites, 26 metrics) already does a controlled multi-model comparison, so the gap is partly filled; gap 2 likewise overlaps with its finding on broad retrieval for QA vs sequential decisions."], "uncovered": ["rq4"], "actions": ["synthesize: restrict this claim to decision-task evidence (AriGraph 10.48550/arxiv.2407.04363, AWM 10.48550/arxiv.2409.07429), move the conversational-QA results into a separate, clearly scoped statement, and state that the harness study contradicts a general structured-memory advantage.", "search rq4: empirical studies that ablate memory retrieval inside planning/decomposition loops (memory-conditioned planners, plan reuse, ReAct/Reflexion-style agents with and without memory) on long-horizon tasks; then revise the coverage note to rate rq4 as thin."]}
+{"t": 222.384, "kind": "node_end", "node": "critic", "round": 0}
+{"t": 222.384, "kind": "node_start", "node": "replan", "round": 0}
+{"t": 226.002, "kind": "llm_call", "role": "replan", "model": "claude-sonnet-5-5", "input_tokens": 4444, "cache_read": 0, "cache_write": 0, "output_tokens": 272, "cost_usd": 0.011608, "attempt": 1, "ok": true, "error": null}
+{"t": 226.002, "kind": "node_check", "node": "replan", "attempt": 1, "issues": []}
+{"t": 226.002, "kind": "replan", "round": 1, "rationale": "Only rq4 is flagged for search. Its new queries target ablation studies of memory inside planning and decomposition loops, such as memory-conditioned planners, plan reuse, and ReAct/Reflexion variants with and without memory. The other critic issues concern synthesis and gap writing and will be handled in the rewrite.", "queries": {"rq4": ["memory-conditioned planner ablation long-horizon embodied agents", "plan reuse experience retrieval LLM agent planning", "ReAct Reflexion with and without memory ablation"]}}
+{"t": 226.002, "kind": "node_end", "node": "replan", "round": 0}
+{"t": 226.002, "kind": "node_start", "node": "search", "round": 1}
+{"t": 226.827, "kind": "tool_call", "name": "search_openalex", "args": {"query": "memory-conditioned planner ablation long-horizon embodied agents", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 227.259, "kind": "tool_call", "name": "search_openalex", "args": {"query": "ReAct Reflexion with and without memory ablation", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 227.278, "kind": "tool_call", "name": "search_openalex", "args": {"query": "plan reuse experience retrieval LLM agent planning", "per_page": 15}, "n_results": 15, "cached": false}
+{"t": 272.383, "kind": "tool_error", "name": "search_arxiv", "query": "memory-conditioned planner ablation long-horizon embodied agents", "error": "The read operation timed out"}
+{"t": 320.456, "kind": "tool_error", "name": "search_arxiv", "query": "plan reuse experience retrieval LLM agent planning", "error": "The read operation timed out"}
+{"t": 320.457, "kind": "arxiv_disabled", "after_failures": 2, "skipped_queries": 0}
+{"t": 320.457, "kind": "node_check", "node": "search", "attempt": 1, "issues": [], "counts": {"rq1": 53, "rq2": 56, "rq3": 48, "rq4": 97, "rq5": 56, "rq6": 53}, "replan_queries": 3}
+{"t": 320.457, "kind": "node_end", "node": "search", "round": 1}
+{"t": 320.458, "kind": "node_start", "node": "evaluate", "round": 1}
+{"t": 332.098, "kind": "llm_call", "role": "evaluate", "model": "claude-sonnet-5-5", "input_tokens": 6574, "cache_read": 0, "cache_write": 0, "output_tokens": 1744, "cost_usd": 0.030588, "attempt": 1, "ok": true, "error": null}
+{"t": 332.098, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": []}
+{"t": 337.464, "kind": "llm_call", "role": "evaluate", "model": "claude-sonnet-5-5", "input_tokens": 3253, "cache_read": 0, "cache_write": 0, "output_tokens": 596, "cost_usd": 0.012466, "attempt": 1, "ok": true, "error": null}
+{"t": 337.464, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": []}
+{"t": 337.464, "kind": "node_check", "node": "evaluate", "attempt": 1, "issues": [], "candidates": 12, "prior": 73, "evaluated": 73, "only_sub_rqs": ["rq4"]}
+{"t": 337.465, "kind": "node_end", "node": "evaluate", "round": 1}
+{"t": 337.465, "kind": "node_start", "node": "synthesize", "round": 1}
+{"t": 369.956, "kind": "llm_call", "role": "synthesize", "model": "claude-sonnet-5-5", "input_tokens": 11870, "cache_read": 0, "cache_write": 0, "output_tokens": 4741, "cost_usd": 0.07115, "attempt": 1, "ok": true, "error": null}
+{"t": 369.956, "kind": "node_check", "node": "synthesize", "attempt": 1, "issues": []}
+{"t": 369.957, "kind": "node_end", "node": "synthesize", "round": 1}
+{"t": 369.957, "kind": "node_start", "node": "gap", "round": 1}
+{"t": 392.48, "kind": "llm_call", "role": "gap", "model": "claude-sonnet-5-5", "input_tokens": 14027, "cache_read": 0, "cache_write": 0, "output_tokens": 2960, "cost_usd": 0.057654, "attempt": 1, "ok": true, "error": null}
+{"t": 392.481, "kind": "node_check", "node": "gap", "attempt": 1, "issues": []}
+{"t": 392.481, "kind": "node_end", "node": "gap", "round": 1}
+{"t": 392.482, "kind": "node_start", "node": "critic", "round": 1}
+{"t": 413.51, "kind": "llm_call", "role": "critic", "model": "claude-sonnet-5-5", "input_tokens": 15731, "cache_read": 0, "cache_write": 0, "output_tokens": 2707, "cost_usd": 0.058532, "attempt": 1, "ok": true, "error": null}
+{"t": 413.51, "kind": "node_check", "node": "critic", "attempt": 1, "issues": []}
+{"t": 413.511, "kind": "critic_persisting", "sub_rqs": ["rq4"]}
+{"t": 413.511, "kind": "critique", "round": 2, "passed": true, "issues": [], "llm_ran": true, "llm_major": ["rq4 passes on count but is effectively unanswered: RAP (2402.03610, no numbers), TRAD (2403.06221, in-context demonstrations, no results), CAPEAM (2308.07241, embodied environment state, no memory ablation), JARVIS-1 (2311.05997 and its duplicate 10.1109/tpami.2024.3511593, no ablation) and the planning survey (2402.02716) give no isolated evidence of memory-planning interaction on success."], "llm_minor": ["The consensus claim that unselective memory degrades success cites 2412.15266, a QA and dialogue study that actually finds mixed memory resilient to noise. It also cites 2606.29178, which reports precision loss for FIFO and unbounded memory, not a success drop, so only 2608.15008 supports the success claim directly.", "rq6 has no non-self-reported measurement of cost, latency or error propagation affecting task success. The cost evidence is VIMBank (2.478/ijanmc-2024-0029) and MRAgent, and the propagation evidence is the toxicity paper (2605.16746), which is tangential.", "The reported conflict pits AriGraph and AWM, which beat selected baselines, against the harness result 2608.15008, which says no substrate dominates. Neither side claims a general structured-memory advantage, so this is a scope difference rather than a true conflict. The same pair is also used as a consensus claim, which duplicates the content.", "For rq2, most of the supporting evidence on retrieval and storage mechanisms comes from conversational QA (2502.05589, 2609.16053, 2606.06036, 2412.15266). The only evidence on sequential tasks is 2608.15008 and the number-free TRAD abstract, so the rq2 conclusions about multi-step success are weakly grounded."], "uncovered": [], "actions": []}
+{"t": 413.511, "kind": "node_end", "node": "critic", "round": 1}
+{"t": 413.511, "kind": "node_start", "node": "write", "round": 1}
+{"t": 424.467, "kind": "llm_call", "role": "write", "model": "claude-sonnet-5-5", "input_tokens": 4796, "cache_read": 0, "cache_write": 0, "output_tokens": 1361, "cost_usd": 0.023202, "attempt": 1, "ok": true, "error": null}
+{"t": 424.467, "kind": "node_check", "node": "write", "attempt": 1, "issues": []}
+{"t": 424.468, "kind": "node_check", "node": "write", "attempt": 1, "issues": [], "checks": {"submitted": true, "citations_total": 73, "citations_verified": 73, "citation_verified_rate": 1.0, "claims_total": 12, "claims_with_source": 12, "sub_rqs": 6, "sub_rqs_covered": 6, "gaps": 5, "gaps_with_2_evidence": 5, "conflicts": 1, "conflicts_with_hypothesis": 1, "unknown_ids": []}}
+{"t": 424.469, "kind": "node_end", "node": "write", "round": 1}
+{"t": 424.485, "kind": "run_end", "status": "ok", "elapsed_sec": 424.5, "llm_calls": 19, "input_tokens": 142252, "output_tokens": 37733, "cost_usd": 0.6618, "checks": {"submitted": true, "citations_total": 73, "citations_verified": 73, "citation_verified_rate": 1.0, "claims_total": 12, "claims_with_source": 12, "sub_rqs": 6, "sub_rqs_covered": 6, "gaps": 5, "gaps_with_2_evidence": 5, "conflicts": 1, "conflicts_with_hypothesis": 1, "unknown_ids": []}, "notes": ["search: arXiv unavailable (disabled after 2 failures, 10 queries skipped); OpenAlex only", "search: arXiv unavailable (disabled after 2 failures, 0 queries skipped); OpenAlex only", "critic: major issue(s) persist after re-search, recorded as limitation: rq4: rq4 passes on count but is effectively unanswered: RAP (2402.03610, no numbers), TRAD (2403.06221, in-context demonstrations, no results), CAPEAM (2308.07241, e"], "papers_seen": 312, "critic_rounds": 2, "replans": 1, "critic_mode": "full", "max_replans": 2, "model": "claude-sonnet-5-5", "plan_from": null, "final_critic_passed": true}

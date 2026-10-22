@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq5",
+      "reason": "Critic found no graduate-level empirical evidence on skill erosion, integrity violations or bias; existing support is perception surveys and commentaries.",
+      "queries": [
+        "experimental study AI assistance skill deskilling doctoral students",
+        "hallucinated references fabricated citations ChatGPT early-career researchers audit",
+        "AI detection false positives master's thesis integrity incidents"
+      ]
+    }
+  ],
+  "rationale": "Only rq5 is flagged for search because the critic found it lacking graduate-level empirical evidence on over-reliance, deskilling, hallucinated citations, integrity incidents and bias. The new queries target experimental, audit and incident-based designs and use different vocabulary from the earlier perception-survey queries. Other critic issues concern synthesis or are not flagged for search, so no queries are added for them."
+}

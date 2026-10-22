@@ -208,7 +208,7 @@ Critic 판정과 Replan 쿼리는 `events.jsonl` 의 `critique` / `replan` 이�
 ## 5. 평가·개발 명령
 
 ```bash
-uv run pytest                                    # 단위 테스트 88개 (네트워크·API 키 불필요)
+uv run pytest                                    # 단위 테스트 98개 (네트워크·API 키 불필요)
 uv run python scripts/smoke_tools.py             # OpenAlex·arXiv·Crossref 실제 호출 확인
 uv run python scripts/smoke_llm.py               # Anthropic 구조화 출력 실제 호출 확인 (비용 발생)
 

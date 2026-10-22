@@ -1,0 +1,37 @@
+{
+  "original_topic": "AI 기반 이상거래 탐지가 외부감사 품질과 감사 비용에 미치는 영향",
+  "topic_en": "The impact of AI-based anomaly (fraudulent transaction) detection on external audit quality and audit costs",
+  "domain": "accounting",
+  "concepts": [
+    "AI-based anomaly detection",
+    "fraudulent transaction detection",
+    "external audit quality",
+    "audit fees",
+    "audit efficiency",
+    "machine learning in auditing",
+    "continuous auditing",
+    "audit analytics"
+  ],
+  "variables": {
+    "independent": [
+      "AI-based anomaly detection adoption in external audits"
+    ],
+    "dependent": [
+      "external audit quality",
+      "audit costs (audit fees)"
+    ],
+    "population": "External auditors and audit firms (and their audit engagements/clients)",
+    "context": "External financial statement audits; use of AI/machine learning tools for detecting anomalous or fraudulent transactions"
+  },
+  "synonyms_en": [
+    "machine learning fraud detection in auditing",
+    "audit data analytics",
+    "artificial intelligence in auditing",
+    "journal entry testing with machine learning",
+    "audit fee and audit effort",
+    "financial statement fraud detection",
+    "technology-enabled auditing",
+    "big data analytics in audit"
+  ],
+  "research_question": "How does the adoption of AI-based anomaly (fraudulent transaction) detection in external audits affect audit quality and audit costs?"
+}

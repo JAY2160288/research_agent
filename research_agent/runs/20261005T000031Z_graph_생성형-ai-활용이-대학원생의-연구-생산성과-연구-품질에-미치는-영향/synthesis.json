@@ -1,0 +1,170 @@
+{
+  "consensus": [
+    {
+      "statement": "Postgraduate and university students broadly report positive attitudes toward GenAI for research and writing, and they perceive efficiency, scope and writing-support benefits. All of this evidence is self-reported, with no objective measures of speed or output.",
+      "evidence_ids": [
+        "10.14742/ajet.8843",
+        "10.1080/14703297.2023.2271445",
+        "10.1186/s41239-023-00411-8",
+        "10.1111/ijal.12574",
+        "10.3389/fpsyg.2023.1259531"
+      ],
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq3"
+      ]
+    },
+    {
+      "statement": "Students, including postgraduates, consistently raise concerns about accuracy, bias, privacy, over-reliance and effects on personal development. Postgraduates show greater awareness of ChatGPT's limitations than undergraduates.",
+      "evidence_ids": [
+        "10.1080/14703297.2023.2271445",
+        "10.1186/s41239-023-00411-8",
+        "10.54855/ijaile.25212",
+        "10.3390/educsci15020141",
+        "10.1080/10494820.2024.2350655",
+        "10.1016/j.heliyon.2024.e26239"
+      ],
+      "sub_rq_ids": [
+        "rq5"
+      ]
+    },
+    {
+      "statement": "Institutional and publisher guidance on GenAI is fragmented and mostly coursework- or publication-oriented rather than graduate-research-specific. Students ask for training and clearer policy.",
+      "evidence_ids": [
+        "10.1057/s41599-024-03526-z",
+        "10.12688/f1000research.142411.2",
+        "10.1186/s41239-023-00408-3",
+        "10.1080/10494820.2024.2350655",
+        "10.1080/14703297.2023.2271445",
+        "10.1080/1360080x.2025.2509187"
+      ],
+      "sub_rq_ids": [
+        "rq6",
+        "rq5"
+      ]
+    },
+    {
+      "statement": "The boundary of academic integrity in AI-assisted writing is ambiguous. Students disapprove of direct content generation but are ambivalent about subtler uses, and breaches hinge on disclosure and are hard to detect. Personal ethical beliefs, not policy awareness, predict misconduct perceptions and behaviour in a US sample, with no graduate-level split.",
+      "evidence_ids": [
+        "10.1007/s10639-024-13151-7",
+        "10.53761/1.20.02.07",
+        "10.3390/aieduc1010002"
+      ],
+      "sub_rq_ids": [
+        "rq5",
+        "rq6"
+      ]
+    },
+    {
+      "statement": "Reflective training can shift doctoral students' views of GenAI. A micro-curriculum produced de-enchantment, better ethical understanding, developed prompting methods and greater awareness of text ownership. This rests on self-reported reflections at one institution.",
+      "evidence_ids": [
+        "10.1016/j.jslw.2024.101156",
+        "10.14742/ajet.8843"
+      ],
+      "sub_rq_ids": [
+        "rq4",
+        "rq5"
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "claim": "Whether GenAI accelerates research progress and relieves workload.",
+      "side_a": {
+        "statement": "Postgraduate research students and surveyed students report accelerated progress and improved efficiency from GenAI.",
+        "evidence_ids": [
+          "10.14742/ajet.8843",
+          "10.1080/14703297.2023.2271445"
+        ],
+        "sub_rq_ids": [
+          "rq1"
+        ]
+      },
+      "side_b": {
+        "statement": "UK academics' survey suggests digitalisation may not deliver relief from overwork, and higher workload and time pressure drive students to use ChatGPT more, which is context rather than evidence of time saved.",
+        "evidence_ids": [
+          "10.1007/s42438-023-00440-6",
+          "10.1186/s41239-024-00444-7"
+        ],
+        "sub_rq_ids": [
+          "rq1",
+          "rq5"
+        ]
+      },
+      "hypothesis_for_conflict": "The populations differ: side B concerns academics and general university students rather than graduate researchers. Both sides use self-reported measures, and side B's abstracts are truncated. Perceived task-level speed-ups may coexist with rising overall workload expectations, so the two sets of findings may not directly contradict each other."
+    },
+    {
+      "claim": "Whether the benefits of ChatGPT for postgraduate academic work outweigh the challenges.",
+      "side_a": {
+        "statement": "Experienced postgraduate research users report enhanced research quality, critical thinking, confidence and autonomy.",
+        "evidence_ids": [
+          "10.14742/ajet.8843"
+        ],
+        "sub_rq_ids": [
+          "rq2",
+          "rq4"
+        ]
+      },
+      "side_b": {
+        "statement": "Postgraduate English-major students judged the challenges of ChatGPT in academic writing to outweigh the benefits, with concern about over-reliance.",
+        "evidence_ids": [
+          "10.54855/ijaile.25212"
+        ],
+        "sub_rq_ids": [
+          "rq5",
+          "rq2"
+        ]
+      },
+      "hypothesis_for_conflict": "Side A sampled research students with at least 4 months of ChatGPT use in research, whereas side B sampled English-major writers at one Vietnamese institution. Side B also focused explicitly on disadvantages. Both rely on small self-reported samples, so differences in experience, task and framing could explain the divergence."
+    }
+  ],
+  "conditional": [
+    {
+      "statement": "Better writing task performance is linked to iterative, highly interactive human-AI collaboration, as opposed to less interactive patterns. This is the only graduate-level link between usage pattern and outcome, and it rests on 10 doctoral students and a single writing task and tool.",
+      "evidence_ids": [
+        "10.1080/03075079.2024.2323593"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq3",
+        "rq4"
+      ]
+    },
+    {
+      "statement": "Indirect language-learning evidence is separate from graduate research quality. A non-generative tool (Grammarly) improved postgraduate EFL post-test writing, and ChatGPT-assisted learning supported knowledge acquisition and motivation among second-language students while raising over-reliance concerns. These are language learners, not graduate researchers, and the studies do not show improved research writing.",
+      "evidence_ids": [
+        "10.1007/s44217-025-00602-7",
+        "10.3390/educsci15020141"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq4",
+        "rq5"
+      ]
+    },
+    {
+      "statement": "Self-efficacy and practical application are associated with higher perceived AI output quality, while critical appraisal was associated with lower perceived quality and lower self-efficacy. This is cross-sectional self-report in general university students. Whether critical appraisal helps or hurts actual outcomes is unresolved, as no cited paper shows it is beneficial. AI self-efficacy also predicted perceived critical-thinking and creativity support in undergraduates.",
+      "evidence_ids": [
+        "10.1186/s40561-025-00384-3",
+        "10.1080/14703297.2025.2600476"
+      ],
+      "sub_rq_ids": [
+        "rq4",
+        "rq2"
+      ]
+    },
+    {
+      "statement": "Guidance appears to shape how GenAI is used. Prompt training and sample prompts shifted programming students' interaction profiles, and supervision roles are reported to shift toward strategic guidance. These are not graduate-research outcomes and are largely perceptual.",
+      "evidence_ids": [
+        "10.1007/s10639-025-13337-7",
+        "10.14742/ajet.8843"
+      ],
+      "sub_rq_ids": [
+        "rq4",
+        "rq3"
+      ]
+    }
+  ],
+  "coverage_note": "Evidence is strongest for student perceptions, ethical concerns and the policy landscape (rq5, rq6 policy), but mostly from self-report surveys of mixed or undergraduate samples. rq3 is thin: the only graduate-level usage-pattern-to-outcome link is a 10-person doctoral study of one writing task. Literature review, coding and data analysis are covered only by non-graduate, model-capability or truncated-abstract papers, and the doctoral intention study reports no outcomes. rq1 rests on perceived speed-ups in two self-report studies, with workload counter-context from non-graduate populations and truncated abstracts. rq2 and rq4 have little measured evidence on graduate research quality or on moderators such as English proficiency, supervisor guidance and discipline. Measurement in rq6 is only indirectly informed (reviewer ratings, recall/precision/hallucination metrics on model outputs, and perception scales), and no paper describes how productivity or quality of AI-assisted graduate research is measured. Policy evidence comes from coursework or publisher documents rather than graduate-school or thesis policies. Missing are longitudinal or experimental graduate studies with usage logs, time-on-task and objective quality or accuracy outcomes."
+}

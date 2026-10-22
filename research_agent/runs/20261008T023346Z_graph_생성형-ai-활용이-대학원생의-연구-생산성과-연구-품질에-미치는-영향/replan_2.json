@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq2",
+      "reason": "Current evidence lacks graduate-specific quality assessments from actual dissertations or theses. Need longitudinal studies with blind expert evaluation of dissertation quality correlated with AI use intensity, or comparative analysis of originality and methodological rigor between high and low AI users.",
+      "queries": [
+        "graduate dissertation quality blind expert assessment AI use",
+        "thesis chapter originality rigor AI-assisted high low users",
+        "longitudinal dissertation quality metrics generative AI intensity correlation"
+      ]
+    },
+    {
+      "sub_rq_id": "rq3",
+      "reason": "Existing studies rely on undergraduate and non-research contexts; need graduate-specific evidence measuring cognitive load, skill development, and problem-solving changes during dissertation research as a function of AI tool intensity using validated performance metrics.",
+      "queries": [
+        "graduate student cognitive load validated scale generative AI use",
+        "dissertation research skill atrophy development AI tool intensity",
+        "graduate problem-solving approach changes large language model reliance longitudinal"
+      ]
+    }
+  ],
+  "rationale": "RQ2 and RQ3 were flagged by the critic as lacking graduate-specific empirical evidence on actual quality outcomes and cognitive mechanisms. For RQ2, new queries target blind-reviewed dissertation quality assessments and comparative analyses of originality/rigor rather than hallucination studies or undergraduate programming work. For RQ3, new queries emphasize validated cognitive load measurement, skill trajectories, and problem-solving changes in dissertation contexts, not undergraduate digital storytelling or programming education."
+}

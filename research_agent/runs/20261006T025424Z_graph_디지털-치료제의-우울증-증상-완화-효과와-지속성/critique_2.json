@@ -1,0 +1,60 @@
+{
+  "round": 2,
+  "passed": true,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [],
+  "weak_claims": [],
+  "actions": [],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The rq2 claim that gains persisted rests on subthreshold depression (10.1159/000507819) and distressed helpline callers (10.1371/journal.pone.0028099), not diagnosed depression. It cites 10.1080/16506073.2011.616531, whose abstract gives no follow-up result. It omits REEACT (10.1136/bmj.h5627), which found no added benefit at 4, 12 and 24 months, so the durability answer for clinical depression is effectively missing.",
+      "action": "search rq2: RCTs and meta-analyses of internet CBT in diagnosed major depression with 6-24+ month follow-up and reported effect sizes versus control, plus long-term follow-up reports of iCBT trials; then synthesize: restrict the persistence claim to subthreshold depression and distressed callers, drop 10.1080/16506073.2011.616531 from it, and report REEACT's null 12/24-month result."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq5",
+      "problem": "The link between engagement and symptom improvement rests on broad mental-health (10.3389/fdgth.2021.764079) and insomnia (10.1038/s41746-023-00800-3) reviews, with nothing depression-specific or on persistence. 10.2196/43727, the depression-specific adherence review, is truncated.",
+      "action": "search rq5: depression-specific studies or meta-analyses linking module completion or adherence to PHQ-9 change and to follow-up outcomes, including full results of the adherence review 10.2196/43727."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "No evidence compares intervention types (web iCBT, apps, chatbots, blended), and guided-versus-unguided durability is unaddressed. The guidance claim relies on cross-trial contrasts (d=0.61 vs 0.25) and a non-depression review, and does not note that the unguided effect in 10.1080/16506073.2011.616531 (d=0.66) is far larger than the pooled unguided estimate.",
+      "action": "synthesize: state that effects are not comparable across intervention types and that guidance comparisons are indirect, noting the discrepant unguided estimates. search rq3: depression-specific head-to-head or network meta-analyses of guided vs unguided and web vs app delivery with follow-up."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq4",
+      "problem": "The first conflict is framed as a primary-care question, but its side B includes helpline callers (10.1371/journal.pone.0028099), who are not a primary-care population. The tension between severity benefit (10.1136/bmj.f540) and severity as an engagement barrier (10.2196/24387, 10.2196/jmir.1194) is not reported.",
+      "action": "synthesize: restrict the primary-care conflict to primary-care trials, and add a conditional note that more severe patients may gain more yet engage less."
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq2",
+      "problem": "The first gap is partly a retrieval failure, not a research gap: it treats the 6/12-month estimates in 10.1001/jamapsychiatry.2020.4364 and 10.1186/1471-244x-13-113 as unfilled when those papers may already report them. The description also contains a garbled phrase about keeping a comparison once waitlist controls are treated.",
+      "action": "gap: rewrite the first gap around what is truly unfilled (follow-up beyond 12 months, relapse timing in diagnosed MDD) and flag the unretrieved estimates as a retrieval limitation; remove the garbled sentence."
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq3",
+      "problem": "The guided-versus-unguided gap is probably already addressed by the IPD network meta-analysis 10.1001/jamapsychiatry.2020.4364 (6- and 12-month PHQ-9). The proposed non-inferiority design also does not fit the research question, which asks whether guidance produces larger effects, a superiority question.",
+      "action": "gap: reframe the gap as unverified until the IPD network meta-analysis results are extracted, and use a superiority or multi-arm design with a justified margin that matches the question."
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq4",
+      "problem": "The moderator gap proposes a new IPD meta-analysis although 10.1001/jamapsychiatry.2017.0044 and 10.1001/jamapsychiatry.2020.4364 already tested moderators, and their results were only unseen because of truncated abstracts. The claim that 'no study has followed deterioration after treatment ends' in the deterioration gap is an unsupported absolute.",
+      "action": "gap: state that moderator results exist but were not retrieved, narrow the gap to adjunct vs standalone use and comorbidity, and soften the 'no study' claim to 'not found in the retrieved evidence'."
+    }
+  ]
+}

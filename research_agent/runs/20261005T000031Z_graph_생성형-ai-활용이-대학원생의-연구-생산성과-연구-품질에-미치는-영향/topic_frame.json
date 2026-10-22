@@ -1,0 +1,36 @@
+{
+  "original_topic": "생성형 AI 활용이 대학원생의 연구 생산성과 연구 품질에 미치는 영향",
+  "topic_en": "The impact of generative AI use on graduate students' research productivity and research quality",
+  "domain": "education",
+  "concepts": [
+    "generative AI",
+    "graduate students",
+    "research productivity",
+    "research quality",
+    "academic writing",
+    "higher education",
+    "AI-assisted research"
+  ],
+  "variables": {
+    "independent": [
+      "Use of generative AI (e.g., large language models, ChatGPT) in research activities"
+    ],
+    "dependent": [
+      "Research productivity",
+      "Research quality"
+    ],
+    "population": "Graduate students (master's and doctoral students)",
+    "context": "Higher education, graduate-level research activities"
+  },
+  "synonyms_en": [
+    "large language models",
+    "ChatGPT",
+    "AI-assisted writing",
+    "AI tools in academic research",
+    "doctoral students",
+    "postgraduate students",
+    "scholarly output",
+    "research performance"
+  ],
+  "research_question": "How does the use of generative AI affect graduate students' research productivity and research quality?"
+}

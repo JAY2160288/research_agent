@@ -1,0 +1,67 @@
+{
+  "round": 3,
+  "passed": true,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [],
+  "weak_claims": [],
+  "actions": [],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq1",
+      "problem": "rq1 is effectively unanswered: no paper in the table measures writing speed, time-on-task or publication output. The only productivity signals are self-reports (10.14742/ajet.8843, 10.3991/ijep.v14i3.48395, 10.46303/jcsr.2024.4) and an n=1 undergraduate autoethnography (10.3390/higheredu2040037).",
+      "action": "search rq1: experimental, quasi-experimental or log-based studies measuring time savings, task completion time, drafting speed or publication/manuscript output with generative AI among graduate students, doctoral candidates or early-career researchers"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The conditional claim that better writing performance is associated with high AI literacy and critical engagement cites 10.1111/ejed.12824, which studies metacognitive strategies and not measured writing quality. The 10.1007/s12528-025-09444-6 abstract also does not say which interaction pattern performed better.",
+      "action": "synthesize: drop 10.1111/ejed.12824 from the performance-association claim, or move it to a separate mechanism statement. State that the AI-literacy to performance link is reported in 10.1007/s12528-025-09444-6 only as a comparison of patterns, unless full-text results can be verified."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq5",
+      "problem": "The consensus that a substantial share of LLM-generated references are fabricated cites 10.2196/53164 and 10.2196/80371, whose abstracts give no numeric results. The quantitative support comes only from 10.2196/52935 (GPT-3.5, 10 topics).",
+      "action": "synthesize: attribute the quantified fabrication and inaccuracy rates to 10.2196/52935 alone. Present 10.2196/53164 and 10.2196/80371 as tests of the same question whose results are not extractable from the abstracts, and soften the wording of 'substantial share'."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The cautious consensus merges two different constructs, AI-augmented writing quality rated by 17 HCI reviewers (10.1016/j.chbah.2024.100095) and AI-generated versus peer review feedback (10.35542/osf.io/x3dct). It then treats them as converging evidence on AI-assisted research writing.",
+      "action": "synthesize: split the claim into two. One covers rated quality of AI-augmented text, and the other covers the perceived quality of AI feedback relative to peer feedback. Flag the second as peripheral to graduate students' own research quality."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq4",
+      "problem": "The critical-appraisal conflict compares a survey measuring perceived output quality and self-efficacy with qualitative studies (10.1007/s40593-024-00454-6, 10.1093/applin/amaf022, 10.14742/ajet.8843) that report no comparable outcome. The hypothesis refers to 'rated' writing quality that those studies do not provide, so the conflict is partly constructed from non-comparable constructs.",
+      "action": "synthesize: reword the conflict as a difference in constructs and populations rather than opposing findings. Remove the claim that the qualitative studies involve rated quality, and note that no study directly tests critical appraisal against objective quality."
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq3",
+      "problem": "No paper in the table addresses graduate students' use of GenAI for coding, statistical or data analysis, or literature search and review workflows. rq3 is therefore covered only for writing, brainstorming and paraphrasing.",
+      "action": "search rq3: surveys or observational studies of graduate students' or researchers' use of ChatGPT and LLMs for programming, statistical analysis, data analysis and literature review across research stages"
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq5",
+      "problem": "Academic integrity violations, overreliance and skill erosion rest on perception surveys, commentaries and one small qualitative study (10.54855/ijaile.25212), with no graduate-specific empirical evidence on skill erosion or detected misconduct.",
+      "action": "search rq5: empirical studies of graduate students' overreliance, deskilling or critical-thinking effects, and misconduct or integrity cases involving generative AI in theses and manuscripts"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq1",
+      "problem": "The proposed no-access RCT for the productivity gap is hard to enforce, since control-arm students can easily use GenAI elsewhere, and the design does not address contamination.",
+      "action": "gap: revise the design to include contamination checks, such as self-report and tool-usage audits, or use an encouraged-versus-not-encouraged or staggered-access design with intention-to-treat analysis."
+    }
+  ]
+}

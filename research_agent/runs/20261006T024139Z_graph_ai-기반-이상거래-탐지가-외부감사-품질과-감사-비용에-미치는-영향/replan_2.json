@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq3",
+      "reason": "Critic found no empirical transaction-level or journal-entry accuracy evidence: the only comparative result is 2011 firm-level fraud prediction, and the journal-entry study uses predefined anomalies on one ledger. Need studies with real or labelled data reporting precision/recall or false-positive rates.",
+      "queries": [
+        "journal entry fraud detection precision recall real ledger data",
+        "AAER labelled misstatement prediction ensemble learning out-of-sample",
+        "isolation forest outlier detection general ledger audit false positive rate"
+      ]
+    }
+  ],
+  "rationale": "Only rq3 is flagged for new search; the other critic items concern synthesis or sub-questions not flagged, and rq4 already received new queries earlier. The new rq3 queries target labelled or real journal-entry and transaction data with reported precision, recall and false-positive rates, using different vocabulary from the earlier queries."
+}

@@ -1,0 +1,70 @@
+{
+  "model": "claude-opus-5-5",
+  "scores": {
+    "J1": 5,
+    "J2": 4,
+    "J3": 3,
+    "J4": 4,
+    "J5": 4,
+    "J6": 5,
+    "J7": 4
+  },
+  "mean": 4.14,
+  "items": [
+    {
+      "id": "J1",
+      "name": "주제 이해의 정확성",
+      "score": 5,
+      "quote": "독립변수: Use of generative AI (e.g., large language models, ChatGPT) in research activities",
+      "reason": "독립변수(연구활동에서의 GenAI 사용), 종속변수(생산성·품질), 대상(석·박사과정)이 원 주제와 정확히 일치합니다. 핵심 개념도 문헌에서 실제로 쓰는 용어여서 범위 왜곡이 없습니다."
+    },
+    {
+      "id": "J2",
+      "name": "조사 계획의 완결성",
+      "score": 4,
+      "quote": "rq6 How are productivity and quality of AI-assisted graduate research measured, and what policies or institutional guidelines govern its use?",
+      "reason": "생산성, 품질, 과업·사용패턴, 조절변수, 위험, 측정·정책으로 주제를 빠짐없이 덮습니다. 다만 rq6이 측정과 정책이라는 이질적 두 측면을 한 질문에 묶었고, rq2와 rq3의 결과 측면이 일부 겹칩니다."
+    },
+    {
+      "id": "J3",
+      "name": "근거 평가의 충실성",
+      "score": 3,
+      "quote": "| 10.1007/s44217-025-00602-7 | Generative AI-assisted feedback and EFL writing: a study on proficienc (2025) | 3 | 3 | randomized experiment with pre/post tests plus semi-structured interviews, n=60 |",
+      "reason": "초록 절단이나 표본 수 미기재를 솔직히 표시해 필드 내용은 초록 범위와 대체로 일관됩니다. 그러나 무작위 실험(n=60, n=26 RCT)이 다수 횡단 설문(4점)보다 낮은 신뢰도를 받아 설계 위계가 일관되게 반영되지 않았습니다. 관광·사이버보안 등 무관한 논문도 표에 섞여 있습니다."
+    },
+    {
+      "id": "J4",
+      "name": "종합의 깊이",
+      "score": 4,
+      "quote": "Perceived task-level speed-ups may coexist with rising overall workload expectations, so the two sets of findings may not directly contradict each other.",
+      "reason": "합의·상충·조건부가 분리되어 있고, 각 상충에 모집단·측정·맥락 차이에 근거한 구체적 가설이 제시됩니다. 다만 두 번째 상충은 소규모 연구 두 편에만 기대어 근거가 얇습니다."
+    },
+    {
+      "id": "J5",
+      "name": "Research Gap 의 타당성",
+      "score": 4,
+      "quote": "Graduate-student productivity is only ever perceived, never measured.",
+      "reason": "모든 Gap이 2편 이상의 출처를 근거로 들고 있습니다(지표 5/5). 각 Gap은 표에서 실제로 답해지지 않은 부분(객관 측정 부재, 대학원생 대상 과업 연구 부재)을 구체적으로 지적하며 일반론에 머물지 않습니다. 다만 일부 Gap은 비대학원 연구의 부재를 근거로 삼아 증명력이 약간 간접적입니다."
+    },
+    {
+      "id": "J6",
+      "name": "향후 연구 제안의 구체성",
+      "score": 5,
+      "quote": "Within-subject crossover experiment in which each student completes matched tasks with and without GenAI. Outcomes are recall/precision against an expert gold standard, fabricated-reference rate, error rate in code, and time to completion.",
+      "reason": "각 제안에 RQ, 설계(무작위·교차·Delphi 등), 결과변수, 표본 규모와 데이터 출처가 명시되어 있어 바로 실행 가능한 수준입니다."
+    },
+    {
+      "id": "J7",
+      "name": "한계 서술의 정직성",
+      "score": 4,
+      "quote": "[auto] search: arXiv unavailable (disabled after 2 failures, 2 queries skipped); OpenAlex only",
+      "reason": "전문 미열람, 초록 절단, rq2·rq6 미해결, [auto] 노트까지 이번 실행에 특화된 한계를 정직하게 적었습니다. 다만 본문은 'OpenAlex and arXiv'로 검색했다고 서술해 auto 노트와 모순되고, 철회 논문과 무관 논문이 포함된 사실은 언급하지 않았습니다."
+    }
+  ],
+  "overall_comment": "주제 분해, 종합 구조, Gap과 후속 연구 제안이 탄탄하며, 근거가 자기보고 인식에 머문다는 핵심 한계를 일관되게 인정합니다. 가장 약한 부분은 Evidence Table로, 신뢰도 점수가 설계 위계(실험 > 설문)와 어긋나는 사례가 있고 무관한 논문이 걸러지지 않았습니다. 한계 절의 검색 출처 서술도 auto 노트와 일부 불일치합니다. 전반적으로 연구 착수용으로 충분히 활용 가능한 브리프입니다.",
+  "flags": [],
+  "notes": [],
+  "cost_usd": 0.1435,
+  "llm_calls": 1,
+  "elapsed_sec": 25.1
+}

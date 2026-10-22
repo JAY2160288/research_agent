@@ -1,0 +1,154 @@
+{
+  "consensus": [
+    {
+      "statement": "Adding an external experience memory (verbal reflections, induced workflows, graph memory, retained traces) raises success over no-memory or stateless baselines on sequential decision tasks, though the standalone gain can be modest.",
+      "evidence_ids": [
+        "10.48550/arxiv.2303.11366",
+        "10.48550/arxiv.2409.07429",
+        "10.48550/arxiv.2606.29178",
+        "10.48550/arxiv.2609.19128",
+        "10.48550/arxiv.2407.04363"
+      ],
+      "sub_rq_ids": [
+        "rq1",
+        "rq3",
+        "rq5"
+      ]
+    },
+    {
+      "statement": "On decision-task evidence only, task-structured memory beat unstructured alternatives: the AriGraph memory graph outperformed full history, summarization and retrieval augmentation in text games, and Agent Workflow Memory improved success on Mind2Web and WebArena while cutting steps on WebArena. The context-reduction mechanism is asserted rather than isolated, and the harness study below contradicts a general advantage.",
+      "evidence_ids": [
+        "10.48550/arxiv.2407.04363",
+        "10.48550/arxiv.2409.07429"
+      ],
+      "sub_rq_ids": [
+        "rq1",
+        "rq2"
+      ]
+    },
+    {
+      "statement": "On conversational and QA memory benchmarks (LoCoMo, LongMemEval, Long-MT-Bench+, not multi-step task success), memory unit granularity, graph-organized memory and iterative retrieval improve retrieval accuracy. The best structure is task-dependent, and mixed memory is the most resilient under noise.",
+      "evidence_ids": [
+        "10.48550/arxiv.2502.05589",
+        "10.48550/arxiv.2609.16053",
+        "10.48550/arxiv.2606.06036",
+        "10.48550/arxiv.2412.15266"
+      ],
+      "sub_rq_ids": [
+        "rq1",
+        "rq2"
+      ]
+    },
+    {
+      "statement": "Reflection or post-episode rule extraction that writes lessons back to memory improves later performance without weight updates. This rests on single-benchmark ablations and small-domain results, so confidence is moderate.",
+      "evidence_ids": [
+        "10.48550/arxiv.2303.11366",
+        "10.48550/arxiv.2609.19128",
+        "10.48550/arxiv.2608.03420"
+      ],
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ]
+    },
+    {
+      "statement": "Unselective memory (excessive retrieval or unbounded writes) degrades precision or sequential-decision success. Direct cost, latency and error-propagation measurements for task success remain sparse and mostly self-reported.",
+      "evidence_ids": [
+        "10.48550/arxiv.2608.15008",
+        "10.48550/arxiv.2606.29178",
+        "10.48550/arxiv.2412.15266"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq6"
+      ]
+    },
+    {
+      "statement": "Memory-specific benchmarks (MemoryAgentBench, MemoryArena, MemGym, IFCMemoryBench) were built because existing benchmarks do not isolate memory. They add multi-session or incremental formats and separate ingestion, retrieval and utilization, but their abstracts do not report results.",
+      "evidence_ids": [
+        "10.48550/arxiv.2507.05257",
+        "10.48550/arxiv.2602.16313",
+        "10.48550/arxiv.2605.20833",
+        "10.48550/arxiv.2607.26072"
+      ],
+      "sub_rq_ids": [
+        "rq5"
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "claim": "Whether structured memory gives a general advantage over simpler memory on sequential decision tasks",
+      "side_a": {
+        "statement": "Structured, task-built memory (AriGraph's memory graph, AWM's induced workflows) outperformed history, summarization and retrieval baselines, or improved success and step efficiency.",
+        "evidence_ids": [
+          "10.48550/arxiv.2407.04363",
+          "10.48550/arxiv.2409.07429"
+        ],
+        "sub_rq_ids": [
+          "rq1",
+          "rq2"
+        ]
+      },
+      "side_b": {
+        "statement": "In a controlled harness with three backbones and four suites, no single memory substrate dominated, and excessive retrieval harmed sequential decision-making, which contradicts a general structured-memory advantage.",
+        "evidence_ids": [
+          "10.48550/arxiv.2608.15008"
+        ],
+        "sub_rq_ids": [
+          "rq1",
+          "rq2",
+          "rq6"
+        ]
+      },
+      "hypothesis_for_conflict": "AriGraph and AWM are bespoke agents whose memory construction, update and use are co-designed for one environment family and compared against selected baselines. The harness holds substrates fixed across models and suites, so the gains may come from domain-tuned design rather than structure itself. Retrieval breadth and intensity may also differ across studies, and both sides are preprints with truncated or no-ablation abstracts."
+    }
+  ],
+  "conditional": [
+    {
+      "statement": "Under 75% distractor writes on ALFWorld, only the trace-aware TraceRetain policy preserved success (97/100), while plain bounded retention (FIFO) and unbounded memory degraded in precision. On clean ALFWorld the bounded policies were statistically indistinguishable, and this is a single-environment, two-seed result.",
+      "evidence_ids": [
+        "10.48550/arxiv.2606.29178"
+      ],
+      "sub_rq_ids": [
+        "rq3",
+        "rq6"
+      ]
+    },
+    {
+      "statement": "Low confidence: forgetting and pruning are reported to help (VIMBank's Ebbinghaus-style forgetting with 10-20% self-reported gains and ~23% lower reasoning cost, AdMem's reward-based pruning with no numbers), but this is self-reported and sits in tension with the null retention effect on clean ALFWorld.",
+      "evidence_ids": [
+        "10.2478/ijanmc-2024-0029",
+        "10.48550/arxiv.2606.06787",
+        "10.48550/arxiv.2606.29178"
+      ],
+      "sub_rq_ids": [
+        "rq3",
+        "rq6"
+      ]
+    },
+    {
+      "statement": "In one ScienceWorld ablation (SwiftSage), self-reflection was the strongest standalone contributor and episodic memory helped most once the runtime loop was stabilized; this should not be generalized beyond that single benchmark and agent.",
+      "evidence_ids": [
+        "10.48550/arxiv.2609.19128"
+      ],
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ]
+    },
+    {
+      "statement": "Broad retrieval helps long-context factual QA but can hurt sequential decision-making. Memory-conditioned planning (RAP, TRAD) is reported to work when retrieved content is step-relevant, but without ablation numbers or isolated memory effects.",
+      "evidence_ids": [
+        "10.48550/arxiv.2608.15008",
+        "10.48550/arxiv.2402.03610",
+        "10.48550/arxiv.2403.06221"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq4"
+      ]
+    }
+  ],
+  "coverage_note": "rq5 (benchmarks) is the best covered, though most benchmark abstracts lack results, and rq1 and rq2 have moderate evidence, much of it from conversational QA rather than multi-step tasks. rq4 (memory-planning interaction) is thin: only RAP (no numbers), TRAD (no results), the planning survey, JARVIS-1 and CAPEAM (no isolating ablation) address it, and no study ablates memory retrieval inside planning or decomposition loops. rq3 has few controlled ablations, with only ALFWorld and ScienceWorld single-environment studies. rq6 is thin: cost and latency claims are self-reported (VIMBank, MRAgent), error propagation is unmeasured for task success, and the toxicity paper is tangential. For rq1, no paper compares episodic, semantic and hierarchical memory head-to-head, and the duplicate JARVIS-1 and agent-survey entries should not be counted twice. The harness study 10.48550/arxiv.2608.15008 already covers multiple models and suites, so the remaining gaps are multiple seeds, variation of the agent loop, and full per-design results. A further gap is the dose-response threshold at which broader retrieval turns harmful, which that study reports only qualitatively. No new searches were possible here, so the rq1, rq3, rq4 and rq6 gaps flagged by the critic remain open."
+}

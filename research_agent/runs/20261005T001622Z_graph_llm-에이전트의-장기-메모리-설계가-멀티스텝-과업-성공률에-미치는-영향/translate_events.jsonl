@@ -1,0 +1,4 @@
+{"t": 0.0, "kind": "run_start", "topic": "20261005T001622Z_graph_llm-에이전트의-장기-메모리-설계가-멀티스텝-과업-성공률에-미치는-영향", "mode": "translate"}
+{"t": 58.419, "kind": "llm_call", "role": "translate", "model": "claude-sonnet-5-5", "input_tokens": 9046, "cache_read": 0, "cache_write": 0, "output_tokens": 10448, "cost_usd": 0.122572, "attempt": 1, "ok": true, "error": null}
+{"t": 58.423, "kind": "translate_check", "attempt": 1, "issues": []}
+{"t": 58.466, "kind": "translate_end", "items": 59, "fallback": 0, "cost_usd": 0.1226, "bytes": 108237}

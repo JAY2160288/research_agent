@@ -1,0 +1,63 @@
+{
+  "gaps": [
+    {
+      "description": "No study in the table measures graduate students' research productivity, such as time-on-task, writing speed, output volume or publication counts. The productivity claims rest on self-reported perceptions from small qualitative or survey samples. The only documented usage trace is an n=1 undergraduate autoethnography, which cannot support a graduate-level claim.",
+      "evidence_ids": [
+        "10.14742/ajet.8843",
+        "10.3991/ijep.v14i3.48395",
+        "10.46303/jcsr.2024.4",
+        "10.3390/higheredu2040037"
+      ],
+      "proposed_rq": "Does access to a general-purpose generative AI assistant change graduate students' time-on-task and manuscript or thesis-chapter output compared with no access?",
+      "method": "Pre-registered RCT with 2 arms (GenAI access vs. no access) over one semester, with logged writing time and words of draft per week as primary outcomes and chapter or manuscript submission as secondary outcomes. Add keystroke and chat logging to separate productive use from idle use.",
+      "data": "About 120 master's and doctoral students recruited through 2-3 universities' graduate schools, with writing-tool logs and advisor-confirmed milestone records. Stratify by discipline and English-language status."
+    },
+    {
+      "description": "Research quality is measured only through perceptions or single-task rated writing, never through expert judgment of the research itself (originality, rigor, argument depth). Evidence suggests AI-augmented text reads better but lacks research detail and reflective insight, while graduate students perceive higher quality. These two signals have not been tested against each other with blinded expert ratings of graduate work.",
+      "evidence_ids": [
+        "10.1016/j.chbah.2024.100095",
+        "10.35542/osf.io/x3dct",
+        "10.14742/ajet.8843",
+        "10.1007/s12528-025-09444-6"
+      ],
+      "proposed_rq": "Do blinded expert raters judge graduate research drafts written with GenAI as higher in rigor, originality and argument depth than unassisted drafts, and does this match students' own quality ratings?",
+      "method": "Randomized crossover design where each student writes two comparable literature-review or methods sections, one with GenAI and one without, and blinded raters score them on a validated rubric. Compare expert scores with student self-ratings to estimate the perception-reality gap.",
+      "data": "About 60 graduate students and 6-10 faculty raters from a research-methods course or writing program, with rubric scores and chat logs."
+    },
+    {
+      "description": "The evidence conflicts on whether critical appraisal of AI output helps or hurts. A general-student survey finds it lowers self-efficacy and perceived output quality, while graduate and doctoral qualitative studies present critical evaluation as central to good writing. The conflict is unresolved because the survey is cross-sectional with perceived outcomes and the qualitative studies have no objective quality comparison.",
+      "evidence_ids": [
+        "10.1186/s40561-025-00384-3",
+        "10.1093/applin/amaf022",
+        "10.1007/s40593-024-00454-6",
+        "10.1007/s12528-025-09444-6"
+      ],
+      "proposed_rq": "Does training graduate students in critical appraisal of AI output improve expert-rated writing quality while lowering or preserving their AI self-efficacy?",
+      "method": "Two-arm randomized experiment comparing a critical-appraisal and verification training module with a basic tool-use module before a research-writing task. Primary outcome is blinded expert-rated quality, with self-efficacy and perceived output quality as secondary outcomes to test whether they diverge.",
+      "data": "About 100 graduate students from multiple disciplines, recruited via graduate schools, with pre/post self-efficacy scales and rated writing samples."
+    },
+    {
+      "description": "Citation fabrication is demonstrated only in LLM-output tests with older models (GPT-3.5, Bard) or narrow topics, never in what graduate students actually submit. It is unknown whether students catch fabricated references, whether discipline-dependent error rates carry over to current models, or whether fabrication affects thesis or manuscript quality.",
+      "evidence_ids": [
+        "10.2196/52935",
+        "10.2196/53164",
+        "10.2196/80371",
+        "10.3991/ijep.v14i3.48395"
+      ],
+      "proposed_rq": "What proportion of fabricated or inaccurate references in graduate students' GenAI-assisted literature reviews survive student verification, and how does this vary by discipline and model version?",
+      "method": "Audit study in which students draft literature reviews with a current LLM, and all citations are verified against databases before and after student checking. Compare error survival rates across disciplines and between students with and without verification training.",
+      "data": "About 80 graduate students across humanities, social science and natural science programs, with drafts, chat logs and bibliographic databases such as Crossref and Scopus."
+    },
+    {
+      "description": "Graduate-specific prevalence and task profiles are unknown because large surveys sample general or mixed student populations. No study in the table covers graduate students' use of LLMs for coding, statistical analysis or data analysis, so the data-analysis side of research productivity and quality is unexamined.",
+      "evidence_ids": [
+        "10.1057/s41599-023-02304-7",
+        "10.1186/s41239-024-00453-6",
+        "10.1186/s41239-023-00411-8"
+      ],
+      "proposed_rq": "What share of master's and doctoral students use GenAI for coding, statistical analysis and data interpretation, and how is that use associated with analysis errors and perceived reliance?",
+      "method": "Stratified cross-sectional survey of graduate students, with a follow-up task in which a subsample completes a standard analysis with and without GenAI and errors are scored against a reference solution. Compare use patterns across disciplines and career stages.",
+      "data": "A survey of about 1,000 graduate students across several universities or national doctoral networks, plus about 60 students for the analysis task."
+    }
+  ]
+}

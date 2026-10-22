@@ -1,0 +1,70 @@
+{
+  "model": "claude-opus-5-5",
+  "scores": {
+    "J1": 4,
+    "J2": 4,
+    "J3": 3,
+    "J4": 4,
+    "J5": 4,
+    "J6": 4,
+    "J7": 4
+  },
+  "mean": 3.86,
+  "items": [
+    {
+      "id": "J1",
+      "name": "주제 이해의 정확성",
+      "score": 4,
+      "quote": "독립변수: generative AI use (ChatGPT, LLM tools), AI training/instruction",
+      "reason": "원 주제의 독립변수·종속변수(생산성, 품질)와 대상(석·박사생)이 왜곡 없이 분해되었고, 핵심 개념도 문헌에서 실제 쓰이는 용어입니다. 다만 무결성·비판적 사고를 종속변수로 추가해 범위를 다소 넓혔습니다."
+    },
+    {
+      "id": "J2",
+      "name": "조사 계획의 완결성",
+      "score": 4,
+      "quote": "**rq3** How accurate and reliable are LLMs for literature review tasks?",
+      "reason": "다섯 sub-RQ가 생산성·품질·윤리·인지적 의존을 빠짐없이 다룹니다. 다만 rq3는 학생 사용이 아닌 모델 성능 중심으로 주제에서 다소 벗어났고, rq1 쿼리에 quality가 포함되어 rq2와 일부 겹칩니다."
+    },
+    {
+      "id": "J3",
+      "name": "근거 평가의 충실성",
+      "score": 3,
+      "quote": "ChatGPT-4 produced plausible summaries and quality rationales for research evaluation, but the abstract frames accuracy as a question to be tested.",
+      "reason": "초록 범위를 넘지 않으려는 신중한 서술과 비동료심사 자료 감점은 적절합니다. 그러나 같은 n=10 인터뷰 연구인데 신뢰도가 3과 2로 갈리는 등 설계 대비 점수 일관성이 부족하고, sample이 빈 칸이거나 'Studies ~'처럼 얕은 finding이 여럿입니다."
+    },
+    {
+      "id": "J4",
+      "name": "종합의 깊이",
+      "score": 4,
+      "quote": "가설: Differences in task (automated pipeline with retrieval versus unaided student writing), evaluation criteria (developer-validated metrics versus expert peer review), and domain expertise of the user.",
+      "reason": "합의·상충·조건부가 분리되어 있고, 상충에는 과제·평가 기준·전문성이라는 구체적 가설이 붙어 있습니다. 다만 상충이 하나뿐이고, 합의 첫 항목에 대학원생 글쓰기 연구를 '깊은 학습 부족'의 근거로 인용한 것은 다소 과잉 해석입니다."
+    },
+    {
+      "id": "J5",
+      "name": "Research Gap 의 타당성",
+      "score": 4,
+      "quote": "**Reliability of LLM literature-review support is benchmarked on models, but not in the hands of graduate students with differing expertise.**",
+      "reason": "모든 gap이 2개 이상의 근거로 뒷받침되며(지표 4/4), 증거표에서 실제로 비어 있는 부분을 짚었습니다. 다만 gap 4는 '질적 탐색만 있다'고 하면서 학부생 대상 설문(10.3390/aieduc1010002)을 인용해 근거와 주장이 다소 어긋납니다."
+    },
+    {
+      "id": "J6",
+      "name": "향후 연구 제안의 구체성",
+      "score": 4,
+      "quote": "Randomized or staggered-rollout trial with blinded expert rating of manuscripts and time logs",
+      "reason": "RQ·방법·데이터가 모두 제시되었고 측정 방식(블라인드 평가, 시간 기록, 인용 오류 감사)도 실행 가능한 수준입니다. 다만 표본 규모, 구체적 척도, 데이터 확보 경로는 빠져 있습니다."
+    },
+    {
+      "id": "J7",
+      "name": "한계 서술의 정직성",
+      "score": 4,
+      "quote": "Korean-language literature was not searched directly; only one Korean nursing study appeared.",
+      "reason": "초록 절단, arXiv 쿼리 실패, 국내 문헌 미검색, 지각 기반 측정 등 이번 실행에 특화된 한계를 정직하게 적었습니다. 다만 증거표에 없는 SSRN·OSF를 언급했고, 표본 정보가 빠진 항목이 많다는 점은 다루지 않았습니다."
+    }
+  ],
+  "overall_comment": "인용 검증률 100%, gap 근거 충족 등 결정적 지표가 양호하고, 증거가 빈약하다는 점을 솔직하게 인정한 균형 잡힌 브리프입니다. 근거표의 신뢰도 점수가 설계와 일관되지 않고 일부 필드가 얕은 것이 가장 큰 약점입니다. 종합과 gap 제안은 구체적이어서 연구 착수용으로 충분히 활용할 수 있습니다.",
+  "flags": [],
+  "notes": [],
+  "cost_usd": 0.0829,
+  "llm_calls": 1,
+  "elapsed_sec": 24.2
+}

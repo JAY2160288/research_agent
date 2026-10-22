@@ -1,0 +1,16 @@
+{
+  "round": 1,
+  "passed": false,
+  "deterministic_issues": [
+    "sub-RQs under-covered: ['rq1']"
+  ],
+  "uncovered_sub_rqs": [
+    "rq1"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "rq1: only 0 relevant papers — add queries and re-search"
+  ],
+  "llm_ran": false,
+  "llm_issues": []
+}

@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq3",
+      "reason": "Critic found only one graduate-level study linking usage pattern to outcome; literature review, coding and data analysis evidence comes from non-graduate or truncated papers, so rq3 needs graduate-level empirical studies per task with measured outcomes.",
+      "queries": [
+        "PhD students LLM systematic review screening accuracy",
+        "graduate students ChatGPT data analysis coding task performance",
+        "doctoral students generative AI usage logs writing outcomes"
+      ]
+    }
+  ],
+  "rationale": "Only rq3 was flagged for searching. The new queries target master's and doctoral samples, specific research tasks (literature screening, coding, data analysis), and usage-log or outcome measures, which the earlier general usage-pattern queries did not reach. The other critic issues concern synthesis or gap wording and need no new searches."
+}

@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq2",
+      "reason": "Existing rq2 evidence is mostly EFL language proficiency or self-reported perceptions; argumentation, rigor and originality of graduate research remain unanswered. Critic asks for expert-rated or rubric-scored outcomes in graduate or doctoral writing.",
+      "queries": [
+        "rubric-scored thesis proposal writing ChatGPT master's students",
+        "expert-rated argument quality AI-assisted doctoral manuscript",
+        "randomized comparison LLM assistance graduate research paper quality"
+      ]
+    },
+    {
+      "sub_rq_id": "rq5",
+      "reason": "Risk evidence rests on perceptions and narrative reviews; the critic wants empirical audits of fabricated citations and studies measuring skill erosion or overreliance in graduate students.",
+      "queries": [
+        "audit fabricated citations ChatGPT generated literature reviews",
+        "reference accuracy large language model bibliographic hallucination rate",
+        "cognitive offloading skill decline doctoral students generative AI longitudinal"
+      ]
+    }
+  ],
+  "rationale": "Added new queries only for rq2 and rq5, the flagged sub-questions that need more evidence. rq2 now targets rubric-scored or expert-rated quality outcomes in graduate writing, and rq5 targets citation-fabrication audits and measured skill erosion or overreliance. The other critic issues concern synthesis wording and need no new searches."
+}

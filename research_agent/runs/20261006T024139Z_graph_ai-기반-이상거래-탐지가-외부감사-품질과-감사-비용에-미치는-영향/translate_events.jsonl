@@ -1,0 +1,4 @@
+{"t": 0.0, "kind": "run_start", "topic": "20261006T024139Z_graph_ai-기반-이상거래-탐지가-외부감사-품질과-감사-비용에-미치는-영향", "mode": "translate"}
+{"t": 50.871, "kind": "llm_call", "role": "translate", "model": "claude-sonnet-5-5", "input_tokens": 8044, "cache_read": 0, "cache_write": 0, "output_tokens": 8825, "cost_usd": 0.104338, "attempt": 1, "ok": true, "error": null}
+{"t": 50.875, "kind": "translate_check", "attempt": 1, "issues": []}
+{"t": 50.891, "kind": "translate_end", "items": 53, "fallback": 0, "cost_usd": 0.1043, "bytes": 91172}

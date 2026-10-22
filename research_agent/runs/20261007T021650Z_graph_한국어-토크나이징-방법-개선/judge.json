@@ -1,0 +1,70 @@
+{
+  "model": "claude-opus-5-5",
+  "scores": {
+    "J1": 4,
+    "J2": 4,
+    "J3": 3,
+    "J4": 4,
+    "J5": 5,
+    "J6": 5,
+    "J7": 5
+  },
+  "mean": 4.29,
+  "items": [
+    {
+      "id": "J1",
+      "name": "주제 이해의 정확성",
+      "score": 4,
+      "quote": "독립변수: improved Korean tokenization method (e.g., morpheme-aware or modified subword segmentation)",
+      "reason": "독립·종속변수와 대상이 원 주제와 일치하고 핵심 개념도 문헌에서 실제로 쓰는 용어다. 다만 독립변수가 '개선된 방법'으로 다소 추상적이고, 주제를 그대로 영어로 옮긴 수준이라 감점했다."
+    },
+    {
+      "id": "J2",
+      "name": "조사 계획의 완결성",
+      "score": 4,
+      "quote": "I expect rq4 (intrinsic evaluation of Korean tokenization) and rq6 (robustness) to be the thinnest in the literature.}",
+      "reason": "6개 sub-RQ가 비교, 알고리즘, 어휘, 평가, LLM 적응, 강건성을 빠짐없이 덮는다. 다만 rq1과 rq2, rq3과 rq5 사이에 일부 중첩이 있고 전략 문단에 오타('}')가 남아 있다."
+    },
+    {
+      "id": "J3",
+      "name": "근거 평가의 충실성",
+      "score": 3,
+      "quote": "| 10.1044/jshr.0302.166 | Reliability of Language Measures and Size of Language Sample (1960) | 0 | 1 | unclear from abstract |",
+      "reason": "method, sample, finding을 abstract에서 얻을 수 있는 범위로 신중하게 채웠고 '명시되지 않음'도 정직하게 표기했다. 그러나 신뢰도가 대부분 3~4로 설계 차이를 충분히 반영하지 못하고, 무관한 문헌(의료영상, L2 어휘학습 등)이 다수 섞여 표의 유용성을 떨어뜨린다."
+    },
+    {
+      "id": "J4",
+      "name": "종합의 깊이",
+      "score": 4,
+      "quote": "가설: The contrasts differ: morphemes feeding BPE keep subword coverage for rare forms, whereas standalone morpheme tokens leave OOVs and jargon in noisy review text.",
+      "reason": "합의·상충·조건부를 분리했고, 상충에는 비교 대상·과제·도메인·표본에 관한 구체적 가설이 붙어 있다. 다만 상충이 하나뿐이고 합의 항목의 근거도 소수 연구에 의존한다."
+    },
+    {
+      "id": "J5",
+      "name": "Research Gap 의 타당성",
+      "score": 5,
+      "quote": "No Korean study reports intrinsic tokenizer metrics (fertility, morpheme-boundary alignment, OOV rate) next to downstream scores.",
+      "reason": "5개 gap 모두 2편 이상의 근거로 부재를 보여 주며(지표 5/5), 근거표에서 이미 답한 내용과 겹치지 않는 구체적 공백이다."
+    },
+    {
+      "id": "J6",
+      "name": "향후 연구 제안의 구체성",
+      "score": 5,
+      "quote": "Run a controlled ablation with vocabulary sizes of 16k, 32k, 64k and 128k, each as a Korean-only and a Korean+English+Chinese+Japanese tokenizer, in 8 pretraining runs at fixed compute.",
+      "reason": "RQ, 실험 설계(요인, 수준, run 수, 시드, 통계 방법), 데이터셋이 모두 실행 가능한 수준으로 구체적이다."
+    },
+    {
+      "id": "J7",
+      "name": "한계 서술의 정직성",
+      "score": 5,
+      "quote": "The quality gate rated rq4 (intrinsic metrics vs. downstream scores) and rq3 (vocabulary size/composition) as effectively unanswered for Korean after two replans",
+      "reason": "[auto] critic 메모를 포함해 이번 실행에 특정한 한계를 서술한다. 미답변 sub-RQ, 교란된 상충, 검색 범위를 구체적으로 밝힌다."
+    }
+  ],
+  "overall_comment": "Gap 도출과 향후 연구 설계가 매우 구체적이고 근거에 기반해 있으며, 한계 서술도 정직하다. 반면 근거표에는 주제와 무관한 문헌이 다수 포함되어 있고, 신뢰도 점수가 연구 설계 차이를 충분히 구분하지 못한다. 한국어 직접 근거가 얇다는 점을 브리프가 스스로 인정하므로, 연구 착수용으로는 충분히 활용 가능하다.",
+  "flags": [],
+  "notes": [],
+  "cost_usd": 0.1344,
+  "llm_calls": 1,
+  "elapsed_sec": 15.0
+}

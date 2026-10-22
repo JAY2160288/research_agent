@@ -1,0 +1,50 @@
+{
+  "round": 2,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq3"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "search rq3: empirical studies of master's/doctoral students using generative AI for literature search/screening, data analysis and coding, with usage logs or accuracy/time outcomes, plus doctoral usage-pattern studies linked to outcomes"
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq3",
+      "problem": "rq3 passes on count, but the only graduate-level link between usage pattern and outcome is 10.1080/03075079.2024.2323593 (n=10, one writing task). Literature review, coding and analysis are covered only by non-graduate or truncated papers (10.3390/computers14020053, 10.2196/56537, 10.2196/53164), and the doctoral intention study 10.3389/fpsyg.2023.1259531 reports no outcomes.",
+      "action": "search rq3: empirical studies of master's/doctoral students using generative AI for literature search/screening, data analysis and coding, with usage logs or accuracy/time outcomes, plus doctoral usage-pattern studies linked to outcomes"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq1",
+      "problem": "The rq1 consensus is built only on 10.14742/ajet.8843 and 10.1080/14703297.2023.2271445. It omits 10.1007/s42438-023-00440-6 (UK academics), which questions whether generative AI relieves workload, and 10.1186/s41239-024-00444-7 (workload drives use), and it does not say how these cut against the claim of faster progress.",
+      "action": "synthesize: add 10.1007/s42438-023-00440-6 and 10.1186/s41239-024-00444-7 to the rq1 discussion as counter-evidence or context, noting that their populations are not graduate students and their abstracts are truncated"
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq6",
+      "problem": "No paper in the table describes how productivity or quality of AI-assisted graduate research is measured. The measurement half of rq6 is unanswered, and only the policy half is covered, mostly by coursework or publisher documents.",
+      "action": "search rq6: instruments, rubrics, time-on-task logging or bibliometric measures of AI-assisted research productivity and quality; graduate-school and thesis/journal AI policies"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The tentative claim that interactive or feedback-oriented AI use is linked to better writing leans on 10.3390/educsci15020141. That paper reports knowledge acquisition and motivation rather than better writing, and it concerns language learners. 10.1007/s44217-025-00602-7 is a non-generative tool.",
+      "action": "synthesize: restrict the 'better writing' claim to 10.1080/03075079.2024.2323593 and treat the Grammarly and educsci studies as separate, indirect language-learning evidence"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq4",
+      "problem": "The moderator gap says critical appraisal lowering perceived output quality (10.1186/s40561-025-00384-3) is in tension with 'framing critical interaction as beneficial'. No cited paper establishes that framing, and 10.1080/03075079.2024.2323593 concerns interactivity, not critical appraisal. Appraisal and interaction are being conflated.",
+      "action": "gap: reword the tension as an unresolved question about whether critical appraisal helps or hurts outcomes, and cite the specific papers that make each claim, or drop the tension"
+    }
+  ]
+}

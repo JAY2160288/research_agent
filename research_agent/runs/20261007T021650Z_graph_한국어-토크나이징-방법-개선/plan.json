@@ -1,0 +1,77 @@
+{
+  "sub_rqs": [
+    {
+      "id": "rq1",
+      "question": "How do morpheme-aware tokenization methods, including hybrid morphological analysis plus subword approaches, compare with purely statistical subword tokenizers on Korean downstream NLP task performance?",
+      "rationale": "This is the central question of the topic: whether linguistically informed segmentation improves task performance over standard subword methods.",
+      "queries": [
+        "morpheme-aware subword tokenization Korean",
+        "Korean morphological analysis BPE hybrid tokenizer",
+        "morpheme-based tokenizer Korean downstream tasks",
+        "Korean pre-trained language model morphological segmentation"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq2",
+      "question": "How do standard subword algorithms (BPE, WordPiece, SentencePiece unigram, byte-level) behave on Korean agglutinative morphology and Hangul script, and what modifications to them have been proposed?",
+      "rationale": "This establishes the baseline behavior and the limitations of existing subword methods, and identifies concrete modification strategies.",
+      "queries": [
+        "byte-pair encoding agglutinative language Korean",
+        "SentencePiece WordPiece Korean comparison",
+        "Hangul jamo-level subword tokenization",
+        "byte-level tokenization Korean Unicode"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq3",
+      "question": "How do vocabulary design choices (vocabulary size, composition, multilingual vs. monolingual vocabularies) affect Korean token efficiency, sequence length and model performance?",
+      "rationale": "The dependent variables include vocabulary efficiency, and vocabulary design determines the trade-off between compression and quality.",
+      "queries": [
+        "vocabulary size effect Korean language model",
+        "multilingual tokenizer Korean token fertility",
+        "tokenizer vocabulary expansion Korean LLM",
+        "token count sequence length Korean text efficiency"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq4",
+      "question": "What intrinsic metrics and evaluation protocols are used to assess Korean tokenization quality, and how well do they correlate with downstream performance?",
+      "rationale": "Determining whether a method is improved requires valid measures of tokenization quality beyond end-task scores.",
+      "queries": [
+        "intrinsic evaluation tokenization quality morphological alignment",
+        "Korean tokenizer evaluation benchmark",
+        "tokenization metrics correlation downstream performance",
+        "Korean word segmentation spacing evaluation"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq5",
+      "question": "How are tokenization improvements for Korean adapted in large language models, including tokenizer replacement or vocabulary extension in pre-trained models and the effects on cost and generation quality?",
+      "rationale": "Current Korean LLM practice involves adapting the tokenizer of existing models, which raises questions about transfer, inference cost and performance.",
+      "queries": [
+        "Korean large language model tokenizer adaptation",
+        "vocabulary extension cross-lingual transfer Korean",
+        "tokenizer-free or byte-level models Korean",
+        "language model tokenizer inference cost Korean"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq6",
+      "question": "What robustness issues and unintended effects do Korean tokenizers exhibit, such as handling of spacing errors, noisy user-generated text, out-of-vocabulary words, and rare morphological forms?",
+      "rationale": "Improvements may fail on noisy or non-standard text, so risks and conditions of use need to be understood.",
+      "queries": [
+        "Korean noisy text tokenization robustness",
+        "spacing errors Korean subword tokenizer",
+        "out-of-vocabulary Korean user-generated text",
+        "Korean social media morphological analysis"
+      ],
+      "source_pref": "both"
+    }
+  ],
+  "search_strategy": "Search 2016–present, with emphasis on 2019 onward, covering the transformer and LLM era, using OpenAlex and arXiv, and ACL Anthology-type venues surfaced through them. Prefer empirical studies with comparative baselines on Korean benchmarks (e.g., KLUE, NSMC, KorQuAD) and tokenization analyses; exclude papers that are only about Chinese or Japanese segmentation unless they offer transferable methods for agglutinative languages. I expect rq4 (intrinsic evaluation of Korean tokenization) and rq6 (robustness) to be the thinnest in the literature.}"
+}

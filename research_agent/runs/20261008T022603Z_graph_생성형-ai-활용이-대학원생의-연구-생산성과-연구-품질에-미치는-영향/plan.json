@@ -1,0 +1,77 @@
+{
+  "sub_rqs": [
+    {
+      "id": "rq1",
+      "question": "How does generative AI use affect graduate students' research productivity, such as writing speed, publication output, and time efficiency?",
+      "rationale": "Productivity is the first dependent variable and needs direct evidence on output and efficiency.",
+      "queries": [
+        "ChatGPT graduate students research productivity",
+        "generative AI doctoral students scholarly output",
+        "AI-assisted writing time efficiency graduate researchers",
+        "large language models thesis writing productivity"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq2",
+      "question": "How does generative AI use affect the quality of graduate students' research, including writing quality, argumentation, methodological rigor, and originality?",
+      "rationale": "Research quality is the second dependent variable and may move differently from productivity.",
+      "queries": [
+        "generative AI research quality graduate students",
+        "ChatGPT academic writing quality postgraduate",
+        "AI tools methodological rigor doctoral research",
+        "LLM assistance originality scholarly writing quality"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq3",
+      "question": "For which research tasks and stages (literature review, data analysis, coding, writing, editing) do graduate students use generative AI, and how prevalent and varied is that use?",
+      "rationale": "Usage patterns explain where productivity and quality effects are likely to arise.",
+      "queries": [
+        "graduate students use of ChatGPT literature review",
+        "AI tools academic research tasks doctoral students survey",
+        "generative AI adoption postgraduate researchers patterns",
+        "AI-assisted research workflow graduate education"
+      ],
+      "source_pref": "openalex"
+    },
+    {
+      "id": "rq4",
+      "question": "What mechanisms and moderators (AI literacy, discipline, prompting skill, supervisor guidance, institutional policy, English proficiency) shape the effects of generative AI on research outcomes?",
+      "rationale": "Moderators explain when AI helps or harms and are needed to interpret mixed findings.",
+      "queries": [
+        "AI literacy moderator graduate research outcomes",
+        "non-native English doctoral students generative AI writing support",
+        "supervisor guidance generative AI graduate students",
+        "discipline differences generative AI use academic research"
+      ],
+      "source_pref": "openalex"
+    },
+    {
+      "id": "rq5",
+      "question": "What risks and unintended effects arise from generative AI use in graduate research, such as hallucinated citations, academic integrity violations, overreliance, and skill erosion?",
+      "rationale": "Risks may offset gains in productivity and quality and are central to responsible use.",
+      "queries": [
+        "ChatGPT hallucinated references academic integrity graduate students",
+        "overreliance generative AI critical thinking doctoral researchers",
+        "deskilling generative AI research skills postgraduate",
+        "ethical concerns AI-assisted research authorship"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq6",
+      "question": "How are research productivity and research quality measured in studies of generative AI in graduate education, and what do the designs and evidence quality look like?",
+      "rationale": "Methodological appraisal clarifies the strength and comparability of the evidence.",
+      "queries": [
+        "measuring research productivity AI tools higher education",
+        "experimental study generative AI academic writing assessment",
+        "generative AI graduate education empirical evidence review",
+        "systematic review ChatGPT higher education research outcomes"
+      ],
+      "source_pref": "both"
+    }
+  ],
+  "search_strategy": "Focus on 2022 to present, since ChatGPT-era generative AI is the relevant intervention, and prefer empirical studies (experiments, quasi-experiments, surveys, interviews, mixed methods) plus systematic reviews on graduate or doctoral students. Exclude work limited to undergraduates or K-12, purely technical LLM benchmarks with no human users, and opinion pieces without data unless they supply policy context. Expect rq6 and the causal evidence on research quality in rq2 to be the thinnest, since most studies rely on self-reports rather than objective output measures.}"
+}

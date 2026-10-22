@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq4",
+      "reason": "The critic found only one archival study (report lag) supplying a mechanism. No cited paper tests skepticism or judgment effects, or moderation by client complexity, firm size, or regulation.",
+      "queries": [
+        "experimental auditors data analytics professional skepticism evidence evaluation",
+        "Big 4 versus non-Big 4 artificial intelligence audit quality",
+        "client complexity moderates audit analytics effect on audit outcomes"
+      ]
+    }
+  ],
+  "rationale": "Only rq4 is flagged for search, so I added three queries aimed at the critic's gaps: experimental evidence on skepticism and judgment, firm-size moderation, and client-complexity moderation. The rq3 and rq5 search suggestions and the synthesis fixes are not flagged, so they are left to the synthesis redo."
+}

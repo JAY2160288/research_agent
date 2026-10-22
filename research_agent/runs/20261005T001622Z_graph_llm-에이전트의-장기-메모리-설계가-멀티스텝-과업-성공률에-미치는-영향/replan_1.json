@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq4",
+      "reason": "The critic found no empirical evidence that ablates memory inside planning or decomposition loops. The existing planning-memory links are a survey, RAP without numbers, and JARVIS-1 without an ablation.",
+      "queries": [
+        "memory-conditioned planner ablation long-horizon embodied agents",
+        "plan reuse experience retrieval LLM agent planning",
+        "ReAct Reflexion with and without memory ablation"
+      ]
+    }
+  ],
+  "rationale": "Only rq4 is flagged for search. Its new queries target ablation studies of memory inside planning and decomposition loops, such as memory-conditioned planners, plan reuse, and ReAct/Reflexion variants with and without memory. The other critic issues concern synthesis and gap writing and will be handled in the rewrite."
+}

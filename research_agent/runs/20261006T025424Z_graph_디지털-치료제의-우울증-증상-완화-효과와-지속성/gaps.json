@@ -1,0 +1,59 @@
+{
+  "gaps": [
+    {
+      "description": "Numerical durability estimates for clinical depression stop at 12 months, and even those come from subthreshold samples (g=0.27). The 6- and 12-month guided vs unguided estimates in the IPD network meta-analysis and the long-term results of the 2013 meta-analysis were not retrieved, so their numbers are unknown to us. Residual gaps are follow-up beyond 12 months, relapse timing, and how to keep a comparison once waitlist controls are treated.",
+      "evidence_ids": [
+        "10.1159/000507819",
+        "10.1001/jamapsychiatry.2020.4364",
+        "10.1186/1471-244x-13-113"
+      ],
+      "proposed_rq": "In adults with diagnosed major depression, how much of the post-treatment reduction in PHQ-9 from internet CBT remains at 12, 24 and 36 months, and when do relapses occur?",
+      "method": "First extract the 6- and 12-month estimates from the existing IPD and meta-analyses, then run a pre-registered IPD meta-analysis of trials with at least 12-month follow-up, modelling PHQ-9 trajectories and time to relapse. Add a 24-36 month registry-linked follow-up of a completed iCBT trial cohort.",
+      "data": "IPD from the iCBT depression trials in the existing IPD consortia (13-42 trials) plus original trial authors' long-term data. Cohort follow-up could use IAPT or primary-care records and outcome questionnaires."
+    },
+    {
+      "description": "Most depression effects come from waitlist, TAU or no-access controls, and the placebo or attention component is unquantified. The only sham-like comparison is a 1-week chatbot trial with truncated results, and the transdiagnostic app estimate is not specific to clinical depression. Small waitlist trials may overstate specific effects.",
+      "evidence_ids": [
+        "10.1002/wps.20673",
+        "10.2196/40719",
+        "10.1080/16506073.2011.616531"
+      ],
+      "proposed_rq": "How much of the effect of digital depression treatment over waitlist remains when it is compared with an attention-control or sham digital condition in clinically depressed adults?",
+      "method": "Meta-regression of control type (waitlist, TAU, attention or sham) on depression effect sizes, restricted to clinical depression, plus a pre-registered three-arm RCT (iCBT vs attention-control app vs waitlist, 8-12 weeks). The primary outcome is PHQ-9 at post-treatment and at 6 months, with the attention-control arm offered iCBT after follow-up.",
+      "data": "Existing trial registries and the meta-analytic databases for coding control type. The RCT needs about 300 adults with PHQ-9 of 10 or more, recruited from primary care or online."
+    },
+    {
+      "description": "Moderators of symptom outcome are essentially untested in the retrieved results. Baseline severity shows only a small interaction with a broad 'low-intensity' category, while the REEACT trial found no add-on benefit and the Swedish trial found benefit over TAU, leaving adjunct vs standalone use, setting and comorbid anxiety unresolved. The two IPD meta-analyses' moderator results were not visible.",
+      "evidence_ids": [
+        "10.1136/bmj.f540",
+        "10.1136/bmj.h5627",
+        "10.1192/bjp.bp.114.160101"
+      ],
+      "proposed_rq": "Do baseline severity, comorbid anxiety, clinical setting and use as adjunct vs standalone treatment moderate the effect of digital CBT on depressive symptoms?",
+      "method": "Two-stage IPD meta-analysis with pre-specified treatment-by-moderator interaction terms on post-treatment PHQ-9, complemented by a pragmatic RCT in primary care randomising adjunct to usual care vs standalone iCBT vs usual care. Compare outcomes at 3 and 12 months.",
+      "data": "IPD from the consortia behind the JAMA Psychiatry and BMJ IPD analyses, with harmonised baseline variables. The RCT needs about 450 primary-care patients with PHQ-9 of 10 or more across several practices."
+    },
+    {
+      "description": "The advantage of guided over unguided formats comes from broad mental-health meta-analyses, not from depression-specific head-to-head comparisons. The only minimal-support test, lay telephone tracking, was small and found nothing. Whether the guidance advantage lasts beyond 12 months or can be replaced by cheaper support is unclear.",
+      "evidence_ids": [
+        "10.1016/j.invent.2014.08.003",
+        "10.1371/journal.pone.0028099",
+        "10.1080/16506073.2011.616531"
+      ],
+      "proposed_rq": "Among adults with depression, does clinician-guided iCBT produce larger and longer-lasting PHQ-9 reductions than iCBT with automated or lay support, and by how much?",
+      "method": "Three-arm non-inferiority RCT comparing clinician-guided, automated-feedback/lay-supported and unguided iCBT, with PHQ-9 at post-treatment, 12 and 24 months. Secondary outcomes are module completion and cost per remission.",
+      "data": "About 600 adults with major depression recruited through online screening or IAPT-type services, with pre-specified non-inferiority margin and sample-size calculations."
+    },
+    {
+      "description": "Deterioration is quantified only from baseline to post-treatment, and engagement is linked to benefit only correlationally. Lower education predicts both deterioration and dropout, but no study has followed deterioration after treatment ends or tested whether adapting to low-education users changes it. The causal role of engagement therefore remains untested.",
+      "evidence_ids": [
+        "10.1017/s0033291716001562",
+        "10.1017/s0033291718000648",
+        "10.3389/fdgth.2021.764079"
+      ],
+      "proposed_rq": "Does an engagement-adaptive version of iCBT reduce deterioration and dropout among lower-education adults compared with standard iCBT, including during 12 months of follow-up?",
+      "method": "Two-arm RCT with an adaptive version (simplified content, scheduled prompts) vs standard iCBT, stratified by education. The primary outcome is reliable deterioration on PHQ-9 at post-treatment and 12 months, with engagement mediation analysis.",
+      "data": "About 500 adults with depressive symptoms, oversampling those with primary or secondary education only. Recruit through primary care and community outreach."
+    }
+  ]
+}

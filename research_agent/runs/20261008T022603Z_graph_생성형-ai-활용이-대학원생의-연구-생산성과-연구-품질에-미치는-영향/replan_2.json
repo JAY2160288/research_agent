@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq1",
+      "reason": "Critic: the cited rq1 papers report only perceived usefulness, and none measures time saved, writing speed or publication output. Controlled, field and log-based studies with objective measures are needed.",
+      "queries": [
+        "randomized controlled trial LLM assistance time-on-task writing",
+        "field experiment ChatGPT task completion time university students",
+        "generative AI adoption early-career researchers publication counts bibliometric"
+      ]
+    }
+  ],
+  "rationale": "Only rq1 is flagged, so I added three queries for it. They target experimental, field and bibliometric studies with objective time and output measures rather than perception surveys. The minor rq3 search suggestion was not flagged, so I added nothing for it. The synthesis-related issues will be handled in the rewrite."
+}

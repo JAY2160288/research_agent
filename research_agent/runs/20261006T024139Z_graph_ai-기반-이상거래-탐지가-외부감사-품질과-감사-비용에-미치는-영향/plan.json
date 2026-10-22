@@ -1,0 +1,65 @@
+{
+  "sub_rqs": [
+    {
+      "id": "rq1",
+      "question": "How does the adoption of AI and machine learning anomaly detection by auditors affect external audit quality, such as misstatement and fraud detection, restatements, and discretionary accruals?",
+      "rationale": "This is the core dependent variable of the topic: the direct effect of AI-based detection on audit quality.",
+      "queries": [
+        "artificial intelligence adoption audit quality",
+        "audit data analytics audit quality restatements",
+        "machine learning auditing misstatement detection",
+        "technology-enabled auditing fraud detection effectiveness"
+      ],
+      "source_pref": "openalex"
+    },
+    {
+      "id": "rq2",
+      "question": "How does the use of AI and audit analytics affect audit fees, audit hours and effort, and audit efficiency?",
+      "rationale": "This addresses the second dependent variable, audit costs, and whether efficiency gains are passed on to clients.",
+      "queries": [
+        "audit analytics audit fees effect",
+        "artificial intelligence audit efficiency audit hours",
+        "big data analytics audit cost reduction",
+        "audit fee audit effort technology investment"
+      ],
+      "source_pref": "openalex"
+    },
+    {
+      "id": "rq3",
+      "question": "How accurate and effective are machine learning and anomaly detection techniques at identifying fraudulent transactions and anomalous journal entries in audit settings?",
+      "rationale": "The technical performance of the tools underlies any quality effect and must be understood before interpreting the audit outcomes.",
+      "queries": [
+        "journal entry testing machine learning anomaly detection",
+        "financial statement fraud detection machine learning",
+        "unsupervised anomaly detection accounting transactions audit",
+        "deep learning fraudulent journal entries autoencoder"
+      ],
+      "source_pref": "both"
+    },
+    {
+      "id": "rq4",
+      "question": "Through which mechanisms and under which conditions (auditor judgment, skepticism, client complexity, firm size, regulation) does AI-based detection change audit outcomes?",
+      "rationale": "Mechanisms and moderators explain why effects on quality and cost vary across engagements and firms.",
+      "queries": [
+        "auditor judgment reliance on AI tools",
+        "professional skepticism audit data analytics",
+        "audit firm size technology adoption audit outcomes",
+        "algorithm aversion auditors decision support"
+      ],
+      "source_pref": "openalex"
+    },
+    {
+      "id": "rq5",
+      "question": "What are the adoption drivers, implementation barriers, and risks (false positives, explainability, data quality, liability, regulatory concerns) of AI in external auditing?",
+      "rationale": "Adoption conditions and unintended effects determine whether quality and cost benefits are realized in practice.",
+      "queries": [
+        "barriers to artificial intelligence adoption in auditing",
+        "explainable AI audit risks false positives",
+        "continuous auditing machine learning implementation challenges",
+        "regulatory standards AI audit evidence PCAOB"
+      ],
+      "source_pref": "both"
+    }
+  ],
+  "search_strategy": "Cover roughly 2010 to the present, with emphasis on 2016 onward when audit analytics and machine learning adoption accelerated. Prefer archival and empirical studies, experiments, field studies, and systematic reviews in accounting, auditing, and information systems, plus technical fraud detection papers from arXiv for rq3. Exclude papers on internal fraud detection in banking or payments with no audit link, and purely opinion or vendor pieces. The thinnest literature is expected for rq2 (causal evidence on audit fees and costs from AI specifically) and for direct archival evidence on AI and audit quality in rq1."
+}

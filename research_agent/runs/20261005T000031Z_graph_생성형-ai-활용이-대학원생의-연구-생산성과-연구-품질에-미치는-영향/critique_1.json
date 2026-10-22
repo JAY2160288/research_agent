@@ -1,0 +1,72 @@
+{
+  "round": 1,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq5"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "synthesize: restrict side A to 10.14742/ajet.8843 and, if the Grammarly study is kept, report it separately as measured writing gains with a non-generative feedback tool; also state that the contrast is perceived research progress versus perceived writing challenges, not a like-for-like conflict.",
+    "search rq5: empirical studies of over-reliance, deskilling, hallucinated citations, AI-detection or integrity incidents, and bias among master's/doctoral students or early-career researchers, preferably longitudinal, experimental or audit designs."
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The only conflict lists 10.1007/s44217-025-00602-7 (a Grammarly writing experiment with EFL postgraduates) on side A, but side A's statement about accelerated progress, research quality and supervisory relationships comes only from 10.14742/ajet.8843, so the pairing mixes two different outcomes and tools.",
+      "action": "synthesize: restrict side A to 10.14742/ajet.8843 and, if the Grammarly study is kept, report it separately as measured writing gains with a non-generative feedback tool; also state that the contrast is perceived research progress versus perceived writing challenges, not a like-for-like conflict."
+    },
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq5",
+      "problem": "rq5 covers skill erosion, integrity violations and bias, yet the table has no graduate-level evidence on them: the support is perception surveys (10.1007/s10639-024-13151-7, 10.1186/s41239-023-00411-8), commentaries (10.53761/1.20.02.07, 10.1080/07294360.2023.2280200), and a truncated general-student study (10.1186/s41239-024-00444-7).",
+      "action": "search rq5: empirical studies of over-reliance, deskilling, hallucinated citations, AI-detection or integrity incidents, and bias among master's/doctoral students or early-career researchers, preferably longitudinal, experimental or audit designs."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "The consensus claim that structured, feedback-oriented AI use improves writing pools a doctoral n=10 correlational study, a Grammarly experiment and 10.3390/educsci15020141 (Chinese-as-a-second-language learners), which do not cover the same population, tool or outcome.",
+      "action": "synthesize: weaken the claim to a tentative pattern, state that only 10.1080/03075079.2024.2323593 involves doctoral students and generative AI, and label the other two as language-learning evidence."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq1",
+      "problem": "The first consensus claim cites 10.3389/fpsyg.2023.1259531 (intention to use) and 10.1111/ijal.12574 (language learning) as support for reported efficiency gains, but neither reports efficiency or productivity; only 10.14742/ajet.8843 and 10.1080/14703297.2023.2271445 do.",
+      "action": "synthesize: split the claim into positive attitudes (all five ids) and perceived efficiency gains (only the two ids that report them), and note that efficiency gains for graduate students rest on one qualitative study."
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq4",
+      "problem": "The conditional claims overstate moderators: 'gains appear only with iterative use' rests on n=10; the supervisor claim presents the authors' suggestion of a shifting role (10.14742/ajet.8843, plus the reli-2 10.14742/ajet.8598) as a dependency; and the discipline and appraisal findings come from undergraduate or general students.",
+      "action": "synthesize: replace 'only' and 'depend on' with hedged wording, mark the discipline and appraisal findings as non-graduate, and note that critical appraisal lowering perceived output quality (10.1186/s40561-025-00384-3) sits in tension with the 'critical interaction' framing used in the gaps."
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq4",
+      "problem": "rq4 lists AI literacy, English proficiency, supervisor guidance and discipline as moderators, but the table has no graduate-level study testing English proficiency, supervisor guidance or discipline effects; the evidence is undergraduate, general-student or qualitative.",
+      "action": "search rq4: studies of graduate students testing AI literacy, English-as-an-additional-language status, supervisor guidance or discipline as moderators of GenAI use and research outcomes."
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq6",
+      "problem": "The measurement half of rq6 (how productivity and quality of AI-assisted research are measured) has no direct source; 10.2196/53164 and 10.2196/56537 are truncated and cover one narrow topic, while the policy evidence is coursework-focused or conceptual.",
+      "action": "search rq6: papers on validated instruments, rubrics, time-on-task logging or bibliometric indicators for AI-assisted research or thesis writing, and on graduate-school or journal policies for AI use in research."
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq3",
+      "problem": "No evidence in the table links task stages such as data analysis, coding or literature review to outcomes in graduate students: 10.3390/computers14020053 is a general higher-education review with a truncated abstract, and the literature-review studies are truncated, so rq3 is largely answered at the writing stage only.",
+      "action": "search rq3: studies of graduate students' GenAI use for literature review, data analysis and coding, with outcome or accuracy measures."
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "status": "ok",
+  "elapsed_sec": 407.8,
+  "llm_calls": 24,
+  "input_tokens": 166243,
+  "output_tokens": 48254,
+  "cost_usd": 0.815,
+  "checks": {
+    "submitted": true,
+    "citations_total": 80,
+    "citations_verified": 80,
+    "citation_verified_rate": 1.0,
+    "claims_total": 9,
+    "claims_with_source": 9,
+    "sub_rqs": 5,
+    "sub_rqs_covered": 5,
+    "gaps": 5,
+    "gaps_with_2_evidence": 5,
+    "conflicts": 0,
+    "conflicts_with_hypothesis": 0,
+    "unknown_ids": []
+  },
+  "notes": [
+    "critic: major issue(s) persist after re-search, recorded as limitation: rq3: rq3 asks about accuracy at identifying fraudulent transactions and journal entries in audit settings. The only audit-relevant papers are 10.3390/systems10050130"
+  ],
+  "papers_seen": 403,
+  "critic_rounds": 3,
+  "replans": 2,
+  "critic_mode": "full",
+  "max_replans": 2,
+  "model": "claude-sonnet-5-5",
+  "plan_from": null,
+  "final_critic_passed": true
+}

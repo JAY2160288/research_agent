@@ -1,0 +1,35 @@
+{
+  "original_topic": "한국어 토크나이징 방법 개선",
+  "topic_en": "Improving Korean tokenization methods",
+  "domain": "computer science",
+  "concepts": [
+    "Korean tokenization",
+    "morphological analysis",
+    "subword tokenization",
+    "byte-pair encoding",
+    "agglutinative language",
+    "Korean natural language processing",
+    "vocabulary design"
+  ],
+  "variables": {
+    "independent": [
+      "improved Korean tokenization method (e.g., morpheme-aware or modified subword segmentation)"
+    ],
+    "dependent": [
+      "tokenization quality",
+      "downstream NLP task performance",
+      "vocabulary efficiency (token count, sequence length)"
+    ],
+    "population": "Korean-language text corpora and Korean NLP models",
+    "context": "Korean natural language processing, including language model pre-training and downstream tasks"
+  },
+  "synonyms_en": [
+    "Korean word segmentation",
+    "Korean morphological tokenization",
+    "subword segmentation for Korean",
+    "morpheme-based tokenizer",
+    "WordPiece and SentencePiece for Korean",
+    "Korean language model tokenizer"
+  ],
+  "research_question": "How can Korean tokenization methods be improved to yield better tokenization quality and downstream NLP performance than existing approaches?"
+}

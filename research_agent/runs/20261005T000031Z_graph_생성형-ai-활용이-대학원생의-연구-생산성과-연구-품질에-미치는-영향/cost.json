@@ -1,0 +1,35 @@
+{
+  "status": "ok",
+  "elapsed_sec": 447.4,
+  "llm_calls": 25,
+  "input_tokens": 181739,
+  "output_tokens": 46139,
+  "cost_usd": 0.8249,
+  "checks": {
+    "submitted": true,
+    "citations_total": 85,
+    "citations_verified": 85,
+    "citation_verified_rate": 1.0,
+    "claims_total": 13,
+    "claims_with_source": 13,
+    "sub_rqs": 6,
+    "sub_rqs_covered": 6,
+    "gaps": 5,
+    "gaps_with_2_evidence": 5,
+    "conflicts": 2,
+    "conflicts_with_hypothesis": 2,
+    "unknown_ids": []
+  },
+  "notes": [
+    "search: arXiv unavailable (disabled after 2 failures, 2 queries skipped); OpenAlex only",
+    "critic: unresolved after 2 replan(s): ['No consensus or conditional claim addresses whether GenAI changes the quality of graduate research outputs, and rq2 rests on perceived quality (10.14742/ajet.8843), n=10 (10.1080/03075079.2024.2323593), and EFL/language-learner or undergraduate studies (10.1007/s44217-025-00602-7, 10.3390/educsci15020141), so the sub-question is effectively unanswered despite passing the count.', 'The measurement half of rq6 is effectively unanswered: no paper in the table describes how productivity or quality of AI-assisted graduate research is measured, and policy evidence covers coursework, publishers or general university frameworks (10.1057/s41599-024-03526-z, 10.12688/f1000research.142411.2, 10.1186/s41239-023-00408-3) rather than graduate research or theses.']"
+  ],
+  "papers_seen": 388,
+  "critic_rounds": 3,
+  "replans": 2,
+  "critic_mode": "full",
+  "max_replans": 2,
+  "model": "claude-sonnet-5-5",
+  "plan_from": null,
+  "final_critic_passed": false
+}

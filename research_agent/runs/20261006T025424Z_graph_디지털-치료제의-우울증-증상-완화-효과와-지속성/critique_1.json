@@ -1,0 +1,66 @@
+{
+  "round": 1,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq2",
+    "rq4"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "search rq2: meta-analyses or RCTs of digital CBT for depression that report follow-up effect sizes at 3-12 months or longer, including long-term follow-up of the Andersson 2013 meta-analysis and the IPD network meta-analysis results",
+    "search rq4: IPD or subgroup/meta-regression analyses of baseline depression severity, comorbid anxiety and clinical setting as moderators of symptom outcome in digital depression treatment, and trials of adjunct vs standalone use"
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq2",
+      "problem": "Persistence after treatment is effectively unanswered: 10.1001/jamapsychiatry.2020.4364, 10.1186/1471-244x-13-113, 10.1038/s41746-020-0293-8 and 10.2196/40719 specify 1-12 month follow-up, but no table entry gives a numerical durability estimate. The only follow-up figure is a 78% completion rate at 6 months in 10.1080/16506073.2011.616531.",
+      "action": "search rq2: meta-analyses or RCTs of digital CBT for depression that report follow-up effect sizes at 3-12 months or longer, including long-term follow-up of the Andersson 2013 meta-analysis and the IPD network meta-analysis results"
+    },
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq4",
+      "problem": "Moderators of outcome (severity, comorbidity, primary care vs community, adjunct vs standalone) are effectively unanswered. The only concrete moderator data are dropout predictors from 10.1017/s0033291715000665, while 10.1001/jamapsychiatry.2017.0044 and 10.1001/jamapsychiatry.2020.4364 give no moderator results in their truncated abstracts. The rest are population-specific reviews with truncated results.",
+      "action": "search rq4: IPD or subgroup/meta-regression analyses of baseline depression severity, comorbid anxiety and clinical setting as moderators of symptom outcome in digital depression treatment, and trials of adjunct vs standalone use"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "The guidance consensus claim says depression-specific direct evidence comes from one meta-analysis (10.1016/j.invent.2014.08.003), but that review covers mental health conditions broadly. It also cites 10.2196/jmir.5774, whose guided advantage (d=0.64) is for stress, not depression, and 10.1007/s40501-023-00297-3, a reliability-2 narrative review.",
+      "action": "synthesize: restate the guided-vs-unguided claim as not depression-specific, remove 10.2196/jmir.5774 as support for symptom severity, and flag 10.1007/s40501-023-00297-3 as low-reliability support only for the engagement mechanism"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq1",
+      "problem": "The rq1 consensus range of g/d 0.27-0.34 pools heterogeneous samples: transdiagnostic smartphone apps (10.1002/wps.20673), young people (10.3389/fpsyt.2019.00759), a 2006 mixed anxiety/depression meta-analysis (10.1017/s0033291706008944) and a stress-management review where depression is secondary (10.2196/jmir.5774). The range is presented without the population caveat.",
+      "action": "synthesize: split rq1 effect sizes by population and intervention type, and mark 10.2196/jmir.5774 and 10.1017/s0033291706008944 as indirect evidence for clinical depression"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq1",
+      "problem": "The conflict between pre-post effects (10.2196/18100) and RCT effects is a design artefact, not a true conflict. The dropout-predictor conflict contrasts a 2015 IPD study with 2009 reviews that cover mixed disorders, and it only reflects differences in power and scope. The smartphone conditional (10.1002/wps.20673) names no moderator, and 'most effects remained robust' is not specific to depression.",
+      "action": "synthesize: relabel the two conflicts as design or power discrepancies rather than disagreement, and either tie the smartphone conditional to a stated moderator or move it to consensus with the transdiagnostic caveat"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq2",
+      "problem": "The durability gap and the guidance-durability gap are framed as absent from the literature, but 10.1001/jamapsychiatry.2020.4364 explicitly estimates 6- and 12-month guided vs unguided relative efficacy. The 'gap' mainly reflects truncated abstracts, and 'nobody has tested' claims in the dropout and deterioration gaps are not supported by the table.",
+      "action": "gap: rewrite the durability and guidance gaps as 'results not retrieved' or as residual gaps beyond 12 months and attention-controlled comparisons, and soften the absolute 'nobody has tested' wording"
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq6",
+      "problem": "Placebo and attention-control effects, and adverse effects, rest on brief statements in a narrative review (10.1002/wps.20610), a pre-post deterioration figure (10.2196/18100) and a 1-week chatbot trial whose results are truncated (10.2196/40719).",
+      "action": "search rq6: meta-analyses of digital depression interventions comparing attention-control, sham or active controls with waitlist, and studies reporting negative effects or deterioration in RCTs"
+    }
+  ]
+}

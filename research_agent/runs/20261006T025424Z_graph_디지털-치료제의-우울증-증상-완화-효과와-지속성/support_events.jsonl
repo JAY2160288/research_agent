@@ -1,0 +1,6 @@
+{"t": 0.0, "kind": "run_start", "topic": "20261006T025424Z_graph_디지털-치료제의-우울증-증상-완화-효과와-지속성", "mode": "support"}
+{"t": 39.484, "kind": "llm_call", "role": "support", "model": "claude-opus-5-5", "input_tokens": 15409, "cache_read": 0, "cache_write": 0, "output_tokens": 5198, "cost_usd": 0.165596, "attempt": 1, "ok": true, "error": null}
+{"t": 39.488, "kind": "support_check", "batch": 1, "attempt": 1, "issues": []}
+{"t": 62.597, "kind": "llm_call", "role": "support", "model": "claude-opus-5-5", "input_tokens": 9272, "cache_read": 0, "cache_write": 0, "output_tokens": 2809, "cost_usd": 0.093268, "attempt": 1, "ok": true, "error": null}
+{"t": 62.599, "kind": "support_check", "batch": 2, "attempt": 1, "issues": []}
+{"t": 62.601, "kind": "support_end", "citation_support_rate": 0.8333, "claim_support_rate": 0.8462, "cost_usd": 0.2589}

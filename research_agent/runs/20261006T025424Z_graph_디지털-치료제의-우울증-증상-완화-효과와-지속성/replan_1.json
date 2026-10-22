@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq2",
+      "reason": "Critic: no numerical durability estimate; need follow-up effect sizes at 3-12+ months from meta-analyses and RCTs, including IPD network meta-analysis and long-term follow-up studies.",
+      "queries": [
+        "individual participant data network meta-analysis guided unguided internet CBT depression follow-up",
+        "internet-based CBT depression pooled effect size 6 to 12 month follow-up",
+        "long-term outcomes randomized trial online cognitive behavioural therapy depression 2-year follow-up"
+      ]
+    },
+    {
+      "sub_rq_id": "rq4",
+      "reason": "Critic: moderator results (baseline severity, comorbid anxiety, setting, adjunct vs standalone) are missing; need IPD, subgroup and meta-regression analyses.",
+      "queries": [
+        "individual participant data meta-analysis baseline severity moderator internet depression treatment",
+        "meta-regression clinical setting comorbidity digital CBT depression effect size",
+        "blended or adjunctive digital CBT versus standalone depression randomized trial"
+      ]
+    }
+  ],
+  "rationale": "Added new queries only for the flagged rq2 and rq4. rq2 now targets follow-up effect sizes at 3-12+ months, IPD network meta-analyses and long-term RCTs. rq4 targets IPD, meta-regression and subgroup moderator analyses plus adjunct vs standalone designs. Synthesis-only issues and rq6 are left to the rewrite."
+}

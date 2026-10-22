@@ -1,0 +1,50 @@
+{
+  "round": 2,
+  "passed": false,
+  "deterministic_issues": [],
+  "uncovered_sub_rqs": [
+    "rq1"
+  ],
+  "weak_claims": [],
+  "actions": [
+    "search rq1: controlled or field experiments and log-based studies measuring time-on-task, output volume or publication counts with LLM assistance among graduate students, early-career researchers or university students"
+  ],
+  "llm_ran": true,
+  "llm_issues": [
+    {
+      "severity": "major",
+      "where": "evidence",
+      "sub_rq_id": "rq1",
+      "problem": "rq1 passes on count but is effectively unanswered: the cited papers (10.3991/ijep.v14i3.48395, 10.46303/jcsr.2024.4, 10.1007/s40593-024-00454-6) report only perceived usefulness, and 10.3390/higheredu2040037 is an n=1 undergraduate case, so none measures writing speed, time saved or publication output.",
+      "action": "search rq1: controlled or field experiments and log-based studies measuring time-on-task, output volume or publication counts with LLM assistance among graduate students, early-career researchers or university students"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq3",
+      "problem": "The first consensus claim cites 10.2196/80371, a GPT-4o reference-fabrication test with no student sample, as support for how graduate students use GenAI, and its 'widespread' use rests on mixed or general student surveys (10.1057/s41599-023-02304-7, 10.1186/s41239-024-00453-6).",
+      "action": "synthesize: drop 10.2196/80371 from the rq3 consensus claim and state that prevalence figures come from general student populations rather than graduate-specific samples"
+    },
+    {
+      "severity": "minor",
+      "where": "evidence",
+      "sub_rq_id": "rq3",
+      "problem": "Coding and data-analysis use is acknowledged as uncovered, but no paper in the table addresses it, so the gap rests on absence of evidence rather than on a targeted search.",
+      "action": "search rq3: surveys or experiments on graduate students' or researchers' use of LLMs for programming, statistical analysis and data-analysis tasks"
+    },
+    {
+      "severity": "minor",
+      "where": "synthesis",
+      "sub_rq_id": "rq2",
+      "problem": "Findings from 10.1016/j.chbah.2024.100095 (AI-augmented writing improved readability but lacked research details and reflective insight) and 10.35542/osf.io/x3dct (AI reviews rated slightly below peer reviews) bear on rq2 quality and originality but are not used in any claim.",
+      "action": "synthesize: add a cautious rq2 statement that AI-augmented text may read better while lacking research depth, citing 10.1016/j.chbah.2024.100095 and 10.35542/osf.io/x3dct, with their small or non-graduate samples noted"
+    },
+    {
+      "severity": "minor",
+      "where": "gaps",
+      "sub_rq_id": "rq4",
+      "problem": "The third gap says the evidence conflicts on critical appraisal, but the contrast between 10.1186/s40561-025-00384-3 (appraisal lowered self-efficacy and output quality) and the qualitative studies is not listed in the conflicts section.",
+      "action": "synthesize: add this critical-appraisal contrast as a conflict, with a hypothesis that perceived output quality and self-efficacy differ from rated writing quality and that the samples (general students vs graduate students) differ"
+    }
+  ]
+}

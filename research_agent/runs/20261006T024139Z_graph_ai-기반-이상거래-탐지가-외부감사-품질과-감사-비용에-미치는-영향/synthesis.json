@@ -1,0 +1,107 @@
+{
+  "consensus": [
+    {
+      "statement": "Greater AI use by audit firms is associated with a lower likelihood of client restatements in two archival studies (about 5.0% lower per SD of AI investment in one). This is only an indirect quality proxy, since fewer restatements could reflect fewer errors or weaker detection, and the Nigerian perception survey adds only self-reported quality.",
+      "evidence_ids": [
+        "10.1007/s11142-022-09697-x",
+        "10.1108/maj-03-2023-3846",
+        "10.22624/aims/humanities/v11n1p4"
+      ],
+      "sub_rq_ids": [
+        "rq1"
+      ]
+    },
+    {
+      "statement": "Evidence on efficiency gains from AI or audit technology is perception-based or comes from internal audit, with self-reported efficiency gains and fewer audit days. No study measures external-audit hours or effort, so efficiency gains are unmeasured in external audit.",
+      "evidence_ids": [
+        "10.15611/pn.2022.4.06",
+        "10.1111/1911-3846.12847",
+        "10.1108/maj-03-2023-3846"
+      ],
+      "sub_rq_ids": [
+        "rq2"
+      ]
+    },
+    {
+      "statement": "The ML fraud-detection literature is dominated by firm-level financial-statement and other non-audit fraud applications, with supervised methods more common than unsupervised ones. The reviews give no audit-specific, transaction-level accuracy benchmark, so no cross-paper consensus on journal-entry accuracy exists.",
+      "evidence_ids": [
+        "10.1109/access.2021.3096799",
+        "10.1057/s41599-024-03606-0",
+        "10.3390/app12199637",
+        "10.6339/jds.201607_14(3).0010"
+      ],
+      "sub_rq_ids": [
+        "rq3"
+      ]
+    },
+    {
+      "statement": "Conceptual and qualitative work, largely about audit data analytics generally and not AI anomaly detection specifically, raises concerns that analytics could weaken professional skepticism and erode junior auditors' sensemaking.",
+      "evidence_ids": [
+        "10.5117/mab.96.78525",
+        "10.1111/1911-3846.12901"
+      ],
+      "sub_rq_ids": [
+        "rq4",
+        "rq5"
+      ]
+    },
+    {
+      "statement": "Reviews, interviews and tool descriptions identify ethical concerns, difficulty hiring skilled staff, and the difficulty of quantifying benefits as barriers and risks. Technology readiness and perceived usefulness drive adoption in one small survey. This evidence is mostly descriptive and low to moderate reliability.",
+      "evidence_ids": [
+        "10.1108/aaaj-09-2020-4934",
+        "10.17261/pressacademia.2020.1337",
+        "10.1111/1911-3846.12847",
+        "10.3390/jrfm17010027",
+        "10.1016/j.respol.2023.104828",
+        "10.20525/ijrbs.v12i9.2737"
+      ],
+      "sub_rq_ids": [
+        "rq5"
+      ]
+    }
+  ],
+  "conflicts": [],
+  "conditional": [
+    {
+      "statement": "In one Chinese archival study, audit report lag falls only when audit firms and clients use AI together; separate use increases lag. This is a within-study moderation by joint versus separate use, not a conflict, and report lag is not audit hours.",
+      "evidence_ids": [
+        "10.1108/maj-03-2023-3846"
+      ],
+      "sub_rq_ids": [
+        "rq2",
+        "rq4"
+      ]
+    },
+    {
+      "statement": "Experienced reviewers rate data-and-analytics procedures as lower quality because of an effort heuristic, even at equal assurance, and a theory-based intervention reduces this bias. This is reviewer perception, not evidence of eroded auditor judgment, and it concerns D&A generally.",
+      "evidence_ids": [
+        "10.1111/1911-3846.12894"
+      ],
+      "sub_rq_ids": [
+        "rq4",
+        "rq5"
+      ]
+    },
+    {
+      "statement": "The practical value of fraud-prediction models depends on whose costs are counted. At false-to-true-positive ratios above 100:1, all seven tested models were too costly for auditors, while some gave net benefits to investors or regulators. This tests traditional models, not modern AI.",
+      "evidence_ids": [
+        "10.2308/tar-2020-0068"
+      ],
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ]
+    },
+    {
+      "statement": "Model rankings are dataset-specific single-study results at firm level: logistic regression and SVM did well against ANN, bagging and stacking in a 2011 study, and bagging beat boosting among ensembles in Chinese A-share data. Neither addresses transaction-level or journal-entry detection.",
+      "evidence_ids": [
+        "10.2308/ajpt-50009",
+        "10.1111/acfi.13159"
+      ],
+      "sub_rq_ids": [
+        "rq3"
+      ]
+    }
+  ],
+  "coverage_note": "No new papers were added to the table, so the critic's requested searches are still outstanding. rq3 is effectively unanswered for transaction-level accuracy: the only journal-entry study (10.3390/systems10050130) uses predefined anomalies on a single ledger, the insurance-claims study (10.4192/1577-8517-v11_4) has no validation, and 10.1109/access.2022.3153478 shows no results. The rest is firm-level or non-audit work. Studies on AAER-labelled or confirmed-misstatement data reporting precision, recall or false-positive rates are missing. rq1 rests on restatement likelihood in two archival studies; no study covers discretionary accruals, detection of misstatement or fraud, AAERs or going-concern outcomes. rq2 separates fees (a price: 0.9% lower per SD in 10.1007/s11142-022-09697-x; a partner digital-expertise premium in 10.1080/09638180.2023.2298433, a different construct from firm AI investment) from hours and effort, which are unmeasured in external audit. Efficiency evidence is limited to report lag, perception surveys and internal audit. rq4 moderators (client complexity, firm size, regulation) are untested; evidence is generic D&A experiments, interviews and one effort-lag mechanism, and no study examines auditors' use of AI flags. rq5 risks are covered descriptively; false positives, explainability, data quality, liability and PCAOB/IAASB guidance are not directly covered. The most useful missing studies are archival or experimental work on auditor AI use with objective outcomes, and audit-hours data.}</br>Correction: the JSON above must be a single object; see below.</br>{"
+}

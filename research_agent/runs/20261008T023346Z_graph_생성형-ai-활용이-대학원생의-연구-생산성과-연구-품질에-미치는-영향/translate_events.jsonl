@@ -1,0 +1,8 @@
+{"t": 0.0, "kind": "run_start", "topic": "20261008T023346Z_graph_생성형-ai-활용이-대학원생의-연구-생산성과-연구-품질에-미치는-영향", "mode": "translate"}
+{"t": 79.764, "kind": "llm_call", "role": "translate", "model": "claude-sonnet-5-5", "input_tokens": 9668, "cache_read": 0, "cache_write": 0, "output_tokens": 10302, "cost_usd": 0.122356, "attempt": 1, "ok": true, "error": null}
+{"t": 79.765, "kind": "translate_check", "attempt": 1, "issues": []}
+{"t": 79.774, "kind": "translate_end", "items": 59, "fallback": 0, "cost_usd": 0.1224, "bytes": 110931}
+{"t": 0.0, "kind": "run_start", "topic": "20261008T023346Z_graph_생성형-ai-활용이-대학원생의-연구-생산성과-연구-품질에-미치는-영향", "mode": "translate"}
+{"t": 78.858, "kind": "llm_call", "role": "translate", "model": "claude-sonnet-5-5", "input_tokens": 9724, "cache_read": 0, "cache_write": 0, "output_tokens": 10270, "cost_usd": 0.122148, "attempt": 1, "ok": true, "error": null}
+{"t": 78.86, "kind": "translate_check", "attempt": 1, "issues": []}
+{"t": 78.879, "kind": "translate_end", "items": 59, "fallback": 0, "cost_usd": 0.1221, "bytes": 109246}

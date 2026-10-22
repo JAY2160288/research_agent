@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "sub_rq_id": "rq3",
+      "reason": "Critic: Korean-specific vocabulary design evidence is missing; existing support comes from Turkish and European studies, so Korean studies that vary vocabulary size or compare monolingual and multilingual vocabularies are needed.",
+      "queries": [
+        "Korean BERT vocabulary size ablation downstream accuracy",
+        "monolingual versus multilingual vocabulary Korean pretrained model",
+        "Korean tokens per character tokenizer vocabulary comparison"
+      ]
+    },
+    {
+      "sub_rq_id": "rq4",
+      "reason": "Critic: no Korean paper links intrinsic tokenization metrics (fertility, morpheme alignment, compression, OOV rate) to downstream scores; the correlation evidence comes from Turkish, European and English studies.",
+      "queries": [
+        "Korean tokenizer morpheme boundary alignment downstream KLUE",
+        "tokenizer fertility compression Korean KoBEST evaluation",
+        "Korean subword tokenization ablation intrinsic extrinsic correlation"
+      ]
+    }
+  ],
+  "rationale": "Added new queries only for the flagged rq3 and rq4. rq3 queries target Korean vocabulary size and monolingual versus multilingual comparisons that report sequence length. rq4 queries target Korean studies that pair intrinsic tokenizer metrics with downstream benchmark results. The other critic issues concern synthesis and gap writing, so they get no new queries."
+}

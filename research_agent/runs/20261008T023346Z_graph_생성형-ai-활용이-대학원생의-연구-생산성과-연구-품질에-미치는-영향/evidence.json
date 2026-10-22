@@ -1,0 +1,1145 @@
+{
+  "items": [
+    {
+      "paper_id": "10.37074/jalt.2023.6.1.9",
+      "relevance": 2,
+      "reliability": 2,
+      "method": "literature review and experimental commentary",
+      "sample": "",
+      "finding": "ChatGPT can create impressive prose indistinguishable from human-written text, raising concerns about assessment integrity in higher education, but the paper focuses on assessment disruption rather than research productivity or quality outcomes for graduate students.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "Commentary with limited empirical evidence; focus on assessment rather than research productivity."
+    },
+    {
+      "paper_id": "10.1007/s11704-024-40231-1",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "systematic review",
+      "sample": "",
+      "finding": "Presents a comprehensive survey of LLM-based autonomous agents and their applications across social science, natural science, and engineering domains, with discussion of evaluation strategies and challenges.",
+      "sub_rq_ids": [],
+      "limitations": "Focuses on autonomous agents and general LLM applications rather than graduate student research processes or outcomes; no empirical data on student productivity or quality."
+    },
+    {
+      "paper_id": "10.1007/s11704-026-60308-3",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "systematic review",
+      "sample": "",
+      "finding": "Surveys LLM development across pre-training, post-training, utilization strategies, and evaluation methods, covering technical capabilities and deployment optimization.",
+      "sub_rq_ids": [],
+      "limitations": "Technical survey of LLM capabilities; does not address graduate student research outcomes, productivity, or quality impacts."
+    },
+    {
+      "paper_id": "10.1002/asi.24750",
+      "relevance": 3,
+      "reliability": 2,
+      "method": "commentary and discussion",
+      "sample": "",
+      "finding": "Discusses ChatGPT's potential for automated preparation of scholarly manuscripts and raises ethical issues related to academic integrity and plagiarism in scholarly publishing.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "Opinion-based commentary without empirical data on actual graduate student use or outcomes; preprint-style discussion."
+    },
+    {
+      "paper_id": "10.53761/1.20.02.07",
+      "relevance": 3,
+      "reliability": 2,
+      "method": "essay with demonstration",
+      "sample": "",
+      "finding": "Explores academic integrity concerns with LLMs like ChatGPT, demonstrating that these tools can generate original text undetectable by plagiarism detection, and argues that transparency in AI use is key rather than prohibition.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "Primarily conceptual discussion with limited empirical evidence; focuses on integrity concerns rather than productivity or quality outcomes."
+    },
+    {
+      "paper_id": "10.48550/arxiv.2203.15556",
+      "relevance": 0,
+      "reliability": 4,
+      "method": "empirical study of LLM training (training of 400+ models)",
+      "sample": "400 language models ranging from 70 million to 16 billion parameters",
+      "finding": "Investigates optimal model scaling for language models and finds that model size and training tokens should be scaled equally for compute-optimal training.",
+      "sub_rq_ids": [],
+      "limitations": "Technical research on LLM training optimization; does not address graduate student research use, productivity, or quality outcomes."
+    },
+    {
+      "paper_id": "10.1080/0144929x.2024.2394886",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "expert commentary synthesis",
+      "sample": "nine experts in learning and technology",
+      "finding": "GenAI tools offer opportunities to enhance teaching and learning through learning design, automated feedback, and assessment, but present ethical concerns, potential for misuse, and limitations that require further research and policy development.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Commentary by experts rather than empirical study; generalizes from education broadly rather than focusing on graduate research."
+    },
+    {
+      "paper_id": "10.1109/access.2024.3387941",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "experimental study of ChatGPT for robotics tasks",
+      "sample": "various robotics tasks and simulators",
+      "finding": "ChatGPT demonstrates effectiveness at solving multiple robotics tasks through natural language interaction, prompt engineering, and code synthesis, with an open-source tool (PromptCraft) introduced.",
+      "sub_rq_ids": [],
+      "limitations": "Robotics domain application; does not address graduate student research productivity, quality, or research processes."
+    },
+    {
+      "paper_id": "10.3390/app13116716",
+      "relevance": 2,
+      "reliability": 2,
+      "method": "research essay with literature analysis",
+      "sample": "",
+      "finding": "Explores potential AI applications for international students including personalized learning, adaptive testing, and chatbots, while identifying risks such as privacy concerns and cultural differences.",
+      "sub_rq_ids": [
+        "rq4"
+      ],
+      "limitations": "Essay format without empirical data; focuses on international students broadly rather than graduate research; does not measure productivity or quality outcomes."
+    },
+    {
+      "paper_id": "10.48550/arxiv.2303.17564",
+      "relevance": 0,
+      "reliability": 4,
+      "method": "empirical study of domain-specific LLM training and evaluation",
+      "sample": "BloombergGPT trained on 363 billion token financial dataset plus 345 billion general tokens",
+      "finding": "Presents BloombergGPT, a 50 billion parameter LLM trained on financial data, which outperforms existing models on financial tasks while maintaining performance on general LLM benchmarks.",
+      "sub_rq_ids": [],
+      "limitations": "Technical research on domain-specific LLM development for finance; does not address graduate student research outcomes or productivity."
+    },
+    {
+      "paper_id": "10.1021/acs.est.3c01106",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "opinion/commentary",
+      "sample": "",
+      "finding": "Discusses risks and benefits of large language models for environmental research generally, but does not address graduate student research productivity or quality outcomes specifically.",
+      "sub_rq_ids": [],
+      "limitations": "Opinion piece without empirical data; focused on environmental domain rather than graduate student research processes."
+    },
+    {
+      "paper_id": "10.48550/arxiv.2402.06196",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "literature review/survey",
+      "sample": "",
+      "finding": "Provides technical overview of LLM characteristics, training, and evaluation metrics, but does not examine effects on graduate student research productivity or quality.",
+      "sub_rq_ids": [],
+      "limitations": "Survey of LLM technology and capabilities, not empirical research on user outcomes; preprint without peer review."
+    },
+    {
+      "paper_id": "10.1109/access.2018.2890507",
+      "relevance": 0,
+      "reliability": 2,
+      "method": "literature review/survey",
+      "sample": "",
+      "finding": "Reviews blockchain applications for AI systems; unrelated to generative AI use by graduate students in research.",
+      "sub_rq_ids": [],
+      "limitations": "Off-topic; concerns blockchain-AI integration, not generative AI tools for research."
+    },
+    {
+      "paper_id": "10.3390/educsci13090856",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "thing ethnography approach",
+      "sample": "ChatGPT as subject; study of perspectives on higher education",
+      "finding": "Identifies challenges (academic integrity, plagiarism detection, critical thinking impacts) and opportunities of ChatGPT in higher education, emphasizing need for clear policies and guidelines; calls for empirical research on user experiences.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Uses unconventional methodology (thing ethnography); limited empirical data on actual graduate student outcomes; focuses on ChatGPT's perspective rather than user experience."
+    },
+    {
+      "paper_id": "10.5114/biolsport.2023.125623",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "literature review with quasi-qualitative analysis",
+      "sample": "Peer-reviewed articles indexed in Scopus Q1 journals",
+      "finding": "Literature review finds that ChatGPT and NLP technologies offer prospects for academic efficiency but raise ethical considerations regarding authenticity and credibility of academic work.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5"
+      ],
+      "limitations": "Incomplete abstract; literature review without primary data from graduate students; does not quantify productivity or quality impacts."
+    },
+    {
+      "paper_id": "10.30935/cedtech/13605",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "systematic literature review (n=30 articles)",
+      "sample": "30 most relevant articles from 550 collected (December 2022–May 2023)",
+      "finding": "Systematic review finds that ChatGPT as writing assistant offers both opportunities and challenges in academic writing; AI in education is developing and its role should be understood as aid and facilitator.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq6"
+      ],
+      "limitations": "Synthesis of literature opinions rather than primary empirical data on graduate student outcomes; early post-release period may not reflect longer-term effects."
+    },
+    {
+      "paper_id": "10.2196/53164",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "comparative empirical analysis",
+      "sample": "11 systematic reviews across 4 fields; 33 prompts to LLMs (ChatGPT and Bard)",
+      "finding": "ChatGPT and Bard generate hallucinated references in systematic reviews at measurable rates, with metrics (recall, precision, F1-score) indicating reliability concerns for scientific writing tasks.",
+      "sub_rq_ids": [
+        "rq2"
+      ],
+      "limitations": "Limited to systematic review context; does not assess graduate students specifically or broader research productivity; specific to reference accuracy task."
+    },
+    {
+      "paper_id": "10.30935/ojcmt/13572",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "literature review",
+      "sample": "Literature from Scopus, Google Scholar, ScienceDirect, ProQuest",
+      "finding": "ChatGPT can serve as valuable writing tool but requires responsible practices; proper citation and attribution of ChatGPT's contribution are essential for academic integrity and preventing plagiarism.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5"
+      ],
+      "limitations": "Literature review without primary empirical data; no direct measurement of graduate student experiences or outcomes."
+    },
+    {
+      "paper_id": "10.55982/openpraxis.16.1.654",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "conceptual analysis/discussion paper",
+      "sample": "",
+      "finding": "Examines ethical, legal, and authorship challenges of generative AI in academic writing; advocates for transparent reporting and new mechanisms to identify AI use; calls for AI-inclusive strategies in academia.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Conceptual paper without empirical data; discusses implications rather than measuring actual graduate student outcomes; no primary research evidence."
+    },
+    {
+      "paper_id": "10.17323/jle.2023.17379",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "cross-sectional online questionnaire survey",
+      "sample": "201 university students from private and public universities in Croatia",
+      "finding": "Over half of student participants use ChatGPT for written assignments; most common uses are generating ideas, summarizing, paraphrasing, and proofreading; students perceive idea generation as most ethically acceptable use.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5"
+      ],
+      "limitations": "Sample limited to Croatian universities; uses self-report measures; does not measure actual productivity or quality outcomes; focuses on ethical perceptions rather than impacts."
+    },
+    {
+      "paper_id": "10.1109/tim.2024.3436128",
+      "relevance": 0,
+      "reliability": 2,
+      "method": "survey",
+      "sample": "",
+      "finding": "This paper surveys UAV channel sounding technologies and measurements for communications systems, with no relevance to generative AI or graduate student research productivity and quality.",
+      "sub_rq_ids": [],
+      "limitations": "Off-topic; focuses on telecommunications hardware rather than AI or research processes."
+    },
+    {
+      "paper_id": "10.1111/imcb.12689",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "symposium overview and commentary",
+      "sample": "",
+      "finding": "Explores practical applications of LLMs and AI-assisted technologies in medical research and education, highlighting opportunities and emerging ethical, legal, and social implications for scientific researchers and educators.",
+      "sub_rq_ids": [
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Commentary summarizing symposium discussions rather than empirical study; lacks quantitative evidence on graduate student outcomes."
+    },
+    {
+      "paper_id": "10.1007/s11192-019-03263-0",
+      "relevance": 2,
+      "reliability": 4,
+      "method": "methodological paper with validation using survey and citation network analysis",
+      "sample": "individual scientific papers",
+      "finding": "Proposes a new measure of originality based on citation network betweenness centrality, finding correlation with self-assessed theoretical but not methodological originality.",
+      "sub_rq_ids": [
+        "rq2"
+      ],
+      "limitations": "Measures originality in general science, not specifically for AI-assisted work or graduate students."
+    },
+    {
+      "paper_id": "10.54963/jic.v4i1.220",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "mixed analysis including statistical comparison and conceptual examination",
+      "sample": "academic writing contexts; specific sample sizes not stated",
+      "finding": "Examines how generative AI technologies like ChatGPT shift academic writing and plagiarism frameworks, contrasting actual LLM use in academic dishonesty with educator perceptions, and discussing AI's potential to accelerate research.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5"
+      ],
+      "limitations": "Limited empirical data; relies partly on anecdotal evidence (Amazon self-publishing example); abstract incomplete."
+    },
+    {
+      "paper_id": "10.1038/s41586-023-06291-2",
+      "relevance": 2,
+      "reliability": 5,
+      "method": "empirical evaluation with human-in-the-loop assessment; benchmark development and model evaluation",
+      "sample": "large language model evaluation using multiple medical QA datasets and 300+ human evaluators",
+      "finding": "Flan-PaLM achieved 67.6% accuracy on US Medical Licensing Exam-style questions, surpassing prior state-of-the-art, with assessment across factuality, comprehension, reasoning, harm, and bias dimensions.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Evaluates LLM capabilities in medical domain rather than graduate student research use; does not measure productivity or quality of student research outputs."
+    },
+    {
+      "paper_id": "10.2196/48291",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "perspective paper based on professional and academic experience",
+      "sample": "",
+      "finding": "Proposes that LLMs hold promise for revolutionizing medical curriculum, teaching, and personalized learning, while critically examining challenges including algorithmic bias, overreliance, plagiarism, misinformation, inequity, privacy, and copyright concerns.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Perspective/opinion piece without empirical data; focuses on medical education generally rather than graduate research specifically."
+    },
+    {
+      "paper_id": "10.1287/orsc.2023.18430",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "crowdsourcing challenge with experimental design; 125 solvers, 300 evaluators, 13 solutions evaluated across 3,900 evaluator-solution pairs",
+      "sample": "125 global solvers; 300 external human evaluators; 234 total solutions generated",
+      "finding": "Human-AI collaborative solutions demonstrated superior strategic viability, financial and environmental value, and overall quality compared to human crowd solutions, though human solutions exhibited higher novelty; AI-guided differentiated search outperformed independent search.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "Focuses on creative problem-solving in business context; limited to 13 evaluated solutions; unclear if findings generalize to academic research workflows."
+    },
+    {
+      "paper_id": "10.1093/bib/bbad236",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "survey of explainable AI methods and tools",
+      "sample": "",
+      "finding": "Surveys explainable AI (XAI) methods for deep learning and ML in bioinformatics, addressing transparency, fairness, and interpretability concerns in healthcare AI applications.",
+      "sub_rq_ids": [],
+      "limitations": "Focuses on AI explainability in bioinformatics rather than generative AI use in graduate research; minimal relevance to research productivity or student outcomes."
+    },
+    {
+      "paper_id": "10.1111/jels.12413",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "preregistered empirical evaluation of AI tools with systematic assessment",
+      "sample": "AI-driven legal research tools (Lexis+ AI, Westlaw AI-Assisted Research, Ask Practical Law AI); hallucination rate assessed across multiple citations",
+      "finding": "AI legal research tools hallucinate between 17% and 33% of the time despite provider claims of hallucination-free operation, with substantial variation across tools.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Limited to legal research domain; does not directly measure graduate student research or assess impact on research quality outcomes."
+    },
+    {
+      "paper_id": "10.1007/s10462-024-10916-x",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "literature survey and conceptualization of explainable GenAI (GenXAI)",
+      "sample": "existing literature on generative AI and explainability",
+      "finding": "Provides taxonomy of explainability mechanisms for generative AI across text and image generation, highlighting emerging criteria for explanations including verifiability, interactivity, security, and cost considerations.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "Survey of explainability methods rather than empirical study of research outcomes; does not address graduate student productivity or research quality directly."
+    },
+    {
+      "paper_id": "10.1007/s43621-025-01094-z",
+      "relevance": 2,
+      "reliability": 5,
+      "method": "systematic review of 55 studies (2020-2024)",
+      "sample": "55 peer-reviewed articles, conference papers, and journal publications",
+      "finding": "Systematic review examined LLM educational impact on student engagement, emotional and social development, real-time progress monitoring, and examination environments; addressed ethical considerations, privacy concerns, and simulation of real-world teaching experiences.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "Abstract cut off; focused on general students, not specifically graduate researchers"
+    },
+    {
+      "paper_id": "10.3390/app14104115",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "experimental design with longitudinal tracking, n=32 undergraduate students over 10 weeks",
+      "sample": "32 undergraduate students in software development education (React applications)",
+      "finding": "Increased LLM reliance for critical thinking-intensive tasks (code generation, debugging) correlated with lower final grades; LLM use for seeking explanations showed weaker correlation with grades, suggesting supplementary rather than primary tool use.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "Undergraduate students, not graduate; small sample size; single discipline (programming); short 10-week study period"
+    },
+    {
+      "paper_id": "10.1186/s41239-025-00526-0",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "mixed-methods experimental study (pre/post surveys and semi-structured interviews) with 60 university students over 20-week program",
+      "sample": "60 university students randomly assigned to experimental (GAI-aided) or control (traditional) groups for digital storytelling",
+      "finding": "Integration of GAI tools (ChatGPT, Midjourney, Runway) significantly enhanced collaborative problem-solving skills and team creativity performance compared to traditional methods.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "University students may not be graduates; discipline-specific (digital storytelling); no direct productivity metrics measured"
+    },
+    {
+      "paper_id": "10.1016/j.heliyon.2024.e32220",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "cross-sectional survey with structural equation modeling, n=262 university students",
+      "sample": "262 students from King Faisal University (Saudi Arabia) via self-report questionnaires",
+      "finding": "Interaction learning and collaborative learning foster ChatGPT adoption; information quality substantially influences continued use; perceived ease of use and usefulness play intermediary roles in adoption decisions.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Self-report questionnaires; single institution; undergraduate focus; does not measure research productivity or quality outcomes directly"
+    },
+    {
+      "paper_id": "10.1016/j.ijinfomgt.2023.102642",
+      "relevance": 2,
+      "reliability": 2,
+      "method": "opinion paper with multidisciplinary contributions from 43 experts",
+      "sample": "43 expert perspectives from fields including computer science, education, policy, management, and nursing",
+      "finding": "ChatGPT offers productivity enhancements in banking, hospitality, tourism, and IT sectors; contributors identified limitations, privacy/security threats, bias risks, and misinformation potential, with divided opinion on regulation.",
+      "sub_rq_ids": [
+        "rq4",
+        "rq5"
+      ],
+      "limitations": "Opinion-based; no empirical data; broad business focus rather than graduate research; high citation may reflect importance but not methodological rigor"
+    },
+    {
+      "paper_id": "10.1080/10494820.2023.2253861",
+      "relevance": 2,
+      "reliability": 3,
+      "method": "qualitative study with survey and focus groups, n=88 school teachers and leaders",
+      "sample": "88 school teachers and leaders of different backgrounds",
+      "finding": "Thematic analysis identified effects of GenAI on four domains (learning, teaching, assessment, administration) with recommendations for practices (addressing know-it-all attitudes, new prerequisite knowledge, interdisciplinary teaching) and policy implications (new assessment, AI education, professional standards).",
+      "sub_rq_ids": [
+        "rq4"
+      ],
+      "limitations": "School education focus, not graduate research; teachers and leaders, not students; no direct outcome measures; limited applicability to graduate research context"
+    },
+    {
+      "paper_id": "10.1109/access.2023.3300381",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "literature review with cybersecurity focus and demonstration of attack vectors",
+      "sample": "Not specified; demonstrates ChatGPT vulnerabilities including jailbreaks, prompt injection",
+      "finding": "GenAI models pose cybersecurity and privacy risks through vulnerabilities that can be exploited for malicious purposes including social engineering attacks, phishing, and data exfiltration.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "Cybersecurity domain, not research productivity; demonstrates offensive uses of GenAI; limited relevance to graduate research workflows"
+    },
+    {
+      "paper_id": "10.15678/eber.2023.110201",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "narrative and critical literature review with conceptual framework development",
+      "sample": "Academic literature, professional press, and Internet portals (unspecified quantity)",
+      "finding": "Identified seven main threat clusters associated with generative AI (ChatGPT) in business and management contexts, including ethical, reliability, and misinformation concerns.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "Narrative review without systematic method; business/management focus, not research; no empirical data; does not address graduate research context"
+    },
+    {
+      "paper_id": "10.37074/jalt.2023.6.1.29",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "perspective-type study (literature-based conceptual analysis)",
+      "sample": "Literature review; no primary data collection",
+      "finding": "Identified five benefits (adaptive learning, personalized feedback, research support, administrative automation, innovative assessments) and five challenges (academic integrity, reliability, skill assessment gaps, learning outcome limitations, bias/misinformation) for ChatGPT in higher education.",
+      "sub_rq_ids": [
+        "rq4",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Perspective/commentary type; no empirical data; proposes rather than tests recommendations; general higher education focus without graduate-specific evidence"
+    },
+    {
+      "paper_id": "10.1016/j.jrt.2023.100060",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "literature review (current arguments overview)",
+      "sample": "Existing academic discourse on ChatGPT and academic integrity",
+      "finding": "GenAI systems like ChatGPT have potential to revolutionize academia but risk undermining academic integrity; mitigation requires institutional and multi-stakeholder efforts.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "Overview of arguments rather than original empirical study; does not provide specific evidence on mechanisms, moderators, or best practices for graduate research"
+    },
+    {
+      "paper_id": "10.1016/j.caeai.2024.100348",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "Multi-site policy analysis of 40 universities across six global regions using Diffusion of Innovations Theory",
+      "sample": "40 universities from six global regions",
+      "finding": "Universities are proactively integrating GAI by emphasizing academic integrity, enhancing teaching and learning, and promoting equity through ethical guidelines, authentic assessments, and faculty/student training programs, though comprehensive policy frameworks remain incomplete.",
+      "sub_rq_ids": [
+        "rq4",
+        "rq6"
+      ],
+      "limitations": "Focus on institutional policies rather than empirical outcomes; gaps in data protection coverage noted."
+    },
+    {
+      "paper_id": "10.1186/s40359-024-01979-0",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "Mixed-method study with qualitative interviews and validated quantitative scale",
+      "sample": "120 undergraduate students and faculty",
+      "finding": "AI-integrated educational applications impose cognitive load and may restrict student creativity while affecting academic emotions; study reports perspectives from both students and teachers on AI integration.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Small sample size (120); no specific reporting of findings on creativity and emotions in abstract; abstract truncated."
+    },
+    {
+      "paper_id": "10.3390/info16040296",
+      "relevance": 5,
+      "reliability": 5,
+      "method": "Systematic literature review of 41 studies from January 2021 to December 2024",
+      "sample": "41 peer-reviewed studies meeting inclusion criteria",
+      "finding": "GenAI enhances educational engagement and efficiency but poses significant risks of academic dishonesty; robust detection tools and enhanced digital literacy are needed to balance benefits and risks.",
+      "sub_rq_ids": [
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Limited diversity of databases used; bias risk assessment conducted; abstract truncated."
+    },
+    {
+      "paper_id": "10.1186/s41239-025-00507-3",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "Mixed-methods analysis combining topic modeling, sentiment analysis, and qualitative thematic analysis of institutional guidelines",
+      "sample": "Top 50 U.S. universities",
+      "finding": "94% of universities emphasize faculty guidelines for course-specific GenAI policies; institutions address academic integrity, privacy, security, and ethical considerations, with more positive attitudes toward GenAI in student-targeted versus faculty guidelines.",
+      "sub_rq_ids": [
+        "rq4",
+        "rq6"
+      ],
+      "limitations": "Limited to top 50 U.S. universities only; does not assess actual implementation or outcomes."
+    },
+    {
+      "paper_id": "10.3390/app13095783",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "Mixed narrative and experimental analysis (coding experiments with ChatGPT)",
+      "sample": "Not specified; includes diverse coding experiments",
+      "finding": "ChatGPT offers opportunities for personalized feedback, accessibility, and learning enhancement but poses threats including cheating potential, diminished critical thinking, and challenges in evaluating AI-generated content; effectiveness varies by discipline.",
+      "sub_rq_ids": [
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Abstract truncated; no clear sample size or empirical study design specified; largely narrative review with some experimental examples."
+    },
+    {
+      "paper_id": "10.37074/jalt.2023.6.1.17",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "Content analysis of news articles (N=100)",
+      "sample": "100 news articles from Australia, New Zealand, UK, and USA",
+      "finding": "Mixed public discussion and university responses to ChatGPT, with dominant focus on academic integrity concerns; limited public discussion of ChatGPT's potential to enhance learning despite opportunities for innovative assessment design.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "News media analysis rather than empirical research; reflects public discourse not measured outcomes; geographic limited to four English-speaking countries."
+    },
+    {
+      "paper_id": "10.1186/s41239-024-00453-6",
+      "relevance": 5,
+      "reliability": 4,
+      "method": "Cross-cultural online survey across 1217 participants in 76 countries",
+      "sample": "1217 participants across 76 countries, diverse genders, disciplines, and cultural orientations",
+      "finding": "High awareness and familiarity with GenAI among respondents globally; significant experience and intention to continue use primarily for information retrieval and text paraphrasing; emphasis on importance of GenAI integration in higher education.",
+      "sub_rq_ids": [
+        "rq4",
+        "rq5"
+      ],
+      "limitations": "Self-reported usage and intentions; abstract truncated; lacks detail on specific concerns identified."
+    },
+    {
+      "paper_id": "10.1007/s10755-023-09686-1",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "Cross-sectional survey using PLS-SEM structural equation modeling",
+      "sample": "503 Polish state university students",
+      "finding": "Habit (0.339) most strongly predicts ChatGPT behavioral intention, followed by performance expectancy (0.260) and hedonic motivation (0.187); model explains 72.8% of behavioral intention and 54.7% of use behavior variance.",
+      "sub_rq_ids": [
+        "rq4"
+      ],
+      "limitations": "Single country (Poland) and university type; limited sample diversity; early-stage research noted by authors."
+    },
+    {
+      "paper_id": "10.2196/59479",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "Literature review and synthesis of LLM applications in mental health",
+      "sample": "Not specified; extant literature review",
+      "finding": "LLMs show promise for mental health education, assessment, and intervention but pose risks including privacy violations, bias, and ethical concerns requiring responsible development and deployment with stakeholder involvement.",
+      "sub_rq_ids": [],
+      "limitations": "Domain-specific to mental health care, not research; off-topic for graduate research productivity and quality."
+    },
+    {
+      "paper_id": "10.3390/bioengineering12060631",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "Systematic narrative review of healthcare LLM applications",
+      "sample": "Not specified; review of healthcare implementations",
+      "finding": "LLMs demonstrate applications across clinical decision support, medical education, diagnostics, and patient care; critical challenges include privacy, ethical deployment, factual accuracy, model bias, and interpretability.",
+      "sub_rq_ids": [],
+      "limitations": "Domain-specific to healthcare/medical applications, not research; not relevant to graduate student research productivity or quality."
+    },
+    {
+      "paper_id": "10.2196/47049",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "experimental evaluation with expert review (23 reviewers) and thematic analysis",
+      "sample": "4 AI-generated articles, 50 abstracts",
+      "finding": "ChatGPT-generated research articles and abstracts were evaluated for quality across research framework, data analysis, and literature review components; concerns were identified regarding ownership and integrity of AI-generated research text.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5"
+      ],
+      "limitations": "Small sample of generated articles (n=4); limited scope to article generation only; reviewer expertise not detailed"
+    },
+    {
+      "paper_id": "10.22521/edupij.2023.123.2",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "systematic review",
+      "sample": "not specified in abstract",
+      "finding": "Systematic review identified both positive and negative aspects of ChatGPT integration into education, with discussion of potential impacts on educational processes.",
+      "sub_rq_ids": [
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Abstract does not specify number of studies reviewed or concrete findings; lack of quantitative data"
+    },
+    {
+      "paper_id": "10.1007/s12599-023-00834-7",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "perspective/opinion piece",
+      "sample": "",
+      "finding": "Discusses the general capability of generative AI to produce content comparable to human work across creative domains.",
+      "sub_rq_ids": [],
+      "limitations": "Opinion piece rather than empirical research; does not address graduate student research specifically; no methodology or evidence presented in abstract"
+    },
+    {
+      "paper_id": "10.1038/s41746-024-01258-7",
+      "relevance": 2,
+      "reliability": 4,
+      "method": "literature review of 142 studies with framework development",
+      "sample": "142 studies on human evaluation of LLMs in healthcare",
+      "finding": "Literature review identified gaps in reliability, generalizability, and applicability of current human evaluation practices for LLMs in healthcare; proposes QUEST framework covering planning, implementation, and scoring phases with five evaluation principles.",
+      "sub_rq_ids": [
+        "rq6"
+      ],
+      "limitations": "Focused on healthcare domain; human evaluation framework rather than graduate student research outcomes; limited applicability to educational research context"
+    },
+    {
+      "paper_id": "10.1007/s10462-024-10888-y",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "comprehensive survey of LLM literature",
+      "sample": "not specified",
+      "finding": "Survey covers LLM architectures, applications across diverse fields including text generation, vision-language models, personalized learning, and code generation; discusses limitations and future research directions.",
+      "sub_rq_ids": [],
+      "limitations": "Technical survey not focused on graduate student research; no empirical data on research productivity or quality outcomes"
+    },
+    {
+      "paper_id": "10.48550/arxiv.2307.06435",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "literature overview/survey",
+      "sample": "",
+      "finding": "Provides comprehensive overview of LLM literature covering architectural innovations, training strategies, fine-tuning, multi-modal models, and benchmarking across recent developments.",
+      "sub_rq_ids": [],
+      "limitations": "Preprint; technical survey not focused on graduate student research; no empirical evaluation of research outcomes"
+    },
+    {
+      "paper_id": "10.1016/s2589-7500(24)00061-x",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "viewpoint/narrative review",
+      "sample": "",
+      "finding": "Identifies ethical and regulatory challenges of LLMs in medicine including data privacy, intellectual property contamination, and concerns from users, developers, and regulators; calls for comprehensive frameworks for responsible integration.",
+      "sub_rq_ids": [
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Healthcare-focused viewpoint rather than empirical research; no specific data on graduate student research impacts; generic discussion without field-specific evidence"
+    },
+    {
+      "paper_id": "10.48550/arxiv.2307.03109",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "comprehensive survey and systematic review of evaluation methods",
+      "sample": "not specified in abstract",
+      "finding": "Survey reviews evaluation methods for LLMs across task level and societal level, covering natural language processing, reasoning, medical usage, ethics, education, and other areas; identifies success and failure cases and future challenges.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq6"
+      ],
+      "limitations": "Preprint; evaluation-focused rather than productivity/quality outcomes for graduate students; broad scope across domains limits graduate education specificity"
+    },
+    {
+      "paper_id": "10.48550/arxiv.2307.10169",
+      "relevance": 2,
+      "reliability": 2,
+      "method": "position paper identifying open problems and applications",
+      "sample": "",
+      "finding": "Establishes systematic overview of open challenges and application successes for large language models to help researchers comprehend current state of the field.",
+      "sub_rq_ids": [
+        "rq6"
+      ],
+      "limitations": "Preprint; position/perspective paper without empirical evidence; not specifically about graduate student research; lacks concrete findings or methodology"
+    },
+    {
+      "paper_id": "10.1016/j.socscimed.2017.12.005",
+      "relevance": 0,
+      "reliability": 4,
+      "method": "Theoretical/methodological critique",
+      "sample": "",
+      "finding": "This paper critiques RCT methodology and discusses limitations of randomization in establishing treatment effects; it does not address generative AI or graduate student research.",
+      "sub_rq_ids": [],
+      "limitations": "Not relevant to generative AI or graduate research"
+    },
+    {
+      "paper_id": "10.36348/gajhss.2023.v05i02.001",
+      "relevance": 3,
+      "reliability": 2,
+      "method": "Literature review",
+      "sample": "",
+      "finding": "ChatGPT can provide rapid responses and automatic text production for research, but lacks proper citation and reference generation, presenting challenges for research writing.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5"
+      ],
+      "limitations": "Literature review without systematic method; no empirical evaluation; limited depth on graduate student contexts"
+    },
+    {
+      "paper_id": "10.1145/3747588",
+      "relevance": 2,
+      "reliability": 3,
+      "method": "Systematic literature review of 328 studies",
+      "sample": "LLM code generation studies",
+      "finding": "LLMs show significant advancements in code generation tasks for software development, with coverage of performance evaluation, ethical implications, and real-world applications including GitHub Copilot.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq5"
+      ],
+      "limitations": "Focuses on code generation rather than general graduate research; ethical implications discussed but not in graduate education context"
+    },
+    {
+      "paper_id": "10.1145/3652154",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "Mixed-methods (survey n=100, validated with SEM n=183 software engineers)",
+      "sample": "183 software engineers",
+      "finding": "AI tool adoption is primarily driven by workflow compatibility rather than perceived usefulness or social factors; social factors and personal innovativeness have less impact than conventional technology theories predict.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Software engineers, not graduate students; focuses on adoption mechanics rather than productivity/quality outcomes"
+    },
+    {
+      "paper_id": "10.1145/3685680",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "Competency framework development",
+      "sample": "",
+      "finding": "Identifies 12 essential generative AI literacy competencies ranging from foundational AI knowledge to prompt engineering and ethical considerations; proposes integration into educational programs.",
+      "sub_rq_ids": [
+        "rq4",
+        "rq6"
+      ],
+      "limitations": "Framework-based; no empirical validation; does not measure impact on productivity or quality"
+    },
+    {
+      "paper_id": "10.1016/s2589-7500(23)00201-7",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "Viewpoint/commentary",
+      "sample": "",
+      "finding": "Discusses transformative applications of LLMs in ophthalmology clinical workflows, highlighting opportunities in digital care and workflow efficiency alongside ethical challenges in data privacy and implementation.",
+      "sub_rq_ids": [],
+      "limitations": "Medical viewpoint; not relevant to graduate research; no empirical evidence"
+    },
+    {
+      "paper_id": "10.1613/jair.1.12647",
+      "relevance": 2,
+      "reliability": 4,
+      "method": "Framework analysis mapping tasks to cognitive abilities to AI benchmarks",
+      "sample": "Occupational database with 59 generic tasks and 328 AI benchmarks",
+      "finding": "Develops framework showing AI impact varies by cognitive ability and occupation; some high-automation-potential occupations previously unaffected by automation now face higher AI exposure.",
+      "sub_rq_ids": [
+        "rq4"
+      ],
+      "limitations": "Occupational analysis, not graduate-student focused; abstract impact rather than empirical measurement of productivity change"
+    },
+    {
+      "paper_id": "10.1007/s42438-023-00440-6",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "Survey of UK academics n=284",
+      "sample": "284 UK academics",
+      "finding": "Survey reveals academics see generative AI as potential relief from intensive workload and performance pressures; however, digitalization of academia may perpetuate overwork despite AI adoption.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq5"
+      ],
+      "limitations": "Academics, not specifically graduate students; limited quantitative productivity measures; sample restricted to UK"
+    },
+    {
+      "paper_id": "10.1016/j.ijpe.2024.109283",
+      "relevance": 1,
+      "reliability": 4,
+      "method": "Structural equation modeling (SEM) based on survey of 200+ professionals",
+      "sample": "200+ automotive industry professionals in China",
+      "finding": "Smart product platforming powered by AI drives personalized design and environmentally friendly manufacturing; machine learning and flexibility moderate outcomes in circular economy applications.",
+      "sub_rq_ids": [],
+      "limitations": "Industry manufacturing context; not relevant to graduate research; focuses on product design rather than research productivity"
+    },
+    {
+      "paper_id": "10.30935/jdet/14027",
+      "relevance": 4,
+      "reliability": 2,
+      "method": "Literature review (document analysis of articles from 2022+)",
+      "sample": "",
+      "finding": "ChatGPT offers opportunities for higher education including research design support, academic writing support, and administrative productivity; challenges include academic integrity concerns, privacy, over-reliance, and information accuracy.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq2",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Literature review without systematic methodology; no primary empirical data; general higher education focus rather than graduate students specifically"
+    },
+    {
+      "paper_id": "10.48550/arxiv.2301.10226",
+      "relevance": 1,
+      "reliability": 4,
+      "method": "Technical framework and empirical testing with OPT model family",
+      "sample": "Multi-billion parameter language model (OPT family)",
+      "finding": "Proposes a watermarking framework for detecting AI-generated text with negligible impact on text quality, using a statistical test for detection.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "Focuses on technical detection methods rather than graduate student research outcomes; does not address research productivity or quality in academic contexts."
+    },
+    {
+      "paper_id": "10.1007/s10755-024-09774-w",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "Cross-sectional survey n=1058 (982 students, 76 faculty)",
+      "sample": "982 students and 76 faculty at a large public U.S. university; disciplinary and gender diversity represented",
+      "finding": "Students and faculty showed similar attitudes toward GenAI in higher education except for ease of use and technology interest; regular use was low in both groups; significant gender and disciplinary differences emerged, with male STEM students differing notably from female non-STEM students.",
+      "sub_rq_ids": [
+        "rq1",
+        "rq4",
+        "rq5"
+      ],
+      "limitations": "Single institution; Fall 2023 survey; abstract does not provide specific quantitative findings on research productivity or quality outcomes; focuses on perceptions rather than direct measurement of research impact."
+    },
+    {
+      "paper_id": "10.1007/s00146-025-02422-7",
+      "relevance": 2,
+      "reliability": 4,
+      "method": "systematic review of 35 peer-reviewed studies",
+      "sample": "Studies from SCOPUS, ScienceDirect, PubMed, Google Scholar (2015-2025) across cognitive psychology, human factors engineering, HCI, neuroscience",
+      "finding": "Automation bias—over-reliance on AI recommendations—manifests in human-AI collaboration across high-stakes domains, driven by over-trust and attentional constraints, though mechanisms are more nuanced than previously understood.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq5"
+      ],
+      "limitations": "Focuses on automation bias in high-stakes domains (healthcare, law, public administration) rather than graduate research specifically; limited to review methodology."
+    },
+    {
+      "paper_id": "10.3390/fi15100336",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "comparative analysis with expert human evaluation of AI-generated content",
+      "sample": "Six AI chatbots (ChatGPT-4, ChatGPT-3.5, Bing, Bard, Claude 2, Aria) evaluated by human experts",
+      "finding": "ChatGPT-4 demonstrated proficiency in recombining existing knowledge but all AI chatbots failed to generate original scientific content; quantitative accuracy varied significantly across models, with ChatGPT-4 scoring best but still with errors.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5"
+      ],
+      "limitations": "No graduate student sample; focuses on humanities and archaeology; limited to abstract evaluation rather than full research production; no sample size for evaluations stated."
+    },
+    {
+      "paper_id": "10.3390/s24206585",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "scoping review of 704 studies using AI-enhanced multi-method data-driven techniques",
+      "sample": "704 peer-reviewed articles on AI applications in stroke rehabilitation",
+      "finding": "AI applications in stroke rehabilitation progressed through themes of impairment assessment, assisted intervention (robotic and BCI techniques), prediction, and imaging, with time-linked patterns in technology adoption.",
+      "sub_rq_ids": [],
+      "limitations": "Focuses on medical rehabilitation, not graduate research or education; not relevant to research productivity or quality in academic contexts."
+    },
+    {
+      "paper_id": "10.1371/journal.pone.0323349",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "structural equation modeling analysis of survey data",
+      "sample": "500 secondary education students (grades 7-12)",
+      "finding": "Generative AI applications significantly enhanced innovation capability (β=0.862) and digital literacy (β=0.835) with bidirectional relationships between these outcomes.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "Secondary education sample, not graduate students; measures innovation skills and digital literacy rather than research productivity or quality directly; cross-sectional design."
+    },
+    {
+      "paper_id": "10.3389/frai.2023.1270749",
+      "relevance": 2,
+      "reliability": 3,
+      "method": "bibliometric and scientometric analysis",
+      "sample": "533 articles on ChatGPT from Scopus database (November 2022-June 2023)",
+      "finding": "Early ChatGPT research revealed prominent publication venues, influential authors, collaborative networks, and application domains including customer support and content generation.",
+      "sub_rq_ids": [],
+      "limitations": "Descriptive bibliometric analysis of research landscape, not empirical evidence on AI impact; no direct measurement of productivity or quality outcomes; does not address graduate student research specifically."
+    },
+    {
+      "paper_id": "10.1016/j.caeo.2025.100284",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "systematic literature review of 129 peer-reviewed journal articles",
+      "sample": "129 articles (2014-2023) on AI-assisted feedback in education",
+      "finding": "AI-assisted feedback can effectively enhance targeted learning outcomes by flexibly supporting multiple feedback foci (task, process, self-regulation, self) and complexity levels, with research accelerating after 2018 due to large language models.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq3",
+        "rq6"
+      ],
+      "limitations": "Broad educational focus, not specific to graduate research; concentrates on feedback mechanisms rather than overall research productivity; primarily recent studies (post-2018)."
+    },
+    {
+      "paper_id": "10.3390/su15010196",
+      "relevance": 2,
+      "reliability": 3,
+      "method": "platform design evaluation with beta test and AI-human scoring comparison",
+      "sample": "24 students for beta test; 36 students for AI-human scoring comparison",
+      "finding": "Students were highly receptive to AI-assisted presentation platform, but noticeable differences existed between AI and human scoring abilities, revealing limitations of both.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "Focuses on presentation skills training, not research productivity or quality; small sample size; undergraduate students, not graduate students; limited to single application."
+    },
+    {
+      "paper_id": "10.1007/s40593-024-00413-1",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "mixed-methods study with retrospective think-aloud interviews",
+      "sample": "27 undergraduate students (M age=20.37) completing source-based writing tasks",
+      "finding": "ChatGPT use in source-based writing tasks showed students employed diverse strategies; quality of written products was related to how students used the tool, though exact outcomes not fully detailed in abstract.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq3"
+      ],
+      "limitations": "Undergraduate sample, not graduate students; small sample size (n=27); limited detail on quality outcomes in abstract; source-based writing is narrow task type."
+    },
+    {
+      "paper_id": "10.31234/osf.io/b58ex",
+      "relevance": 3,
+      "reliability": 2,
+      "method": "practical guideline and policy commentary",
+      "sample": "Not applicable; guidance document with example",
+      "finding": "The guideline recommends transparency practices when using ChatGPT in scholarly writing to safeguard credibility and addresses journal/institutional policy needs around LLM usage in research workflows.",
+      "sub_rq_ids": [
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Preprint format; not empirical research; focuses on transparency recommendations rather than measuring actual productivity or quality effects; no data presented."
+    },
+    {
+      "paper_id": "10.1080/00987913.2025.2581429",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "qualitative policy analysis of 74 policy documents",
+      "sample": "74 policy documents from governmental authorities, higher education institutions, academic publishers, and publication manuals worldwide",
+      "finding": "GenAI policies in higher education emphasize ethical use, academic integrity, transparency, and accountability, with recurring themes identified across governmental (10 themes), HEI (14 themes), and institutional levels.",
+      "sub_rq_ids": [
+        "rq4",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "Policy analysis, not empirical study of actual graduate student use; descriptive rather than causal; unclear coverage of graduate research specifically; document analysis without implementation outcomes."
+    },
+    {
+      "paper_id": "10.20853/37-5-5941",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "qualitative study with interviews n=3",
+      "sample": "three established professors in South Africa",
+      "finding": "Professors view ChatGPT as a welcome technology and recommend teaching students how to engage with it rather than vilifying it; responsibility for integration rests with instructors.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5"
+      ],
+      "limitations": "very small sample of three professors only; single country; views may not represent broader faculty perspectives"
+    },
+    {
+      "paper_id": "10.1109/access.2019.2925708",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "course design with teaching experiment",
+      "sample": "graduate students in wireless communications",
+      "finding": "Course design for introducing research methodology to graduate students through simulations and analytical expressions.",
+      "sub_rq_ids": [],
+      "limitations": "published before ChatGPT; does not address generative AI tools; focuses on general research methodology pedagogy"
+    },
+    {
+      "paper_id": "10.3390/educsci14121302",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "cross-sectional survey with structural equation modelling n=223",
+      "sample": "223 higher education students",
+      "finding": "Ease of use of GenAI significantly enhances self-regulation, which positively impacts critical thinking and problem-solving; perceived usefulness and learning value did not significantly influence these skills through self-regulation.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "cross-sectional design limits causal inference; undergraduate focus rather than exclusively graduate students; self-reported perceptions"
+    },
+    {
+      "paper_id": "10.1093/jamia/ocad252",
+      "relevance": 4,
+      "reliability": 3,
+      "method": "narrative review of published literature",
+      "sample": "not applicable",
+      "finding": "LLMs offer potential advantages including access to information and personalized learning but pose challenges including academic misconduct risk, overreliance on AI, dilution of critical thinking, accuracy concerns, and implications for teaching staff.",
+      "sub_rq_ids": [
+        "rq2",
+        "rq5",
+        "rq6"
+      ],
+      "limitations": "narrative review without systematic methodology; medical education focus rather than research; does not measure actual outcomes"
+    },
+    {
+      "paper_id": "10.3390/electronics12040783",
+      "relevance": 0,
+      "reliability": 2,
+      "method": "literature review of AI/ML techniques",
+      "sample": "not applicable",
+      "finding": "Review of AI-based machine learning and deep learning techniques for diagnosing Parkinson's disease.",
+      "sub_rq_ids": [],
+      "limitations": "entirely unrelated to graduate research productivity and quality; focuses on medical diagnosis applications"
+    },
+    {
+      "paper_id": "10.1145/3735633",
+      "relevance": 1,
+      "reliability": 3,
+      "method": "comprehensive survey of research literature",
+      "sample": "not applicable",
+      "finding": "Overview of continual learning in large language models, covering vertical and horizontal continuity in LLM adaptation.",
+      "sub_rq_ids": [],
+      "limitations": "technical LLM survey focused on catastrophic forgetting and model adaptation; not focused on educational or research contexts"
+    },
+    {
+      "paper_id": "10.1073/pnas.2518075122",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "experimental design with autonomous synthetic respondent testing n=6000 trials",
+      "sample": "6000 trials of standard attention checks; synthetic respondent evaluation",
+      "finding": "Large language models can generate survey data with coherence and plausibility of human responses, evading data quality checks with 99.8% pass rate, posing threats to survey research integrity.",
+      "sub_rq_ids": [
+        "rq5"
+      ],
+      "limitations": "synthetic data rather than real graduate student research; focuses on survey research specifically; does not address broader research quality impacts"
+    },
+    {
+      "paper_id": "10.3390/info14070409",
+      "relevance": 3,
+      "reliability": 3,
+      "method": "evaluation of ChatGPT responses to chemistry problems n=30",
+      "sample": "30 chemistry problems in Introduction to Material Science domain",
+      "finding": "ChatGPT demonstrated significant conceptual knowledge difficulties in chemistry problem-solving, particularly in representations and depth categories, hindering knowledge transfer.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "single domain (chemistry); small problem set; does not measure graduate student use or outcomes; focuses on tool limitations rather than student impacts"
+    },
+    {
+      "paper_id": "10.1186/s41239-025-00535-z",
+      "relevance": 3,
+      "reliability": 4,
+      "method": "cross-sectional survey with extended technology acceptance model n=943",
+      "sample": "943 undergraduate students from 140 universities in Turkey",
+      "finding": "Attitude toward use, perceived usefulness, self-efficacy, and compatibility predicted behavioral intention to use GenAI; subjective norms had limited influence on adoption intentions.",
+      "sub_rq_ids": [
+        "rq4"
+      ],
+      "limitations": "undergraduate students rather than graduate students; single country (Turkey); cross-sectional design; self-reported behavioral intentions not actual use"
+    },
+    {
+      "paper_id": "10.3390/su151712731",
+      "relevance": 0,
+      "reliability": 2,
+      "method": "literature review of practical AI applications n≈100 manuscripts",
+      "sample": "approximately 100 publicly available research manuscripts and reports",
+      "finding": "Review of AI applications in environmental, social, and governance challenges, including challenges such as fake news generation and electricity consumption.",
+      "sub_rq_ids": [],
+      "limitations": "focused on ESG/sustainability applications; not related to graduate research productivity or quality; does not address generative AI specifically"
+    },
+    {
+      "paper_id": "10.1007/s12528-025-09444-6",
+      "relevance": 4,
+      "reliability": 4,
+      "method": "mixed-methods study with think-aloud protocols, screen-recordings, and chat histories (n=36), analyzed with epistemic network analysis",
+      "sample": "36 Chinese graduate students",
+      "finding": "Graduate students with high AI literacy exhibited a collaborative approach to generative AI interaction, actively engaging with the system, while those with lower literacy showed more passive patterns; different interaction patterns related to differences in academic writing task performance.",
+      "sub_rq_ids": [
+        "rq3",
+        "rq4"
+      ],
+      "limitations": "Single-site study with Chinese students only; unclear how performance differences translate to quality outcomes."
+    },
+    {
+      "paper_id": "10.1111/bjet.13587",
+      "relevance": 2,
+      "reliability": 4,
+      "method": "between-group experimental design with eye-tracking and system logs, comparing AI-generated vs. human instructor feedback",
+      "sample": "children (sample size not specified in abstract)",
+      "finding": "Generative AI feedback resulted in lower cognitive load and different visual information processing strategies compared to human feedback, though task-based performance did not differ significantly between conditions.",
+      "sub_rq_ids": [
+        "rq3"
+      ],
+      "limitations": "Study focuses on elementary mathematics learning in children, not graduate research; unclear sample size; generalizability to graduate research context questionable."
+    },
+    {
+      "paper_id": "10.1016/j.patter.2024.101098",
+      "relevance": 0,
+      "reliability": 2,
+      "method": "literature review and research framework synthesis",
+      "sample": "",
+      "finding": "This is a technical review paper exploring the integration of large language models with federated learning across healthcare, finance, and other domains, focusing on system architecture and algorithm development.",
+      "sub_rq_ids": [],
+      "limitations": "This is a technical systems review paper with no empirical data on student outcomes; entirely off-topic for questions about graduate student research productivity and quality."
+    },
+    {
+      "paper_id": "10.3991/ijet.v18i20.42979",
+      "relevance": 1,
+      "reliability": 2,
+      "method": "position paper/commentary",
+      "sample": "",
+      "finding": "The paper discusses how large language models like ChatGPT could potentially be utilized in mathematics teaching in higher education and may influence curriculum and assessment approaches, comparing LLMs to computer algebra systems.",
+      "sub_rq_ids": [],
+      "limitations": "Opinion/commentary piece without empirical data; focuses on teaching mathematics rather than graduate student research productivity or quality; no evidence presented."
+    }
+  ]
+}

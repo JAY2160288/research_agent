@@ -1,0 +1,36 @@
+{
+  "status": "ok",
+  "elapsed_sec": 424.5,
+  "llm_calls": 19,
+  "input_tokens": 142252,
+  "output_tokens": 37733,
+  "cost_usd": 0.6618,
+  "checks": {
+    "submitted": true,
+    "citations_total": 73,
+    "citations_verified": 73,
+    "citation_verified_rate": 1.0,
+    "claims_total": 12,
+    "claims_with_source": 12,
+    "sub_rqs": 6,
+    "sub_rqs_covered": 6,
+    "gaps": 5,
+    "gaps_with_2_evidence": 5,
+    "conflicts": 1,
+    "conflicts_with_hypothesis": 1,
+    "unknown_ids": []
+  },
+  "notes": [
+    "search: arXiv unavailable (disabled after 2 failures, 10 queries skipped); OpenAlex only",
+    "search: arXiv unavailable (disabled after 2 failures, 0 queries skipped); OpenAlex only",
+    "critic: major issue(s) persist after re-search, recorded as limitation: rq4: rq4 passes on count but is effectively unanswered: RAP (2402.03610, no numbers), TRAD (2403.06221, in-context demonstrations, no results), CAPEAM (2308.07241, e"
+  ],
+  "papers_seen": 312,
+  "critic_rounds": 2,
+  "replans": 1,
+  "critic_mode": "full",
+  "max_replans": 2,
+  "model": "claude-sonnet-5-5",
+  "plan_from": null,
+  "final_critic_passed": true
+}

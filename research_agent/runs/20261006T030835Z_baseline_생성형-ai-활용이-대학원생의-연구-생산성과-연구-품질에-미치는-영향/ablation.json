@@ -1,0 +1,9 @@
+{
+  "topic_id": "T1",
+  "lang": "ko",
+  "condition": "A",
+  "model": "claude-sonnet-5-5",
+  "max_replans": 2,
+  "plan_from": null,
+  "topic": "생성형 AI 활용이 대학원생의 연구 생산성과 연구 품질에 미치는 영향"
+}
