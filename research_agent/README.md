@@ -12,7 +12,7 @@
 | 필요한 키 | **Anthropic 키 하나.** 문헌 검색은 키 없는 공개 학술 API(OpenAlex·arXiv·Crossref)만 사용 |
 | 1회 실행 | ≈ $0.7 · 6~8분 (`claude-sonnet-5-5`, 상한 $1 · 10분) |
 | 품질 보장 | 인용 실존 검증 100%, 모든 주장에 출처, Gap 마다 근거 ≥ 2편 — LLM 이 아니라 **코드(스키마·결정적 검사·Critic)가** 보장 |
-| 검증 | 주제 5개 × 조건 4개 ablation 20회 완주, 같은 주제 독립 반복 6회, 새 환경 클린룸 2회 — 전부 위 지표 100% ([docs/design.md](docs/design.md)) |
+| 검증 | 주제 5개 × 조건 4개 ablation 20회 완주, 같은 주제 독립 반복 8회, 새 환경 클린룸 2회 — 전부 위 지표 100% ([docs/design.md](docs/design.md)) |
 
 ---
 
@@ -41,6 +41,7 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 
 **바로 볼 수 있는 결과물**: 제출 zip 의 `runs/` 에 실행 결과가 들어 있습니다. 폴더 안에 `cleanroom.json` 이 있는 2개가 새 clone + 새 키로 README 명령을 그대로 돌린 클린룸 실행이고,
 `ablation.json` 이 있는 20개가 주제 5개 × 조건 4개 ablation 실행입니다. 전부 `report.md`(한국어본은 번역한 실행만)·`brief.json`·`events.jsonl`·`cost.json` 을 포함합니다.
+`brief.json` 이 없는 폴더(10-04 날짜 19개)는 개발 중 상한 초과·중단으로 완주하지 못한 실행의 로그로, `docs/design.md` §1.4 실패 사례 표의 원본 기록이라 그대로 두었습니다.
 
 ### 결과 폴더 구성
 
@@ -124,13 +125,13 @@ research_agent/
 │   └── runlog.py             runs/ 에 events.jsonl · cost.json 기록
 ├── eval/                     topics.yaml (테스트 주제 5개) · rubric.md (judge 루브릭) · gold.yaml (정답 서베이)
 ├── scripts/                  run_ablation · summarize_runs · compare_repeats · gold_recall · smoke_tools · smoke_llm
-├── tests/                    단위 테스트 97개 (네트워크·API 키 불필요 — HTTP·LLM 모킹)
+├── tests/                    단위 테스트 98개 (네트워크·API 키 불필요 — HTTP·LLM 모킹)
 ├── docs/design.md            설계 문서 — 아키텍처(역할 카드·토폴로지 선택·실패 대응·비용 모델), 설계 의도, ablation·반복·클린룸 결과, 한계
 ├── docs/quality.md           "제품 수준" 기준의 개선 항목 17개 (측정된 결함 → 설계 → 확인, 제출 전/후 구분)
 └── runs/                     실행 결과 (제출 zip 에 포함)
 ```
 
-설계 문서는 상위 폴더에 더 있습니다: [`../goals.md`](../goals.md) (목표 O1~O7·성공 기준·non-goal), [`../plan.md`](../plan.md) (ADR-1~11, 작업 분해, 변경 로그).
+설계 문서는 상위 폴더에 더 있습니다: [`../goals.md`](../goals.md) (목표 O1~O7·성공 기준·non-goal), [`../plan.md`](../plan.md) (ADR-1~14, 작업 분해, 변경 로그).
 
 ---
 
