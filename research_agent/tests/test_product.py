@@ -177,3 +177,36 @@ def test_progress_lines_from_events(tmp_path):
     text = "\n".join(lines)
     assert "[r1] 문헌 탐색" in text and "후보 21편" in text and "Critic r1: 미달" in text and "rq2 +2개" in text
     assert "$0.01" in text and "LLM 1회" in text
+
+
+def test_select_candidates_recency_slots_and_cites_per_year():
+    """ADR-16: 피인용 절대값이면 2025년 논문(14~15회)은 12위 밖 — 연간 피인용 + 최근 2년 슬롯 보장으로 들어온다.
+    2026-10-30 실행의 rq1 축소판: 오래된 고피인용 12편 + 최근 저피인용 4편."""
+    from research_agent.nodes import evaluate
+    from research_agent.schemas import Paper, ResearchPlan, RunState, SubRQ, TopicFrame, Variables
+    tf = TopicFrame(original_topic="t", topic_en="t", domain="d", concepts=["a", "b", "c"],
+                    variables=Variables(independent=["x"], dependent=["y"], population="p"),
+                    synonyms_en=["s1", "s2", "s3"], research_question="q?")
+    plan = ResearchPlan(sub_rqs=[SubRQ(id=f"rq{i}", question=f"q{i}", rationale="r", queries=["q"], source_pref="openalex")
+                                 for i in (1, 2, 3)], search_strategy="s")   # 계획은 sub-RQ ≥ 3, 문헌은 rq1 에만
+    st = RunState(topic="t", topic_frame=tf, plan=plan)
+
+    def add(i, year, cites, abstract="abs"):
+        st.papers[f"10.1/p{i}"] = Paper(id=f"10.1/p{i}", title=f"P{i}", year=year, abstract=abstract, doi=f"10.1/p{i}",
+                                        source="openalex", verified=True, cited_by_count=cites, sub_rq_ids=["rq1"])
+    for i in range(12):
+        add(i, 2019, 300 - 10 * i)          # 2019년, 190~300회 → 연간 24~38
+    add(20, 2025, 15); add(21, 2025, 14); add(22, 2026, 6); add(23, 2025, 3)   # 최근 2년(2025·2026), 저피인용
+    add(24, 2025, 999, abstract=None)       # 초록 없는 최근 논문은 슬롯 대상 아님
+
+    old = {p.id for p in evaluate.select_candidates(st, 12, rank_by="cites", recent_slots=0)}
+    assert not ({"10.1/p20", "10.1/p21"} & old)                          # 제출본 방식: 2025년 논문 전부 탈락
+    new = {p.id for p in evaluate.select_candidates(st, 12)}
+    assert {"10.1/p20", "10.1/p21", "10.1/p22", "10.1/p23"} <= new       # 최근 4편 보장
+    assert len(new) == 12 and "10.1/p24" not in new                        # 상한 유지, 초록 없음은 제외
+    assert "10.1/p11" not in new and "10.1/p0" in new                      # 밀려난 건 2019년 하위 4편
+
+    # 이미 상위에 최근 논문이 충분하면 결과 불변: 최근 논문 피인용을 크게 하면 슬롯 보장 유무가 같은 집합
+    for i in (20, 21, 22, 23):
+        st.papers[f"10.1/p{i}"].cited_by_count = 500
+    assert {p.id for p in evaluate.select_candidates(st, 12)} == {p.id for p in evaluate.select_candidates(st, 12, recent_slots=0)}

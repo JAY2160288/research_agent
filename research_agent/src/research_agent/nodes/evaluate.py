@@ -1,6 +1,8 @@
 """④ Evaluate — 후보 문헌 → EvidenceTable (plan.md §3.2 넷째 행).
 
-- 후보 선별(LLM 없음): sub-RQ 마다 verified 문헌 중 초록 있음 → 피인용 → 최신 순으로 evaluate_per_subrq 편. 합집합을 평가.
+- 후보 선별(LLM 없음): sub-RQ 마다 verified 문헌 중 초록 있음 → **연간 피인용**(피인용 ÷ 경과 연수) → 최신 순으로 evaluate_per_subrq 편,
+  그중 evaluate_recent_slots 자리는 최근 evaluate_recent_years 년 논문에 보장한다 (ADR-16, 2026-10-30). 합집합을 평가.
+  피인용 절대값만 쓰면 2025년 논문은 14~15회로는 12위 안에 못 들어 주제에 가장 직접적인 최신 연구가 LLM 평가조차 못 받았다.
 - LLM 배치 평가: evaluate_batch 편씩 묶어 Evidence 를 채운다. 초록에 없는 내용은 쓰지 않도록 프롬프트에서 제한.
 - 결정적 검증(배치): paper_id 가 배치 안의 id 여야 하고 중복 없음, sub_rq_ids ⊆ 계획의 sub-RQ. 실패 시 1회 재호출.
 - 결정적 검증(전체): EvidenceTable.check — 미검증 문헌 참조 금지.
@@ -18,9 +20,20 @@ from ..schemas import Evidence, EvidenceTable, Paper, RunState
 from . import NodeContext, checked_call
 
 
+def _rank_key(p: Paper, ref_year: int, rank_by: str):
+    """(고정 → 초록 있음 → 점수 → 최신). 점수는 연간 피인용(기본) 또는 피인용 절대값(ablation 재현용).
+    경과 연수는 풀의 최신 연도 기준이라 실행 시점과 무관하게 결정적이다. 연도 없는 문헌은 경과 1년으로 본다."""
+    cites = p.cited_by_count or 0
+    age = max(1, ref_year - (p.year or ref_year) + 1)
+    score = cites / age if rank_by == "cites_per_year" else cites
+    return (not p.pinned, p.abstract is None, -score, -(p.year or 0))
+
+
 def select_candidates(state: RunState, per_subrq: int, exclude: set[str] | None = None,
-                      only_sub_rqs: set[str] | None = None) -> list[Paper]:
-    """sub-RQ 마다 (고정 → 초록 있음 → 피인용 → 최신) 순으로 per_subrq 편 + 고정 문헌 전부.
+                      only_sub_rqs: set[str] | None = None, *, recent_years: int = 2, recent_slots: int = 4,
+                      rank_by: str = "cites_per_year") -> list[Paper]:
+    """sub-RQ 마다 _rank_key 순으로 per_subrq 편 + 고정 문헌 전부. 그중 recent_slots 자리는 최근 recent_years 년
+    (풀의 최신 연도 기준) 논문 중 상위에 보장한다 — 이미 상위에 최근 논문이 그만큼 있으면 결과는 달라지지 않는다 (ADR-16).
     exclude 는 이미 평가한 id, only_sub_rqs 는 재검색 대상."""
     assert state.plan is not None
     exclude = exclude or set()
@@ -29,10 +42,16 @@ def select_candidates(state: RunState, per_subrq: int, exclude: set[str] | None 
         if only_sub_rqs is not None and sq.id not in only_sub_rqs:
             continue
         pool = [p for p in state.papers.values() if sq.id in p.sub_rq_ids and p.verified and p.id not in exclude]
-        pool.sort(key=lambda p: (not p.pinned, p.abstract is None, -(p.cited_by_count or 0), -(p.year or 0)))
-        for p in pool[:per_subrq]:
+        ref_year = max((p.year or 0 for p in pool), default=0)
+        pool.sort(key=lambda p: _rank_key(p, ref_year, rank_by))
+        n_recent = max(0, min(recent_slots, per_subrq))   # 슬롯은 상한을 넘지 않는다
+        recent = [p for p in pool if (p.year or 0) >= ref_year - recent_years + 1 and p.abstract][:n_recent]
+        reserved = {p.id for p in recent}
+        rest = [p for p in pool if p.id not in reserved][:max(0, per_subrq - len(recent))]
+        top = sorted(recent + rest, key=lambda p: _rank_key(p, ref_year, rank_by))   # 평가 순서는 원래 순위대로
+        for p in top:
             chosen.setdefault(p.id, p)
-        for p in pool[per_subrq:]:       # 상한 밖이라도 사용자가 고정한 문헌은 평가한다
+        for p in pool:                   # 상한 밖이라도 사용자가 고정한 문헌은 평가한다
             if p.pinned:
                 chosen.setdefault(p.id, p)
     return list(chosen.values())
@@ -74,7 +93,9 @@ def run(state: RunState, ctx: NodeContext, only_sub_rqs: set[str] | None = None)
     cfg = ctx.settings.tools
     prior = list(state.evidence.items) if state.evidence else []
     evaluated = {e.paper_id for e in prior}
-    candidates = select_candidates(state, cfg.evaluate_per_subrq, exclude=evaluated, only_sub_rqs=only_sub_rqs)
+    candidates = select_candidates(state, cfg.evaluate_per_subrq, exclude=evaluated, only_sub_rqs=only_sub_rqs,
+                                   recent_years=cfg.evaluate_recent_years, recent_slots=cfg.evaluate_recent_slots,
+                                   rank_by=cfg.evaluate_rank_by)
     rq_ids = {sq.id for sq in state.plan.sub_rqs}
     items: list[Evidence] = prior
     B = max(1, cfg.evaluate_batch)

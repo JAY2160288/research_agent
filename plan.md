@@ -250,6 +250,12 @@ Replan 상한 2회(`graph.max_replans`). 상한 도달 시 미달 항목을 리�
 - 대안·기각: arXiv 기본 off(quality.md D3) — CS 주제의 프리프린트 보강을 잃는다. 타임아웃만 늘리기 — 서버가 멈춘 경우 시간만 더 쓴다. arXiv 를 OpenAlex 와 병렬로 — 3초 간격 규칙 때문에 이득이 작고 검색 순서가 바뀌어 ablation 공정성이 흔들린다.
 - 영향: 제출본 `v1.0-submission` 불변, 브랜치 `improve/arxiv-robustness`. 도구·노드 변경은 추가 kwarg(`deadline`) 뿐이라 워커(research-brief-web)는 무수정 — 단, launchd 워커는 재시작해야 새 코드를 쓴다. 테스트 98 → 102.
 
+### ADR-16. evaluate 후보 선별: 피인용 절대값 → 연간 피인용 + 최근 2년 슬롯 보장 (2026-10-30, 제출 후)
+- 결정: `select_candidates` 의 순위 점수를 피인용 ÷ 경과 연수(풀의 최신 연도 기준, 결정적)로 바꾸고, sub-RQ 당 상한 12 중 `evaluate_recent_slots`(4) 자리는 최근 `evaluate_recent_years`(2)년 논문(초록 있음) 상위에 보장한다. 상위에 최근 논문이 이미 그만큼 있으면 결과는 같다. 제출본 방식은 `evaluate_rank_by: cites` + `evaluate_recent_slots: 0` 으로 재현.
+- 근거: 2026-10-30 실행(신용평가 XAI) 추적 — 주제에 가장 직접적인 Ballegeer 2025(EJOR, 설명 안정성·비용민감 신용평가)와 Lin & Wang 2025(Risks, SHAP 안정성·신용카드 연체)가 OpenAlex 검색에는 잡혔지만(rq1 후보 74편) 피인용 14~15회라 선별 15·17위로 LLM 평가조차 못 받았다(12위 피인용 35). 연간 피인용만으로는 13·14위. 최근 2년 슬롯 4개를 두면 rq1 의 최근 상위 4편이 정확히 이 둘을 포함한다. 피인용은 나이에 비례해 쌓이므로 절대값 순위는 구조적으로 최신 연구를 배제한다 — 연구 착수용 브리프(goals.md)가 가장 놓치면 안 되는 문헌이 바로 그것.
+- 대안·기각: `--include` 로 고정 — 사용자가 이미 아는 논문만 구제되고 구조는 그대로. 상한 12 → 20 — evaluate 비용 +60% 이고 순위 편향은 그대로. 어휘 일치(BM25) 재순위 — 주제 밖 고피인용 논문(rq4 의 "은행 유동성 위험" 등)까지 잡는 더 근본적 해법이지만 범위가 커서 quality.md A3 로 남김(다음 단계).
+- 영향: **evidence 구성이 바뀌므로 파이프라인 출력·지표에 영향** — 제출 전 ablation 매트릭스(design.md §3)는 제출본 설정 기준이고, 이 브랜치의 결과와 섞지 않는다. 제출본 `v1.0-submission` 불변, 브랜치 `improve/arxiv-robustness`. 테스트 102 → 103.
+
 ## 5. 작업 분해
 
 ### W1 (10/2–10/8) — 기반 + 베이스라인
@@ -382,6 +388,7 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 
 | 날짜 | 변경 | 이유 |
 |---|---|---|
+| 2026-10-30 | **ADR-16: evaluate 후보 선별을 연간 피인용 + 최근 2년 슬롯 4개 보장으로 (제출 후, 같은 브랜치).** `evaluate_rank_by: cites_per_year`, `evaluate_recent_years: 2`, `evaluate_recent_slots: 4`. 제출본 재현은 `cites` + `0`. 테스트 +1 (103) | Ballegeer 2025(EJOR)·Lin & Wang 2025(Risks) 가 검색엔 잡히고도 피인용 14~15회로 선별 15·17위 → 평가 0. 피인용 절대값 순위는 최신 연구를 구조적으로 배제 |
 | 2026-10-30 | **ADR-15: arXiv 재시도·Retry-After·라운드당 시간 예산 (제출 후, 브랜치 `improve/arxiv-robustness`).** `arxiv.search` 가 타임아웃·연결·429·5xx 를 3회 재시도(Retry-After ≤ 30초), `deadline` 인자로 남은 예산 안에서만 요청·대기. search 노드 `arxiv_time_budget_sec: 90`, `arxiv_max_failures` 2 → 3, `arxiv_disabled` 이벤트에 `reason`·`budget_sec`. 테스트 +4 (102) | 10-30 실행에서 세 라운드 모두 arXiv 차단(타임아웃→429) — 결과 구조는 지켜졌지만 CS 보강이 0. 직접 호출은 1초 안에 응답하므로 재시도만 있었어도 됐을 실패 |
 | 2026-10-16 | **관측·실험 손잡이 (B·D 묶음, 출력·지표 불변).** `cost.json` 에 `stop_reason`(graph: critic_passed · critic_persisting · replan_limit · replan_budget · limit_exceeded · no_critic · until:<node> · interrupted · error / baseline: submitted · forced_submit · limit_exceeded · no_brief) 와 `critic_model`; `summarize_runs.py` 에 `stop` 열과 조건 E 인식; `scripts/node_costs.py`(노드별 소요·호출·토큰·비용 + 라운드별 합계, design.md §1.5 의 원천); `llm.critic_model` + `--critic-model`(기본 null). 단위 테스트 97 → 98. **조건 E 1회**(T1, critic = opus, `--plan-from` 10-10 D): $0.639 · 4.5분 · 16회 · 결정적 지표 전부 통과 · judge 3.86(D 4.00) · 지지율 strict 79%(D 22%, claim 길이 효과) — design.md §6. 프롬프트 캐싱은 **하지 않기로**: digest 재읽기를 전부 캐시해도 절감이 실행당 ≈ $0.04(입력 단가 $2/M) 라 프롬프트 구조를 바꿀 가치가 없다 | 강의 AGT06 의 trace 필드(stop_reason·노드별 토큰·지연)와 AGT05 의 이종 검토자("같은 모델은 맹점을 공유")를 코드로 확인하려는 것. 기본 동작은 그대로라 ablation 결과 유효 |
 | 2026-10-16 | **ADR-14: 토폴로지·오케스트레이션 선택을 명시 (문서만).** 강의 AGT05·06 추가분을 대조해 design.md 보강 — §1.2 역할 카드(하지 않는 일·도구 소유·읽는 맥락·완료 기준·미달 시), §1.3 결정 매트릭스와 기각한 토폴로지 5종·종료 5겹, §1.4 실제 사고 10건의 MAST 분류 대응과 단계적 개입 사다리, §1.5 10-10 실행의 노드별 소요·토큰·비용 표(지연 = 임계 경로, 재검색 라운드가 비용 54%, 캐시 적중 0), §6 Critic·작성자 동일 모델 한계. 코드·테스트·지표 불변 | 강의가 요구하는 설계 원칙(단일 기준선 → 과제 구조에 맞는 토폴로지 → 역할은 경계 → 제안은 LLM·승인은 코드 → 종료 겹으로 → 관측)은 이미 충족하고 있었으나 그 용어로 설명한 문서가 없었다. 평가자가 강의 어휘로 읽을 수 있어야 설계평가에 유리 |

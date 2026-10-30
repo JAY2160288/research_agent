@@ -55,6 +55,9 @@ class ToolsConfig(BaseModel):
     arxiv_time_budget_sec: float = 90.0  # search 라운드당 arXiv 에 쓰는 시간 상한 — 재시도·대기 포함. 넘으면 나머지 쿼리 건너뜀
     arxiv_max_failures: int = 3        # 연속 실패(재시도 소진) 시 이 라운드의 arXiv 차단 (circuit breaker)
     evaluate_per_subrq: int = 12       # evaluate 에 넘길 sub-RQ 당 후보 상한 (초록 있음·피인용·최신 순)
+    evaluate_rank_by: str = "cites_per_year"  # 후보 순위 점수: cites_per_year(피인용 ÷ 경과 연수, 기본) | cites(절대값, 제출본 방식. ADR-16)
+    evaluate_recent_years: int = 2     # 풀의 최신 연도 기준 최근 N 년을 '최근 논문' 으로
+    evaluate_recent_slots: int = 4     # sub-RQ 당 상한 중 최근 논문에 보장하는 자리 수 (0 이면 보장 없음 = 제출본 방식)
     evaluate_batch: int = 10           # evaluate LLM 1회 호출당 문헌 수
     evaluate_workers: int = 4          # evaluate 배치 LLM 호출 병렬 수 (배치는 서로 독립 — 결과는 배치 순서로 합친다). 1 이면 순차
     openalex_api_key: str | None = None  # 선택. .env 의 OPENALEX_API_KEY — 있으면 일일 호출 한도가 사라진다 (없으면 polite pool)

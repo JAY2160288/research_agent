@@ -45,6 +45,9 @@ tools:
   arxiv_time_budget_sec: 90         # 라운드당 arXiv 시간 상한(재시도·대기 포함). 넘으면 나머지 쿼리 건너뜀 → 최악 시간 고정
   arxiv_max_failures: 3             # 연속 실패(재시도 소진) 시 이 라운드의 arXiv 차단. OpenAlex 가 모든 sub-RQ 의 주력이라 결과 구조는 유지됨
   evaluate_per_subrq: 12
+  evaluate_rank_by: cites_per_year  # 후보 순위: 피인용 ÷ 경과 연수 (ADR-16). 제출본 재현은 cites + evaluate_recent_slots: 0
+  evaluate_recent_years: 2          # 풀의 최신 연도 기준 최근 2년 = '최근 논문'
+  evaluate_recent_slots: 4          # 상한 12 중 4자리는 최근 논문 상위에 보장 (2025년 논문이 피인용 14~15회로 밀리던 문제)
   evaluate_batch: 10
   evaluate_workers: 4               # evaluate 배치 LLM 호출 병렬 수 (2026-10-08). 배치는 독립이라 결과 동일, 시간만 단축. 1 이면 순차
   min_relevance: 3
