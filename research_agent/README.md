@@ -195,13 +195,14 @@ research_agent/
 
 Critic 판정과 Replan 쿼리는 `events.jsonl` 의 `critique` / `replan` 이벤트와 `critique_N.json` / `replan_N.json` 에 남습니다.
 속도·비용 손잡이는 `config/models.yaml` 의 `tools.evaluate_workers`(평가 배치 병렬 수, 기본 4), `evaluate_per_subrq`, `graph.max_replans`.
+후보 선별(v1.1, ADR-16)은 연간 피인용(피인용 ÷ 경과 연수) 순이며 sub-RQ 당 상한 12 중 `evaluate_recent_slots`(4) 자리는 최근 `evaluate_recent_years`(2)년 논문에 보장됩니다. 제출본(v1.0) 방식은 `evaluate_rank_by: cites` + `evaluate_recent_slots: 0`.
 
 ### 재현 환경 주의
 
 - **OpenAlex 는 IP 당 하루 검색 약 100회**로 제한됩니다. 그래프 1회가 약 30~35회를 쓰므로 하루 3회를 넘기면 429 가 납니다.
   이때 파이프라인은 실패한 쿼리만 **Crossref 검색으로 자동 폴백**하고 그 사실을 리포트 §7 에 적습니다. 실행이 멈추지는 않지만 초록이 적어 품질은 떨어집니다.
   `.env` 의 `CONTACT_EMAIL` 을 채우면 polite pool 로 들어가 안정적입니다 (키가 아니라 연락처입니다).
-- arXiv 가 불안정한 날(503)에는 circuit breaker 가 arXiv 를 건너뛰고 OpenAlex 만으로 완주합니다. 역시 §7 에 자동 기재.
+- arXiv 가 느리거나 429·503 을 돌려주면 요청마다 3회까지 재시도하되(Retry-After 존중), 라운드당 `arxiv_time_budget_sec`(90초) 를 넘기면 나머지 arXiv 쿼리를 건너뛰고 OpenAlex 만으로 완주합니다(v1.1, ADR-15). 역시 §7 에 자동 기재.
 
 ---
 

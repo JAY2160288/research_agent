@@ -66,7 +66,7 @@
 
 **A3. 레코드 병합 + 경량 재순위**
 - 병합: OpenAlex 응답의 `ids.arxiv`·`locations[].landing_page_url` 로 arXiv id ↔ DOI 매핑, 없으면 제목 정규화(소문자·구두점 제거) 일치 + 연도 ±1 + 첫 저자 성 일치. `Paper` 에 `aliases: list[str]` 추가, 레지스트리(`tools/__init__.py` `papers`) 가 병합하고 인용 시 대표 id 로 치환. 렌더러는 참고문헌에 "preprint: arXiv:…" 병기.
-- 재순위: 후보 300~400편 중 evaluate 에 보낼 12~15편을 지금은 (초록 있음 → 피인용 → 최신) 순으로 고른다 (`select_candidates`). 피인용은 오래된 문헌에 유리해 최신 연구가 밀린다. BM25 (`rank_bm25`, 의존성 1개, LLM 0) 로 sub-RQ 질문과의 점수 → 상위 선택.
+- 재순위: 후보 300~400편 중 evaluate 에 보낼 12~15편을 지금은 (초록 있음 → 피인용 → 최신) 순으로 고른다 (`select_candidates`). 피인용은 오래된 문헌에 유리해 최신 연구가 밀린다. **→ 2026-10-30 ADR-16(v1.1): 연간 피인용 + 최근 2년 슬롯 4 로 연도 편향은 해소.** BM25 (`rank_bm25`, 의존성 1개, LLM 0) 로 sub-RQ 질문과의 점수 → 상위 선택은 미적용(주제 밖 고피인용 문헌 문제가 남음).
 - 확인: 중복 근거 0건 (judge), 회수율 cited, 최신 2년 문헌 비율.
 
 **A4. OA 본문 추출 (초록 → Methods·Results)**

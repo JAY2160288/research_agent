@@ -20,7 +20,9 @@ uv run agent run --topic "생성형 AI 활용이 대학원생의 연구 생산�
 **실행 결과 바로 보기** — `research_agent/runs/` 에 대표 실행 8개를 넣어 두었습니다 (클린룸 2개 = `cleanroom.json` 포함, 주제 5개의 최종 구조 실행 = `ablation.json` 포함, 베이스라인 1개). 예시 주제의 클린룸 리포트:
 [`runs/20261008T022603Z_graph_…/report.md`](research_agent/runs/20261008T022603Z_graph_생성형-ai-활용이-대학원생의-연구-생산성과-연구-품질에-미치는-영향/report.md) (한국어본, 영어 원문은 같은 폴더의 `report.en.md`).
 각 폴더에는 `report.md`·`brief.json`·`events.jsonl`(단계 전이·LLM/도구 호출 로그)·`cost.json`(비용·결정적 지표)·노드별 중간 산출물이 있습니다.
-제출 zip 에는 ablation 20회·반복 실행을 포함한 전체 55개 실행이 들어 있습니다.
+제출 zip 에는 ablation 20회·반복 실행을 포함한 전체 58개 실행이 들어 있습니다.
+
+**v1.1 (2026-10-30, 제출 후 수정 — 태그 `v1.1-submission`)**: 제출 후 실제 주제(신용평가 XAI)를 돌리다 평가 단계의 결함을 찾았습니다 — 후보를 **피인용 절대값** 순으로 12편만 고르다 보니 주제에 가장 직접적인 2025년 논문(Ballegeer 2025 EJOR, Lin & Wang 2025)이 검색에는 잡히고도 LLM 평가조차 받지 못했습니다. 순위를 연간 피인용으로 바꾸고 상한 12 중 4자리를 최근 2년 논문에 보장하도록 고쳤고(ADR-16), 같은 날 arXiv 검색이 일시 지연으로 세 라운드 모두 차단되던 것도 재시도·시간 예산으로 고쳤습니다(ADR-15). 전후 비교는 [`runs/INDEX.md`](research_agent/runs/INDEX.md) 의 10-30 행 3개와 `design.md` §6. 제출 전 ablation 표(§3)는 v1.0 설정 기준 그대로이며, v1.0 동작은 `config/models.yaml` 의 `evaluate_rank_by: cites` + `evaluate_recent_slots: 0` 으로 재현됩니다.
 
 GitHub: https://github.com/JAY2160288/research_agent · 웹 버전(초대 계정 전용, 같은 에이전트를 그대로 실행): https://research-brief-web.vercel.app
 
@@ -28,7 +30,7 @@ GitHub: https://github.com/JAY2160288/research_agent · 웹 버전(초대 계정
 
 | 지침 항목 | 위치 | 보는 법 |
 |---|---|---|
-| **설계 의도** | [`research_agent/docs/design.md`](research_agent/docs/design.md) §1 아키텍처(역할 카드·토폴로지 선택 이유·실패 대응·비용 모델) · §2 설계 의도("달라지는 것 / 아닌 것") · §6 한계. 배경은 [`goals.md`](goals.md)(평가 기준 → 목표 O1~O7), 결정 이력은 [`plan.md`](plan.md) §4 ADR-1~14 | design.md §1~§2 만 읽어도 "왜 이 구조인가"가 닿도록 썼습니다 |
+| **설계 의도** | [`research_agent/docs/design.md`](research_agent/docs/design.md) §1 아키텍처(역할 카드·토폴로지 선택 이유·실패 대응·비용 모델) · §2 설계 의도("달라지는 것 / 아닌 것") · §6 한계. 배경은 [`goals.md`](goals.md)(평가 기준 → 목표 O1~O7), 결정 이력은 [`plan.md`](plan.md) §4 ADR-1~16 | design.md §1~§2 만 읽어도 "왜 이 구조인가"가 닿도록 썼습니다 |
 | **소스** | [`research_agent/src/research_agent/`](research_agent/src/research_agent/) — `graph.py`(노드 순서 + Critic/Replan 루프), `nodes/`(6단계 + critic·replan·write), `schemas.py`(모든 입출력 타입 + 결정적 검사), `llm.py`(유일한 LLM 호출 지점), `tools/`(OpenAlex·arXiv·Crossref). 프롬프트는 [`prompts/`](research_agent/prompts/), 설정은 [`config/models.yaml`](research_agent/config/models.yaml), 테스트 98개는 [`tests/`](research_agent/tests/) | 구조 설명과 디렉터리 표는 [`research_agent/README.md`](research_agent/README.md) §2 |
 | **수행 입출력 결과** | [`research_agent/runs/INDEX.md`](research_agent/runs/INDEX.md) — 모든 실행을 **입력 주제 → 출력 리포트 링크 → 비용·시간·결정적 지표** 순으로 색인. 실행 폴더마다 `report.md`(출력), `brief.json`(구조화 출력), `events.jsonl`(단계 전이·LLM/도구 호출 로그), `cost.json`, 노드별 중간 산출물 | GitHub 에는 대표 8개, 제출 zip 에는 55개 전체. 예시 주제의 클린룸 결과는 위 "빠른 시작" 링크 |
 
@@ -59,3 +61,4 @@ GitHub: https://github.com/JAY2160288/research_agent · 웹 버전(초대 계정
 | W3 | Reflection·Replanning 루프, 같은 주제 반복 실행 안정성 | 완료 |
 | W4 | 베이스라인 vs 최종 구조 ablation(20회), LLM-judge, 주장-근거 지지율·정답 회수율, 클린룸 재현, 누출 검사 | 완료 (2026-10-08) |
 | 마무리 | `docs/design.md` 전 섹션, 리포트 렌더러 개편, 한국어 번역 단계(ADR-11), 제출 직전 재점검(누출 검사·클린 clone 재설치·zip 검증) | 완료 (2026-10-23) |
+| 제출 후 수정 (v1.1) | evaluate 후보 선별의 연도 편향 수정(ADR-16: 연간 피인용 + 최근 2년 슬롯 4), arXiv 재시도·라운드당 시간 예산(ADR-15), 테스트 103 | 완료 (2026-10-30) |
