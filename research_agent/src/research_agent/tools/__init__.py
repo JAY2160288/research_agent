@@ -117,11 +117,13 @@ class Tools:
         papers = [Paper(**d) for d in raw]
         return self._register(papers, sub_rq_id, "search_crossref", args, cached)
 
-    def search_arxiv(self, query: str, sub_rq_id: str | None = None) -> list[Paper]:
+    def search_arxiv(self, query: str, sub_rq_id: str | None = None, deadline: float | None = None) -> list[Paper]:
+        """deadline(time.monotonic) 은 search 노드의 라운드당 arXiv 시간 예산 (ADR-15). 캐시 적중이면 쓰지 않는다. 캐시 키 불변."""
         args = {"query": query, "max_results": self.s.tools.arxiv_per_query}
         raw, cached = self.cache.get_or_call("arxiv", args, lambda: [
             p.model_dump() for p in arxiv.search(query, max_results=self.s.tools.arxiv_per_query,
-                                                 user_agent=self.s.tools.user_agent)])
+                                                 user_agent=self.s.tools.user_agent, timeout=self.s.tools.arxiv_timeout_sec,
+                                                 max_attempts=self.s.tools.arxiv_max_attempts, deadline=deadline)])
         papers = [Paper(**d) for d in raw]
         return self._register(papers, sub_rq_id, "search_arxiv", args, cached)
 

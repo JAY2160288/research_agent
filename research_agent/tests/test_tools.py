@@ -137,3 +137,49 @@ def test_verify_doi_skips_already_verified_and_arxiv(tmp_path, monkeypatch):
     assert calls["n"] == 0  # Crossref 미호출
     assert "NOT FOUND" in t.dispatch("verify_doi", {"doi": "10.9999/unknown"})
     assert calls["n"] == 1  # 모르는 DOI 만 Crossref 로
+
+
+# ---- arXiv 재시도·시간 예산 (ADR-15) -------------------------------------------------------------
+
+def test_arxiv_retries_429_with_retry_after_and_5xx(monkeypatch):
+    """429 는 Retry-After(최대 30초) 만큼, 5xx 는 retry_wait × 시도 만큼 쉬고 재시도한다 (2026-10-30 타임아웃→429 차단 사례)."""
+    waits: list[float] = []
+    monkeypatch.setattr(arxiv.time, "sleep", lambda s: waits.append(s))
+    n = {"i": 0}
+
+    def handler(r):
+        n["i"] += 1
+        if n["i"] == 1:
+            return httpx.Response(429, headers={"Retry-After": "7"})
+        if n["i"] == 2:
+            return httpx.Response(503)
+        return httpx.Response(200, text=ARXIV_XML)
+    c = httpx.Client(transport=httpx.MockTransport(handler))
+    ps = arxiv.search("x", client=c, retry_wait=5.0, max_attempts=3)
+    assert len(ps) == 2 and n["i"] == 3
+    assert waits == [7.0, 10.0]
+
+
+def test_arxiv_timeout_retries_then_raises(monkeypatch):
+    """타임아웃은 max_attempts 회까지만 — 그래도 안 되면 예외를 올려 search 노드의 breaker 가 센다."""
+    monkeypatch.setattr(arxiv.time, "sleep", lambda s: None)
+    n = {"i": 0}
+
+    def handler(r):
+        n["i"] += 1
+        raise httpx.ReadTimeout("The read operation timed out")
+    c = httpx.Client(transport=httpx.MockTransport(handler))
+    with pytest.raises(httpx.TimeoutException):
+        arxiv.search("x", client=c, max_attempts=3)
+    assert n["i"] == 3
+
+
+def test_arxiv_deadline_bounds_waiting(monkeypatch):
+    """남은 예산이 대기보다 짧으면 자지 않고 TimeoutError, 예산이 이미 끝났으면 요청 자체를 안 한다."""
+    monkeypatch.setattr(arxiv.time, "sleep", lambda s: pytest.fail("예산 밖에서 자면 안 된다"))
+    c = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(429, headers={"Retry-After": "20"})))
+    with pytest.raises(TimeoutError):
+        arxiv.search("x", client=c, max_attempts=3, deadline=arxiv.time.monotonic() + 5)
+    no_req = httpx.Client(transport=httpx.MockTransport(lambda r: pytest.fail("요청하면 안 된다")))
+    with pytest.raises(TimeoutError):
+        arxiv.search("x", client=no_req, deadline=arxiv.time.monotonic() - 1)

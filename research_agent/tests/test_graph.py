@@ -240,3 +240,24 @@ def test_graph_end_to_end_with_fakes(tmp_path, monkeypatch):
     assert kinds.count("node_start") == 8 and "critique" in kinds
     for f in ("brief.json", "report.md", "papers.json", "state.json", "critique_1.json"):
         assert (log.dir / f).exists(), f
+
+
+def test_search_arxiv_time_budget_skips_remaining_queries(tmp_path, monkeypatch):
+    """라운드당 arXiv 시간 예산(ADR-15): 느린 arXiv 가 10분 상한을 먹지 않게, 예산이 끝나면 남은 쿼리를 건너뛴다."""
+    clock = {"t": 0.0}
+    ax_calls = []
+
+    def slow_ok(q, **kw):
+        ax_calls.append(q)
+        clock["t"] += 50.0            # 쿼리 하나가 재시도 포함 50초 걸렸다고 치자
+        return [_paper(200 + len(ax_calls), "arxiv")]
+    monkeypatch.setattr(openalex, "search", lambda q, **kw: [_paper(1), _paper(2), _paper(3)])
+    monkeypatch.setattr(arxiv, "search", slow_ok)
+    monkeypatch.setattr(search.time, "sleep", lambda s: None)
+    monkeypatch.setattr(search.time, "monotonic", lambda: clock["t"])
+    ctx, _ = _ctx(tmp_path, [], arxiv_time_budget_sec=90.0)
+    state = RunState(topic="t", topic_frame=TF, plan=PLAN)
+    search.run(state, ctx)
+    assert len(ax_calls) == 2                                          # 0초·50초에 시작한 둘만, 100초 시점엔 예산 초과
+    assert any("time budget 90s exhausted, 2 queries skipped" in n for n in state.notes)
+    assert all(sum(1 for p in state.papers.values() if sq.id in p.sub_rq_ids) >= 3 for sq in PLAN.sub_rqs)

@@ -50,7 +50,10 @@ class ToolsConfig(BaseModel):
     search_workers: int = 4            # OpenAlex 병렬 요청 수 (arXiv 는 순차)
     arxiv_max_queries_per_subrq: int = 2  # arXiv 는 3초/요청 → sub-RQ 당 쿼리 상한
     arxiv_interval_sec: float = 3.0    # arXiv 요청 간격 (공식 권고 3초)
-    arxiv_max_failures: int = 2        # 연속 실패 시 이 실행에서 arXiv 차단 (circuit breaker)
+    arxiv_timeout_sec: float = 30.0    # arXiv 요청 1회 타임아웃. export.arxiv.org 는 부하 시 20초를 넘긴다 (2026-10-30, ADR-15)
+    arxiv_max_attempts: int = 3        # 타임아웃·연결 오류·429·5xx 재시도 횟수 (Retry-After 존중, 최대 30초 대기)
+    arxiv_time_budget_sec: float = 90.0  # search 라운드당 arXiv 에 쓰는 시간 상한 — 재시도·대기 포함. 넘으면 나머지 쿼리 건너뜀
+    arxiv_max_failures: int = 3        # 연속 실패(재시도 소진) 시 이 라운드의 arXiv 차단 (circuit breaker)
     evaluate_per_subrq: int = 12       # evaluate 에 넘길 sub-RQ 당 후보 상한 (초록 있음·피인용·최신 순)
     evaluate_batch: int = 10           # evaluate LLM 1회 호출당 문헌 수
     evaluate_workers: int = 4          # evaluate 배치 LLM 호출 병렬 수 (배치는 서로 독립 — 결과는 배치 순서로 합친다). 1 이면 순차

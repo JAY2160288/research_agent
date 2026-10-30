@@ -3,8 +3,10 @@
 - **OpenAlex 가 모든 sub-RQ 의 주력** (전 분야 + arXiv 프리프린트도 색인). 병렬(search_workers).
   OpenAlex 가 실패한 쿼리(429 — 일일 크레딧 소진, 5xx, 타임아웃)는 **Crossref works 검색으로 폴백** (ADR-8). 결과 구조는 같다.
 - arXiv 는 source_pref 가 arxiv/both 인 sub-RQ 의 **보강**. 순차 + arxiv_interval_sec 간격, sub-RQ 당 arxiv_max_queries_per_subrq 개.
-  연속 arxiv_max_failures 회 실패하면 이 실행에서는 arXiv 를 끊는다 (circuit breaker) — arXiv 가 429·지연을 돌려줘도
-  파이프라인이 시간 상한 안에 끝나야 한다 (goals.md O1·O7-L1: 평가자 환경의 외부 API 상태에 결과 구조가 흔들리면 안 됨).
+  도구가 타임아웃·429·5xx 를 재시도하되(ADR-15), 라운드당 arxiv_time_budget_sec 의 deadline 안에서만 요청·대기한다.
+  예산 소진 또는 연속 arxiv_max_failures 회 실패면 이 라운드의 나머지 arXiv 쿼리를 건너뛴다 (circuit breaker) —
+  arXiv 가 429·지연을 돌려줘도 파이프라인이 시간 상한 안에 끝나야 한다 (goals.md O1·O7-L1: 평가자 환경의 외부 API 상태에
+  결과 구조가 흔들리면 안 됨). 다음 라운드(Replan 재검색)에서는 다시 시도한다.
 - 결정적 검증: sub-RQ 당 후보 ≥ search_min_per_subrq. 미달은 state.notes 에 적고 계속 (W3 Critic 의 Replan 대상).
 - `extra_queries` 를 주면 그 sub-RQ 만 추가 검색 (Replan 용).
 """
@@ -60,19 +62,30 @@ def run(state: RunState, ctx: NodeContext, extra_queries: dict[str, list[str]] |
             state.notes.append(f"search: OpenAlex failed for {len(failed)}/{len(jobs_oa)} queries (rate limit or outage); "
                                f"Crossref fallback answered {n_cr}")
 
+    # arXiv 보강: 순차 + 간격. 라운드당 시간 예산(deadline) 을 도구에 넘겨 재시도·대기가 예산을 넘지 않게 하고 (ADR-15),
+    # 예산 소진 또는 연속 실패면 나머지 쿼리를 건너뛴다. 최악의 경우에도 이 라운드의 arXiv 시간 ≈ 예산.
+    def _disable(reason: str, done: int, failures: int) -> None:
+        skipped = len(jobs_ax) - done
+        ctx.log.event("arxiv_disabled", reason=reason, after_failures=failures, skipped_queries=skipped,
+                      budget_sec=cfg.arxiv_time_budget_sec)
+        why = (f"time budget {cfg.arxiv_time_budget_sec:.0f}s exhausted" if reason == "time_budget"
+               else f"disabled after {failures} failures")
+        state.notes.append(f"search: arXiv unavailable ({why}, {skipped} queries skipped); OpenAlex only")
+
     failures = 0
+    deadline = time.monotonic() + cfg.arxiv_time_budget_sec
     for i, (sid, q) in enumerate(jobs_ax):
+        if time.monotonic() >= deadline:
+            _disable("time_budget", i, failures)
+            break
         try:
-            ctx.tools.search_arxiv(q, sub_rq_id=sid)
+            ctx.tools.search_arxiv(q, sub_rq_id=sid, deadline=deadline)
             failures = 0
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:  # noqa: BLE001 — 재시도까지 소진한 실패 (TimeoutError = 예산 소진 포함)
             failures += 1
             ctx.log.event("tool_error", name="search_arxiv", query=q, error=str(e)[:200])
             if failures >= cfg.arxiv_max_failures:
-                skipped = len(jobs_ax) - i - 1
-                ctx.log.event("arxiv_disabled", after_failures=failures, skipped_queries=skipped)
-                state.notes.append(f"search: arXiv unavailable (disabled after {failures} failures, {skipped} queries skipped); "
-                                   "OpenAlex only")
+                _disable("failures", i + 1, failures)
                 break
         if i < len(jobs_ax) - 1:
             time.sleep(cfg.arxiv_interval_sec)

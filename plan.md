@@ -244,6 +244,12 @@ Replan 상한 2회(`graph.max_replans`). 상한 도달 시 미달 항목을 리�
 - 대안·기각: Supervisor(LLM 라우터) — 고를 경로가 없고 라운드마다 감독 호출이 붙음, 재현성 L1 저하. Swarm/handoff — 역할이 겹치지 않아 넘길 일이 없고 감사 어려움이 O4 와 상충. Blackboard — RunState 가 그 역할을 하지만 키마다 단일 작성자라 충돌 관리 불필요. Debate/Ensemble — 제안 수 × 라운드 비용이 O6 상한($1·10분) 밖, 제출 후 후보. 단일 에이전트 — 조건 A 로 측정, 지지율 52% vs 78%.
 - 영향: 문서 — design.md §1.2 역할 카드(책임·도구·읽는 맥락·완료 기준·에스컬레이션), §1.3 토폴로지 선택 표, §1.4 실제 사고의 MAST 분류 대응표, §1.5 비용·지연 모델(10-10 실행 노드별 집계), §6 한계에 "Critic 과 작성자가 같은 모델" + 조건 E 1회 결과. 코드는 같은 날 관측·실험 손잡이만(§8 2026-10-16 첫 행: `stop_reason`, `critic_model`, `node_costs.py`) — 기본 동작·지표·ablation 결과 불변.
 
+### ADR-15. arXiv 는 재시도로 버티고, 라운드당 시간 예산으로 자른다 (2026-10-30, 제출 후)
+- 결정: `tools/arxiv.py` 가 타임아웃·연결 오류·429·5xx 를 `arxiv_max_attempts`(3)회 재시도하고, 대기는 `Retry-After`(최대 30초) 또는 5초×시도. search 노드는 라운드마다 `arxiv_time_budget_sec`(90초) 의 deadline 을 만들어 도구에 넘기고, 도구는 남은 예산 안에서만 요청·대기한다(요청 타임아웃도 남은 예산으로 자름). 예산 소진 또는 연속 `arxiv_max_failures`(2 → 3)회 실패면 그 라운드의 나머지 arXiv 쿼리를 건너뛴다(`arxiv_disabled` 이벤트에 `reason`). OpenAlex 주력·arXiv 보강 구조(ADR-6)와 캐시 키는 그대로.
+- 근거: 2026-10-30 실행(신용평가 XAI 주제)에서 세 라운드 모두 타임아웃 1회 + 429/타임아웃 1회로 차단 — 재시도가 1회뿐이고 429 의 Retry-After 를 무시했으며, breaker 가 "연속 2회"만 보고 시간은 보지 않아 느린 arXiv 에 너무 일찍 포기했다. 시간 예산을 두면 재시도를 늘려도 라운드당 arXiv 최악 시간이 예산으로 고정된다(이전 최악 ≈ 2×(20+5+20) = 90초와 같음). 같은 날 직접 호출은 0.6~1.2초 — 실패는 arXiv 쪽의 일시적 지연이었다.
+- 대안·기각: arXiv 기본 off(quality.md D3) — CS 주제의 프리프린트 보강을 잃는다. 타임아웃만 늘리기 — 서버가 멈춘 경우 시간만 더 쓴다. arXiv 를 OpenAlex 와 병렬로 — 3초 간격 규칙 때문에 이득이 작고 검색 순서가 바뀌어 ablation 공정성이 흔들린다.
+- 영향: 제출본 `v1.0-submission` 불변, 브랜치 `improve/arxiv-robustness`. 도구·노드 변경은 추가 kwarg(`deadline`) 뿐이라 워커(research-brief-web)는 무수정 — 단, launchd 워커는 재시작해야 새 코드를 쓴다. 테스트 98 → 102.
+
 ## 5. 작업 분해
 
 ### W1 (10/2–10/8) — 기반 + 베이스라인
@@ -376,6 +382,7 @@ LLM-judge도 Claude로 채점하므로 자기 채점 편향이 있음. 완화: �
 
 | 날짜 | 변경 | 이유 |
 |---|---|---|
+| 2026-10-30 | **ADR-15: arXiv 재시도·Retry-After·라운드당 시간 예산 (제출 후, 브랜치 `improve/arxiv-robustness`).** `arxiv.search` 가 타임아웃·연결·429·5xx 를 3회 재시도(Retry-After ≤ 30초), `deadline` 인자로 남은 예산 안에서만 요청·대기. search 노드 `arxiv_time_budget_sec: 90`, `arxiv_max_failures` 2 → 3, `arxiv_disabled` 이벤트에 `reason`·`budget_sec`. 테스트 +4 (102) | 10-30 실행에서 세 라운드 모두 arXiv 차단(타임아웃→429) — 결과 구조는 지켜졌지만 CS 보강이 0. 직접 호출은 1초 안에 응답하므로 재시도만 있었어도 됐을 실패 |
 | 2026-10-16 | **관측·실험 손잡이 (B·D 묶음, 출력·지표 불변).** `cost.json` 에 `stop_reason`(graph: critic_passed · critic_persisting · replan_limit · replan_budget · limit_exceeded · no_critic · until:<node> · interrupted · error / baseline: submitted · forced_submit · limit_exceeded · no_brief) 와 `critic_model`; `summarize_runs.py` 에 `stop` 열과 조건 E 인식; `scripts/node_costs.py`(노드별 소요·호출·토큰·비용 + 라운드별 합계, design.md §1.5 의 원천); `llm.critic_model` + `--critic-model`(기본 null). 단위 테스트 97 → 98. **조건 E 1회**(T1, critic = opus, `--plan-from` 10-10 D): $0.639 · 4.5분 · 16회 · 결정적 지표 전부 통과 · judge 3.86(D 4.00) · 지지율 strict 79%(D 22%, claim 길이 효과) — design.md §6. 프롬프트 캐싱은 **하지 않기로**: digest 재읽기를 전부 캐시해도 절감이 실행당 ≈ $0.04(입력 단가 $2/M) 라 프롬프트 구조를 바꿀 가치가 없다 | 강의 AGT06 의 trace 필드(stop_reason·노드별 토큰·지연)와 AGT05 의 이종 검토자("같은 모델은 맹점을 공유")를 코드로 확인하려는 것. 기본 동작은 그대로라 ablation 결과 유효 |
 | 2026-10-16 | **ADR-14: 토폴로지·오케스트레이션 선택을 명시 (문서만).** 강의 AGT05·06 추가분을 대조해 design.md 보강 — §1.2 역할 카드(하지 않는 일·도구 소유·읽는 맥락·완료 기준·미달 시), §1.3 결정 매트릭스와 기각한 토폴로지 5종·종료 5겹, §1.4 실제 사고 10건의 MAST 분류 대응과 단계적 개입 사다리, §1.5 10-10 실행의 노드별 소요·토큰·비용 표(지연 = 임계 경로, 재검색 라운드가 비용 54%, 캐시 적중 0), §6 Critic·작성자 동일 모델 한계. 코드·테스트·지표 불변 | 강의가 요구하는 설계 원칙(단일 기준선 → 과제 구조에 맞는 토폴로지 → 역할은 경계 → 제안은 LLM·승인은 코드 → 종료 겹으로 → 관측)은 이미 충족하고 있었으나 그 용어로 설명한 문서가 없었다. 평가자가 강의 어휘로 읽을 수 있어야 설계평가에 유리 |
 | 2026-10-10 | **ADR-13: "품질 한눈에" 카드를 §7 뒤·참고문헌 앞으로.** `report.py` 렌더 순서만 변경, 테스트 97 유지, `agent render --all` 로 runs/ 재생성. README·design.md·CLAUDE.md 의 읽는 순서 문구 갱신 | 웹에 올려 보니 검증용 카드가 본문 앞에 있어 읽기 흐름을 끊음. 독자용(요약·읽을 문헌)은 앞, 검증용은 뒤 |

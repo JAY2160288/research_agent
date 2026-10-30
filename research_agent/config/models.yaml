@@ -40,7 +40,10 @@ tools:
   search_workers: 4
   arxiv_max_queries_per_subrq: 2    # arXiv 는 3초/요청 예절 → 과하면 429·타임아웃
   arxiv_interval_sec: 3.0
-  arxiv_max_failures: 2             # 연속 실패 시 arXiv 차단. OpenAlex 가 모든 sub-RQ 의 주력이라 결과 구조는 유지됨
+  arxiv_timeout_sec: 30             # 요청 1회 타임아웃 — export.arxiv.org 는 부하 시 20초를 넘긴다 (ADR-15)
+  arxiv_max_attempts: 3             # 타임아웃·429·5xx 재시도 (Retry-After 존중, 최대 30초)
+  arxiv_time_budget_sec: 90         # 라운드당 arXiv 시간 상한(재시도·대기 포함). 넘으면 나머지 쿼리 건너뜀 → 최악 시간 고정
+  arxiv_max_failures: 3             # 연속 실패(재시도 소진) 시 이 라운드의 arXiv 차단. OpenAlex 가 모든 sub-RQ 의 주력이라 결과 구조는 유지됨
   evaluate_per_subrq: 12
   evaluate_batch: 10
   evaluate_workers: 4               # evaluate 배치 LLM 호출 병렬 수 (2026-10-08). 배치는 독립이라 결과 동일, 시간만 단축. 1 이면 순차
